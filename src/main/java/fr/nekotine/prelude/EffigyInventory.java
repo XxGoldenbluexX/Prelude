@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -32,8 +35,13 @@ public class EffigyInventory implements Listener{
 		for(int tier=1;tier<=wrapper.tier;tier++) {
 			effigies.addAll(Effigy.getTier(tier));	
 		}
+		ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+		ItemMeta meta = head.getItemMeta();
+		meta.displayName(Component.text("Humain"));
+		head.setItemMeta(meta);
+		inv.setItem(0, head);
 		for(int x=0;x<effigies.size();x++) {
-			inv.setItem(x, createStack(wrapper,effigies.get(x)));
+			inv.setItem(x+1, createStack(wrapper,effigies.get(x)));
 		}
 	}
 	private static ItemStack createStack(PlayerWrapper wrapper, Effigy ef) {
@@ -58,18 +66,31 @@ public class EffigyInventory implements Listener{
 			List<Component> loreList = new ArrayList<>();
 			loreList.add(Component.text(ChatColor.DARK_GREEN+""+ChatColor.UNDERLINE+"[Actuelle]"));
 			meta.lore(loreList);
+		}
+		is.setItemMeta(meta);
+		if(wrapper.effigy==ef) {
 			is.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 			is.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
-		is.setItemMeta(meta);
 		return is;
 	}
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent e) {
 		if(e.getClickedInventory()==inv) {
 			e.setCancelled(true);
-			wrapper.effigy=effigies.get(e.getRawSlot());
+			if(e.getRawSlot()==0) {
+				wrapper.effigy=null;
+				e.getWhoClicked().closeInventory();
+			}else {
+				wrapper.effigy=effigies.get(e.getRawSlot()-1);
+			}
 			loadInventory();
+		}
+	}
+	@EventHandler
+	public void closeInventory(InventoryCloseEvent e) {
+		if(e.getInventory()==inv) {
+			HandlerList.unregisterAll(this);
 		}
 	}
 }

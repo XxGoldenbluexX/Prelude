@@ -6,8 +6,10 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -55,6 +57,12 @@ public class TeamInventory implements Listener {
 			e.setCancelled(true);
 			wrapper.team=e.getRawSlot()+1;
 			loadInventory();
+		}
+	}
+	@EventHandler
+	public void closeInventory(InventoryCloseEvent e) {
+		if(e.getInventory()==inv) {
+			HandlerList.unregisterAll(this);
 		}
 	}
 }
