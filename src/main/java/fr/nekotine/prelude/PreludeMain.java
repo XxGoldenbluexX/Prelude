@@ -1,8 +1,8 @@
 package fr.nekotine.prelude;
 
 import java.util.HashMap;
-import java.util.WeakHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,23 +22,23 @@ public class PreludeMain extends JavaPlugin implements Listener{
 	public void onEnable() {
 		super.onEnable();
 		main=this;
+		Bukkit.getPluginManager().registerEvents(this, this);
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			playerWrappers.put(player, new PlayerWrapper(player,1,1));
+		}
 	}
 	@EventHandler
 	public void playerInteract(PlayerInteractEvent e) {
 		if(e.getClickedBlock()!=null) {
-			switch (e.getClickedBlock().getType()){
-			case effigyBlockMaterial:
-				break;
-			case teamBlockMaterial:
-				break;
-			default:
-				return;
+			if (e.getClickedBlock().getType()==effigyBlockMaterial){
+			}else if (e.getClickedBlock().getType()==teamBlockMaterial){
+				new TeamInventory(playerWrappers.get(e.getPlayer()));
 			}
 		}
 	}
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		playerWrappers.put(e.getPlayer(), new PlayerWrapper(e.getPlayer()));
+		playerWrappers.put(e.getPlayer(), new PlayerWrapper(e.getPlayer(),1,1));
 	}
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent e) {

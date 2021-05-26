@@ -4,7 +4,11 @@ import org.bukkit.entity.Player;
 
 public class PlayerWrapper {
 	public final Player player;
-	public PlayerWrapper(Player player) {
+	public int tier;
+	public int team;
+	public PlayerWrapper(Player player, int tier, int team) {
 		this.player=player;
+		this.tier=tier;
+		this.team=team;
 	}
 }
