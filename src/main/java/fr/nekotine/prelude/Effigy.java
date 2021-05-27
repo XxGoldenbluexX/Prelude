@@ -22,10 +22,12 @@ public abstract class Effigy implements Listener {
 		return wrapper;
 	}
 	
-	public Effigy(PlayerWrapper w) {
+	public Effigy(PlayerWrapper w,int cooldown1, int cooldown2) {
 		wrapper=w;
 		cd1 = System.currentTimeMillis();
 		cd2 = System.currentTimeMillis();
+		this.cooldown1 = cooldown1;
+		this.cooldown2 = cooldown2;
 	}
 	
 	@EventHandler

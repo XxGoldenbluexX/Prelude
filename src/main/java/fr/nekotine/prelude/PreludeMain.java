@@ -32,8 +32,10 @@ public class PreludeMain extends JavaPlugin implements Listener{
 	public void playerInteract(PlayerInteractEvent e) {
 		if(e.getClickedBlock()!=null) {
 			if (e.getClickedBlock().getType()==effigyBlockMaterial){
+				e.setCancelled(true);
 				new EffigyInventory(playerWrappers.get(e.getPlayer()));
 			}else if (e.getClickedBlock().getType()==teamBlockMaterial){
+				e.setCancelled(true);
 				new TeamInventory(playerWrappers.get(e.getPlayer()));
 			}
 		}

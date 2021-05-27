@@ -10,7 +10,7 @@ import fr.nekotine.prelude.PlayerWrapper;
 public class Spider extends Effigy{
 
 	public Spider(PlayerWrapper w) {
-		super(w);
+		super(w,3000,3000);
 	}
 
 	@Override
