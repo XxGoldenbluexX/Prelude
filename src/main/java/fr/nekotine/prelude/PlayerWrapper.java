@@ -47,7 +47,7 @@ public class PlayerWrapper {
 		this.effigytype = effigytype;
 		HandlerList.unregisterAll(effigy);
 		DisguiseAPI.undisguiseToAll(player);
-		if (effigy!=null) {
+		if (effigytype!=null) {
 			DisguiseAPI.disguiseToAll(player, effigytype.getDisguise());
 			effigy = EffigyList.buildEffigy(this, effigytype);
 			Bukkit.getPluginManager().registerEvents(effigy, PreludeMain.main);
