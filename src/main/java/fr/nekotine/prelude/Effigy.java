@@ -1,6 +1,7 @@
 package fr.nekotine.prelude;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -27,6 +28,7 @@ public abstract class Effigy implements Listener {
 		cd2 = System.currentTimeMillis();
 	}
 	
+	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent event) {
 		Player p = event.getPlayer();
 		if (p.equals(wrapper.getPlayer())) {
@@ -40,6 +42,7 @@ public abstract class Effigy implements Listener {
 		}
 	}
 	
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action a = event.getAction();
 		Player p = event.getPlayer();
