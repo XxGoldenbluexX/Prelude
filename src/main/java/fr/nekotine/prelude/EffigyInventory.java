@@ -28,11 +28,11 @@ public class EffigyInventory implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, PreludeMain.main);
 		inv = Bukkit.createInventory(null, 9*6, Component.text("Effigies"));
 		loadInventory();
-		wrapper.player.openInventory(inv);
+		wrapper.getPlayer().openInventory(inv);
 	}
 	private void loadInventory() {
 		effigies.clear();
-		for(int tier=1;tier<=wrapper.tier;tier++) {
+		for(int tier=1;tier<=wrapper.getTier();tier++) {
 			effigies.addAll(EffigyList.getTier(tier));	
 		}
 		ItemStack head = new ItemStack(Material.PLAYER_HEAD);
@@ -62,13 +62,13 @@ public class EffigyInventory implements Listener{
 			break;
 		}
 		meta.displayName(Component.text(effigyColor+ef.toString()));
-		if(wrapper.effigy==ef) {
+		if(wrapper.getEffigy()==ef) {
 			List<Component> loreList = new ArrayList<>();
 			loreList.add(Component.text(ChatColor.DARK_GREEN+""+ChatColor.UNDERLINE+"[Actuelle]"));
 			meta.lore(loreList);
 		}
 		is.setItemMeta(meta);
-		if(wrapper.effigy==ef) {
+		if(wrapper.getEffigy()==ef) {
 			is.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 			is.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
@@ -79,10 +79,10 @@ public class EffigyInventory implements Listener{
 		if(e.getClickedInventory()==inv) {
 			e.setCancelled(true);
 			if(e.getRawSlot()==0) {
-				wrapper.effigy=null;
+				wrapper.setEffigy(null);
 				e.getWhoClicked().closeInventory();
 			}else {
-				wrapper.effigy=effigies.get(e.getRawSlot()-1);
+				wrapper.setEffigy(effigies.get(e.getRawSlot()-1));
 			}
 			loadInventory();
 		}

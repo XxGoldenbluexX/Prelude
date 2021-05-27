@@ -48,6 +48,6 @@ public class PreludeMain extends JavaPlugin implements Listener{
 	}
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		playerWrappers.get(e.getEntity()).tier=1;
+		playerWrappers.get(e.getEntity()).setTier(1);
 	}
 }

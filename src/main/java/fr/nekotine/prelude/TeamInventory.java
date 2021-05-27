@@ -25,7 +25,7 @@ public class TeamInventory implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, PreludeMain.main);
 		inv = Bukkit.createInventory(null, 9*6, Component.text("Equipes"));
 		loadInventory();
-		wrapper.player.openInventory(inv);
+		wrapper.getPlayer().openInventory(inv);
 	}
 	private void loadInventory() {
 		for(int x=0;x<54;x++) {
@@ -34,7 +34,7 @@ public class TeamInventory implements Listener {
 	}
 	private static ItemStack createStack(PlayerWrapper wrapper, int count) {
 		ItemStack is;
-		if (wrapper.team==count) {
+		if (wrapper.getTeam()==count) {
 			is = new ItemStack(Material.LIME_WOOL, count);
 		}else {
 			is = new ItemStack(Material.WHITE_WOOL, count);
@@ -43,8 +43,8 @@ public class TeamInventory implements Listener {
 		List<Component> loreList = new ArrayList<>();
 		loreList.add(Component.text(ChatColor.RED+"Membres:"));
 		for(PlayerWrapper wrappers : PreludeMain.main.playerWrappers.values()) {
-			if(wrappers.team==count) {
-				loreList.add(Component.text(ChatColor.GOLD+""+ChatColor.UNDERLINE+wrappers.player.getName()));
+			if(wrappers.getTeam()==count) {
+				loreList.add(Component.text(ChatColor.GOLD+""+ChatColor.UNDERLINE+wrappers.getPlayer().getName()));
 			}
 		}
 		meta.lore(loreList);
@@ -55,7 +55,7 @@ public class TeamInventory implements Listener {
 	public void inventoryClick(InventoryClickEvent e) {
 		if(e.getClickedInventory()==inv) {
 			e.setCancelled(true);
-			wrapper.team=e.getRawSlot()+1;
+			wrapper.setTeam(e.getRawSlot()+1);
 			loadInventory();
 		}
 	}

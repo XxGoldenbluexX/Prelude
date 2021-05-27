@@ -3,14 +3,42 @@ package fr.nekotine.prelude;
 import org.bukkit.entity.Player;
 
 public class PlayerWrapper {
-	protected final Player player;
-	protected int tier;
-	protected int team;
-	protected EffigyList effigy;
+	private final Player player;
+	private int tier;
+	private int team;
+	private EffigyList effigy;
 	
 	public PlayerWrapper(Player player, int tier, int team) {
 		this.player=player;
-		this.tier=tier;
-		this.team=team;
+		this.setTier(tier);
+		this.setTeam(team);
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public int getTier() {
+		return tier;
+	}
+
+	public void setTier(int tier) {
+		this.tier = tier;
+	}
+
+	public int getTeam() {
+		return team;
+	}
+
+	public void setTeam(int team) {
+		this.team = team;
+	}
+
+	public EffigyList getEffigy() {
+		return effigy;
+	}
+
+	public void setEffigy(EffigyList effigy) {
+		this.effigy = effigy;
 	}
 }
