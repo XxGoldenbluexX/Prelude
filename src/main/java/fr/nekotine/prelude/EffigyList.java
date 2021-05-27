@@ -7,17 +7,15 @@ import fr.nekotine.prelude.effigies.*;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 public enum EffigyList {
-	Spider(Material.COBWEB,1,Spider.class,new MobDisguise(DisguiseType.SPIDER)),
-	Zombie(Material.ROTTEN_FLESH, 1,Zombie.class,new MobDisguise(DisguiseType.ZOMBIE));
+	Spider(Material.COBWEB,1,new MobDisguise(DisguiseType.SPIDER)),
+	Zombie(Material.ROTTEN_FLESH, 1,new MobDisguise(DisguiseType.ZOMBIE));
 	
 	private final Material shopMaterial;
-	private final Class<?> effigyClass;
 	private final int tier;
 	private final MobDisguise disguise;
 	
-	EffigyList(Material shopMaterial, int tier, Class<?> effigyClass, MobDisguise disguise) {
+	EffigyList(Material shopMaterial, int tier, MobDisguise disguise) {
 		this.shopMaterial=shopMaterial;
-		this.effigyClass=effigyClass;
 		this.tier=tier;
 		this.disguise = disguise;
 	}
@@ -42,13 +40,22 @@ public enum EffigyList {
 	public Material getShopMaterial() {
 		return shopMaterial;
 	}
-	public Class<?> getEffigyClass() {
-		return effigyClass;
-	}
 	public MobDisguise getDisguise() {
 		return disguise;
 	}
 	public int getTier() {
 		return tier;
+	}
+	public static Effigy buildEffigy(PlayerWrapper w,EffigyList effigy) {
+		Effigy builded = null;
+		switch(effigy) {
+		case Spider:
+			builded = new Spider(w);
+		case Zombie:
+			break;
+		default:
+			break;
+		}
+		return builded;
 	}
 }

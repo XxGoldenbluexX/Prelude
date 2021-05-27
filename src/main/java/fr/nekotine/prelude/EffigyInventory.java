@@ -62,13 +62,13 @@ public class EffigyInventory implements Listener{
 			break;
 		}
 		meta.displayName(Component.text(effigyColor+ef.toString()));
-		if(wrapper.getEffigy()==ef) {
+		if(wrapper.getEffigyType()==ef) {
 			List<Component> loreList = new ArrayList<>();
 			loreList.add(Component.text(ChatColor.DARK_GREEN+""+ChatColor.UNDERLINE+"[Actuelle]"));
 			meta.lore(loreList);
 		}
 		is.setItemMeta(meta);
-		if(wrapper.getEffigy()==ef) {
+		if(wrapper.getEffigyType()==ef) {
 			is.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 			is.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
@@ -79,10 +79,10 @@ public class EffigyInventory implements Listener{
 		if(e.getClickedInventory()==inv) {
 			e.setCancelled(true);
 			if(e.getRawSlot()==0) {
-				wrapper.setEffigy(null);
+				wrapper.setEffigyType(null);
 				e.getWhoClicked().closeInventory();
 			}else {
-				wrapper.setEffigy(effigies.get(e.getRawSlot()-1));
+				wrapper.setEffigyType(effigies.get(e.getRawSlot()-1));
 			}
 			loadInventory();
 		}

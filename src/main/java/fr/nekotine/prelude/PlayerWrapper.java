@@ -1,6 +1,8 @@
 package fr.nekotine.prelude;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import me.libraryaddict.disguise.DisguiseAPI;
 
@@ -8,7 +10,8 @@ public class PlayerWrapper {
 	private final Player player;
 	private int tier;
 	private int team;
-	private EffigyList effigy;
+	private EffigyList effigytype;
+	private Effigy effigy;
 	
 	public PlayerWrapper(Player player, int tier, int team) {
 		this.player=player;
@@ -36,13 +39,18 @@ public class PlayerWrapper {
 		this.team = team;
 	}
 
-	public EffigyList getEffigy() {
-		return effigy;
+	public EffigyList getEffigyType() {
+		return effigytype;
 	}
 
-	public void setEffigy(EffigyList effigy) {
-		this.effigy = effigy;
+	public void setEffigyType(EffigyList effigytype) {
+		this.effigytype = effigytype;
+		HandlerList.unregisterAll(effigy);
 		DisguiseAPI.undisguiseToAll(player);
-		if (effigy!=null) DisguiseAPI.disguiseToAll(player, effigy.getDisguise());
+		if (effigy!=null) {
+			DisguiseAPI.disguiseToAll(player, effigytype.getDisguise());
+			effigy = EffigyList.buildEffigy(this, effigytype);
+			Bukkit.getPluginManager().registerEvents(effigy, PreludeMain.main);
+		}
 	}
 }
