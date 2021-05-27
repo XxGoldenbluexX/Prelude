@@ -45,7 +45,7 @@ public class PlayerWrapper {
 
 	public void setEffigyType(EffigyList effigytype) {
 		this.effigytype = effigytype;
-		HandlerList.unregisterAll(effigy);
+		if (effigy!=null) HandlerList.unregisterAll(effigy);
 		DisguiseAPI.undisguiseToAll(player);
 		if (effigytype!=null) {
 			DisguiseAPI.disguiseToAll(player, effigytype.getDisguise());

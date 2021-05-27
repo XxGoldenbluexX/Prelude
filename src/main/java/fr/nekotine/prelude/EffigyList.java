@@ -18,6 +18,7 @@ public enum EffigyList {
 		this.shopMaterial=shopMaterial;
 		this.tier=tier;
 		this.disguise = disguise;
+		disguise.setSelfDisguiseVisible(false);
 	}
 	public static ArrayList<EffigyList> getTier(int tier){
 		ArrayList<EffigyList> effigies = new ArrayList<EffigyList>();
