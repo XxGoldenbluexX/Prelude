@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import fr.nekotine.prelude.effigies.*;
+import me.libraryaddict.disguise.DisguiseConfig.NotifyBar;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 public enum EffigyList {
@@ -19,6 +20,7 @@ public enum EffigyList {
 		this.tier=tier;
 		this.disguise = disguise;
 		disguise.setSelfDisguiseVisible(false);
+		disguise.setNotifyBar(NotifyBar.NONE);
 	}
 	public static ArrayList<EffigyList> getTier(int tier){
 		ArrayList<EffigyList> effigies = new ArrayList<EffigyList>();
