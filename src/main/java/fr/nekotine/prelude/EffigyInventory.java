@@ -45,10 +45,10 @@ public class EffigyInventory implements Listener{
 		}
 	}
 	private static ItemStack createStack(PlayerWrapper wrapper, EffigyList ef) {
-		ItemStack is = new ItemStack(ef.shopMaterial,ef.tier);
+		ItemStack is = new ItemStack(ef.getShopMaterial(),ef.getTier());
 		ItemMeta meta = is.getItemMeta();
 		ChatColor effigyColor = ChatColor.WHITE;
-		switch(ef.tier) {
+		switch(ef.getTier()) {
 		case 1:
 			effigyColor = ChatColor.GREEN;
 			break;

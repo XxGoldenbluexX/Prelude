@@ -1,9 +1,13 @@
 package fr.nekotine.prelude;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 public abstract class Effigy implements Listener {
 
@@ -13,6 +17,10 @@ public abstract class Effigy implements Listener {
 	private int cooldown1;//cooldown time in ms
 	private int cooldown2;
 	
+	public PlayerWrapper getWrapper() {
+		return wrapper;
+	}
+	
 	public Effigy(PlayerWrapper w) {
 		wrapper=w;
 		cd1 = System.currentTimeMillis();
@@ -20,19 +28,29 @@ public abstract class Effigy implements Listener {
 	}
 	
 	public void onPlayerDrop(PlayerDropItemEvent event) {
-		if (event.getPlayer().equals(wrapper.getPlayer()) && System.currentTimeMillis()>cd2) {
-			event.setCancelled(true);
-			cd2 = System.currentTimeMillis()+cooldown2;
-			castSpell2();
+		Player p = event.getPlayer();
+		if (p.equals(wrapper.getPlayer())) {
+			if (System.currentTimeMillis()>cd2) {
+				event.setCancelled(true);
+				cd2 = System.currentTimeMillis()+cooldown2;
+				castSpell2();
+			}else {
+				p.sendMessage(Component.text("Votre sort 2 est en recharge").color(TextColor.color(255, 0, 0)));
+			}
 		}
 	}
 	
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action a = event.getAction();
-		if (event.getPlayer().equals(wrapper.getPlayer()) && (a==Action.RIGHT_CLICK_AIR || a==Action.RIGHT_CLICK_BLOCK) && System.currentTimeMillis()>cd1) {
-			event.setCancelled(true);
-			cd1 = System.currentTimeMillis()+cooldown1;
-			castSpell1();
+		Player p = event.getPlayer();
+		if (p.equals(wrapper.getPlayer()) && (a==Action.RIGHT_CLICK_AIR || a==Action.RIGHT_CLICK_BLOCK)) {
+			if (System.currentTimeMillis()>cd1) {
+				event.setCancelled(true);
+				cd1 = System.currentTimeMillis()+cooldown1;
+				castSpell1();
+			}else {
+				p.sendMessage(Component.text("Votre sort 1 est en recharge").color(TextColor.color(255, 0, 0)));
+			}
 		}
 	}
 	
