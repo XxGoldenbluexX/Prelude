@@ -22,7 +22,7 @@ import net.md_5.bungee.api.ChatColor;
 public class EffigyInventory implements Listener{
 	private final Inventory inv;
 	private final PlayerWrapper wrapper;
-	private final ArrayList<Effigy> effigies = new ArrayList<Effigy>();
+	private final ArrayList<EffigyList> effigies = new ArrayList<EffigyList>();
 	public EffigyInventory(PlayerWrapper wrapper) {
 		this.wrapper=wrapper;
 		Bukkit.getPluginManager().registerEvents(this, PreludeMain.main);
@@ -33,7 +33,7 @@ public class EffigyInventory implements Listener{
 	private void loadInventory() {
 		effigies.clear();
 		for(int tier=1;tier<=wrapper.tier;tier++) {
-			effigies.addAll(Effigy.getTier(tier));	
+			effigies.addAll(EffigyList.getTier(tier));	
 		}
 		ItemStack head = new ItemStack(Material.PLAYER_HEAD);
 		ItemMeta meta = head.getItemMeta();
@@ -44,7 +44,7 @@ public class EffigyInventory implements Listener{
 			inv.setItem(x+1, createStack(wrapper,effigies.get(x)));
 		}
 	}
-	private static ItemStack createStack(PlayerWrapper wrapper, Effigy ef) {
+	private static ItemStack createStack(PlayerWrapper wrapper, EffigyList ef) {
 		ItemStack is = new ItemStack(ef.shopMaterial,ef.tier);
 		ItemMeta meta = is.getItemMeta();
 		ChatColor effigyColor = ChatColor.WHITE;
