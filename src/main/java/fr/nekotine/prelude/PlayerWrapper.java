@@ -2,6 +2,8 @@ package fr.nekotine.prelude;
 
 import org.bukkit.entity.Player;
 
+import me.libraryaddict.disguise.DisguiseAPI;
+
 public class PlayerWrapper {
 	private final Player player;
 	private int tier;
@@ -40,5 +42,7 @@ public class PlayerWrapper {
 
 	public void setEffigy(EffigyList effigy) {
 		this.effigy = effigy;
+		DisguiseAPI.undisguiseToAll(player);
+		if (effigy!=null) DisguiseAPI.disguiseToAll(player, effigy.getDisguise());
 	}
 }
