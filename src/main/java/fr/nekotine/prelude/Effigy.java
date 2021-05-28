@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -59,6 +60,14 @@ public abstract class Effigy implements Listener {
 		}
 	}
 	
+	@EventHandler
+	public void onDamageTaken(EntityDamageByEntityEvent e) {
+		if(e.getEntity().equals(wrapper.getPlayer()) && e.getDamager() instanceof Player) {
+			if(PreludeMain.main.playerWrappers.get((Player)e.getDamager()).getTeam()==wrapper.getTeam()) {
+				e.setCancelled(true);
+			}
+		}
+	}
 	protected abstract void castSpell1();
 	protected abstract void castSpell2();
 
