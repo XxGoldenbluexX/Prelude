@@ -3,6 +3,8 @@ package fr.nekotine.prelude.effigies;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -15,15 +17,24 @@ import fr.nekotine.prelude.PreludeMain;
 
 public class Spider extends Effigy{
 	private final int levitationDuration=5;
+	private final double spell1DamageMultiplyer=2;
 	private BukkitTask runnable;
-	
+	private boolean reinforcedAuto=false;
 	public Spider(PlayerWrapper w) {
 		super(w,3000,3000);
 	}
 
 	@Override
 	protected void castSpell1() {
-		getWrapper().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,20,1,false,false,true));
+		reinforcedAuto=true;
+	}
+	
+	@EventHandler
+	public void damageEvent(EntityDamageByEntityEvent e) {
+		if(e.getCause()==DamageCause.ENTITY_ATTACK && e.getDamager().equals(getWrapper().getPlayer()) && reinforcedAuto) {
+			e.setDamage(e.getDamage()*spell1DamageMultiplyer);
+			reinforcedAuto=false;
+		}
 	}
 
 	@Override
