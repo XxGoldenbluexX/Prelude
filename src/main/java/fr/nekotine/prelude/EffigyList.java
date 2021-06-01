@@ -9,8 +9,8 @@ import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 public enum EffigyList {
 	Spider(Material.COBWEB,1,new MobDisguise(DisguiseType.SPIDER)),
-	Zombie(Material.ROTTEN_FLESH, 1,new MobDisguise(DisguiseType.ZOMBIE));
-	
+	Zombie(Material.ROTTEN_FLESH, 1,new MobDisguise(DisguiseType.ZOMBIE)),
+	Slime(Material.SLIME_BALL, 1, new MobDisguise(DisguiseType.SLIME));
 	private final Material shopMaterial;
 	private final int tier;
 	private final MobDisguise disguise;
@@ -56,6 +56,8 @@ public enum EffigyList {
 			builded = new Spider(w);
 		case Zombie:
 			break;
+		case Slime:
+			builded = new Slime(w);
 		default:
 			break;
 		}

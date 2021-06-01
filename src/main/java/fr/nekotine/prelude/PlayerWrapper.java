@@ -53,4 +53,8 @@ public class PlayerWrapper {
 			Bukkit.getPluginManager().registerEvents(effigy, PreludeMain.main);
 		}
 	}
+	
+	public Effigy getEffigy() {
+		return effigy;
+	}
 }
