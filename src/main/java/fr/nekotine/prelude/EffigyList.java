@@ -1,27 +1,42 @@
 package fr.nekotine.prelude;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
-import fr.nekotine.prelude.effigies.*;
-import me.libraryaddict.disguise.DisguiseConfig.NotifyBar;
+
+import fr.nekotine.prelude.effigies.Slime;
+import fr.nekotine.prelude.effigies.Spider;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 public enum EffigyList {
-	Spider(Material.COBWEB,1,new MobDisguise(DisguiseType.SPIDER)),
-	Zombie(Material.ROTTEN_FLESH, 1,new MobDisguise(DisguiseType.ZOMBIE)),
-	Slime(Material.SLIME_BALL, 1, new MobDisguise(DisguiseType.SLIME));
-	private final Material shopMaterial;
-	private final int tier;
-	private final MobDisguise disguise;
 	
-	EffigyList(Material shopMaterial, int tier, MobDisguise disguise) {
-		this.shopMaterial=shopMaterial;
+	Spider(
+			Spider.class,
+			Material.COBWEB,
+			Main.getQuestionMarkHeadUrl(),
+			1,
+			DisguiseType.SPIDER),
+	Slime(
+			Slime.class,
+			Material.SLIME_BALL, 
+			Main.getQuestionMarkHeadUrl(),
+			1, 
+			DisguiseType.SLIME
+			);
+	private final Material weaponMaterial;
+	private final String urlToHead;
+	private final int tier;
+	private final DisguiseType disguiseType;
+	private final Class<? extends Effigy> effigyClass;
+	
+	EffigyList(Class<? extends Effigy> effigyClass, Material weaponMaterial, String urlToHead, int tier, DisguiseType disguiseType) {
+		this.weaponMaterial=weaponMaterial;
 		this.tier=tier;
-		this.disguise = disguise;
-		disguise.setSelfDisguiseVisible(false);
-		disguise.setNotifyBar(NotifyBar.NONE);
+		this.disguiseType = disguiseType;
+		this.effigyClass=effigyClass;
+		this.urlToHead=urlToHead;
 	}
+	
 	public static ArrayList<EffigyList> getTier(int tier){
 		ArrayList<EffigyList> effigies = new ArrayList<EffigyList>();
 		for(EffigyList eff : values()) {
@@ -31,36 +46,33 @@ public enum EffigyList {
 		}
 		return effigies;
 	}
-	public static int getMaxTier() {
-		int max=1;
-		for(EffigyList eff : values()) {
-			if(eff.getTier()>max) {
-				max=eff.getTier();
-			}
-		}
-		return max;
+	
+	public Material getWeaponMaterial() {
+		return weaponMaterial;
 	}
-	public Material getShopMaterial() {
-		return shopMaterial;
+	public DisguiseType getDisguiseType() {
+		return disguiseType;
 	}
-	public MobDisguise getDisguise() {
-		return disguise;
+	public Class<? extends Effigy> getEffigyClass(){
+		return effigyClass;
 	}
 	public int getTier() {
 		return tier;
 	}
-	public static Effigy buildEffigy(PlayerWrapper w,EffigyList effigy) {
-		Effigy builded = null;
-		switch(effigy) {
-		case Spider:
-			builded = new Spider(w);
-		case Zombie:
-			break;
-		case Slime:
-			builded = new Slime(w);
-		default:
-			break;
-		}
-		return builded;
+	public String getUrlToHead() {
+		return urlToHead;
 	}
+	
+	public static Effigy buildEffigy(PlayerWrapper w, EffigyList effigy) {
+		try {
+			return (Effigy)effigy.getEffigyClass().getConstructor(PlayerWrapper.class, EffigyList.class)
+			.newInstance(effigy.getEffigyClass(), effigy.getWeaponMaterial());
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	
 }

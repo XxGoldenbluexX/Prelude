@@ -1,21 +1,16 @@
 package fr.nekotine.prelude;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 
-import me.libraryaddict.disguise.DisguiseAPI;
+import fr.nekotine.prelude.utils.Team;
 
 public class PlayerWrapper {
 	private final Player player;
-	private int tier;
-	private int team;
-	private EffigyList effigytype;
+	private Team team;
 	private Effigy effigy;
 	
-	public PlayerWrapper(Player player, int tier, int team) {
+	public PlayerWrapper(Player player, Team team) {
 		this.player=player;
-		this.setTier(tier);
 		this.setTeam(team);
 	}
 
@@ -23,38 +18,24 @@ public class PlayerWrapper {
 		return player;
 	}
 
-	public int getTier() {
-		return tier;
-	}
-
-	public void setTier(int tier) {
-		this.tier = tier;
-	}
-
-	public int getTeam() {
+	public Team getTeam() {
 		return team;
 	}
 
-	public void setTeam(int team) {
+	public void setTeam(Team team) {
 		this.team = team;
 	}
 
-	public EffigyList getEffigyType() {
-		return effigytype;
-	}
-
-	public void setEffigyType(EffigyList effigytype) {
-		this.effigytype = effigytype;
-		if (effigy!=null) HandlerList.unregisterAll(effigy);
-		DisguiseAPI.undisguiseToAll(player);
-		if (effigytype!=null) {
-			DisguiseAPI.disguiseToAll(player, effigytype.getDisguise());
-			effigy = EffigyList.buildEffigy(this, effigytype);
-			Bukkit.getPluginManager().registerEvents(effigy, PreludeMain.main);
-		}
+	public void setEffigy(EffigyList effigytype) {
+		destroy();
+		effigy = EffigyList.buildEffigy(this, effigytype);
 	}
 	
 	public Effigy getEffigy() {
 		return effigy;
+	}
+	
+	public void destroy() {
+		if(effigy != null) effigy.destroy();
 	}
 }

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nekotine</groupId>
 	<artifactId>Prelude</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1</version>
 	<name>Prelude</name>
 	<repositories>
 		<repository><!-- PAPER REPOSITORY -->
@@ -19,22 +19,22 @@
 		</repository>
 	</repositories>
 	<dependencies>
-		<dependency><!-- PAPER DEPENDENCY -->
-			<groupId>com.destroystokyo.paper</groupId>
-			<artifactId>paper-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
+		 <dependency>
+        <groupId>io.papermc.paper</groupId>
+        <artifactId>paper-api</artifactId>
+        <version>1.18.2-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
+   		 </dependency>
 		<dependency><!-- LIB'S DISGUISE DEPENDENCY -->
 			<groupId>LibsDisguises</groupId>
 			<artifactId>LibsDisguises</artifactId>
-			<version>10.0.24</version>
+			<version>10.0.28</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency><!-- PROTOCOLIB DEPENDENCY -->
 			<groupId>com.comphenix.protocol</groupId>
 			<artifactId>ProtocolLib</artifactId>
-			<version>4.6.0</version>
+			<version>4.8.0</version>
 		</dependency>
 	</dependencies>
 </project>
