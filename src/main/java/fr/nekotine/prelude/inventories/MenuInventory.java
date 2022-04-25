@@ -2,11 +2,13 @@ package fr.nekotine.prelude.inventories;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
+import fr.nekotine.prelude.events.PlayerChangeTeamEvent;
 import fr.nekotine.prelude.utils.ItemStackMaker;
 import net.md_5.bungee.api.ChatColor;
 
@@ -66,8 +68,14 @@ public class MenuInventory extends BaseInventory{
 			break;
 		case TEAM_SLOT:
 			Main.getInstance().swapTeam(getHolder());
-			setTeamItem();
 			break;
+		}
+	}
+	
+	@EventHandler
+	public void onTeamChange(PlayerChangeTeamEvent e) {
+		if(e.getPlayer().equals(getHolder())) {
+			setTeamItem();
 		}
 	}
 

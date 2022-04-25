@@ -4,6 +4,37 @@
 	<artifactId>Prelude</artifactId>
 	<version>1</version>
 	<name>Prelude</name>
+	<build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*</include>
+                </includes>
+            </resource>
+        </resources>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <outputFile>${basedir}\build\${project.artifactId}.jar</outputFile>
+                </configuration>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
 	<repositories>
 		<repository><!-- PAPER REPOSITORY -->
 			<id>destroystokyo-repo</id>
@@ -36,5 +67,17 @@
 			<artifactId>ProtocolLib</artifactId>
 			<version>4.8.0</version>
 		</dependency>
+		<dependency>
+   			 <groupId>com.mojang</groupId>
+    		<artifactId>authlib</artifactId>
+    		<version>1.5.25</version>
+    		<scope>provided</scope>
+		</dependency>
 	</dependencies>
+	
+	<properties>
+   		 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   		 <maven.compiler.source>14</maven.compiler.source>
+   		 <maven.compiler.target>14</maven.compiler.target>
+  	</properties>
 </project>

@@ -64,7 +64,10 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public boolean setTeam(Player player, Team team) {
 		if(players.containsKey(player)) {
+			PlayerWrapper wrapper = getWrapper(player);
+			Team before = wrapper.getTeam();
 			getWrapper(player).setTeam(team);
+			EventRegisterer.callPlayerChangeTeamEvent(player, before, team);
 			return true;
 		}
 		return false;
@@ -75,9 +78,11 @@ public class Main extends JavaPlugin implements Listener{
 			switch(wrapper.getTeam()) {
 			case RED:
 				setTeam(player, Team.BLUE);
+				EventRegisterer.callPlayerChangeTeamEvent(player, Team.RED, Team.BLUE);
 				return Team.BLUE;
 			case BLUE:
 				setTeam(player, Team.RED);
+				EventRegisterer.callPlayerChangeTeamEvent(player, Team.BLUE, Team.RED);
 				return Team.RED;
 			}
 		}
