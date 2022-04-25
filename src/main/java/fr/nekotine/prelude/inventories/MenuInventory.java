@@ -11,6 +11,7 @@ import fr.nekotine.prelude.utils.ItemStackMaker;
 import net.md_5.bungee.api.ChatColor;
 
 public class MenuInventory extends BaseInventory{
+	
 	private static final String TITLE = "Menu";
 	private static final int SIZE = 9*3;
 	
@@ -26,12 +27,17 @@ public class MenuInventory extends BaseInventory{
 	private static final ItemStack BLUE_TEAM_ITEM = ItemStackMaker.make(Material.BLUE_CONCRETE, 1, ChatColor.AQUA+"Equipe Bleue");
 	private static final int TEAM_SLOT = 15;
 
+	private final PlayerWrapper wrapper;
+	
 	public MenuInventory(Player holder) {
 		super(holder, TITLE, SIZE);
+		wrapper = Main.getInstance().getWrapper(getHolder());
+		
 		fillVoidGlass();
 		
 		setItem(MAP_ITEM, MAP_SLOT);
 		setItem(START_ITEM, START_SLOT);
+		setTeamItem();
 	}
 	private void fillVoidGlass() {
 		for(int i=0; i<SIZE; i++) {
@@ -39,11 +45,30 @@ public class MenuInventory extends BaseInventory{
 		}
 	}
 	private void setTeamItem() {
-		PlayerWrapper wrapper = Main.getInstance().getWrapper(getHolder());
+		switch(wrapper.getTeam()) {
+		case RED:
+			setItem(RED_TEAM_ITEM, TEAM_SLOT);
+			break;
+		case BLUE:
+			setItem(BLUE_TEAM_ITEM, TEAM_SLOT);
+			break;
+		}
 	}
 
 	@Override
 	public void onInventoryClick(InventoryClickEvent e) {
+		switch(e.getSlot()) {
+		case MAP_SLOT:
+			Main.getInstance().openMapInventory(getHolder());
+			break;
+		case START_SLOT:
+			Main.getInstance().start();
+			break;
+		case TEAM_SLOT:
+			Main.getInstance().swapTeam(getHolder());
+			setTeamItem();
+			break;
+		}
 	}
 
 }

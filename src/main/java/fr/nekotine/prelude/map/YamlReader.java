@@ -1,4 +1,4 @@
-package fr.nekotine.prelude.utils;
+package fr.nekotine.prelude.map;
 
 import java.util.ArrayList;
 

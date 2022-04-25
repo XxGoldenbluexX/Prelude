@@ -2,6 +2,7 @@ package fr.nekotine.prelude;
 
 import org.bukkit.entity.Player;
 
+import fr.nekotine.prelude.inventories.MenuInventory;
 import fr.nekotine.prelude.utils.Team;
 
 public class PlayerWrapper {
@@ -9,9 +10,12 @@ public class PlayerWrapper {
 	private Team team;
 	private Effigy effigy;
 	
+	private final MenuInventory menuInventory;
+	
 	public PlayerWrapper(Player player, Team team) {
 		this.player=player;
 		this.setTeam(team);
+		this.menuInventory = new MenuInventory(player);
 	}
 
 	public Player getPlayer() {
@@ -37,5 +41,9 @@ public class PlayerWrapper {
 	
 	public void destroy() {
 		if(effigy != null) effigy.destroy();
+	}
+
+	public void openMenuInventory() {
+		menuInventory.open(player);
 	}
 }

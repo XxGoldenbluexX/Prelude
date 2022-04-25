@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.Team;
 
@@ -23,6 +24,8 @@ public class Main extends JavaPlugin implements Listener{
 	
 	private HashMap<Player, PlayerWrapper> players = new HashMap<Player, PlayerWrapper>();
 	private String mapName;
+	private final MapInventory mapInventory = new MapInventory();
+	private boolean running = false;
 	
 	@Override
 	public void onEnable() {
@@ -59,5 +62,35 @@ public class Main extends JavaPlugin implements Listener{
 	public PlayerWrapper getWrapper(Player player) {
 		return players.get(player);
 	}
-	
+	public boolean setTeam(Player player, Team team) {
+		if(players.containsKey(player)) {
+			getWrapper(player).setTeam(team);
+			return true;
+		}
+		return false;
+	}
+	public Team swapTeam(Player player) {
+		if(players.containsKey(player)) {
+			PlayerWrapper wrapper = getWrapper(player);
+			switch(wrapper.getTeam()) {
+			case RED:
+				setTeam(player, Team.BLUE);
+				return Team.BLUE;
+			case BLUE:
+				setTeam(player, Team.RED);
+				return Team.RED;
+			}
+		}
+		return null;
+	}
+	public void openMapInventory(Player player) {
+		mapInventory.open(player);
+	}
+	public boolean start() {
+		if(!running) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 }

@@ -37,6 +37,9 @@ public abstract class BaseInventory implements Listener{
 	public Player getHolder() {
 		return (Player)inventory.getHolder();
 	}
+	public void open(Player player) {
+		player.openInventory(inventory);
+	}
 	
 	public abstract void onInventoryClick(InventoryClickEvent e);
 	

@@ -3,6 +3,7 @@ package fr.nekotine.prelude.inventories;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -13,10 +14,10 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.events.MapChangeEvent;
+import fr.nekotine.prelude.map.YamlReader;
 import fr.nekotine.prelude.utils.ComponentMaker;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.ItemStackMaker;
-import fr.nekotine.prelude.utils.YamlReader;
 import net.md_5.bungee.api.ChatColor;
 
 public class MapInventory extends BaseInventory{
@@ -76,8 +77,7 @@ public class MapInventory extends BaseInventory{
 		}else {
 			switch(e.getSlot()) {
 			case BACK_SLOT:
-				closeInventory(e.getWhoClicked());
-				//ouvrir l'inventaire de base
+				Main.getInstance().getWrapper((Player) e.getWhoClicked()).openMenuInventory();
 				return;
 			case RANDOMIZE_MAP_SLOT:
 				randomizeMap(e.getView());
