@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.events.MapChangeEvent;
-import fr.nekotine.prelude.map.YamlReader;
+import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.ComponentMaker;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.ItemStackMaker;
@@ -43,7 +43,7 @@ public class MapInventory extends BaseInventory{
 		setItem(BACK_ITEM, BACK_SLOT);
 		setItem(RANDOMIZE_MAP_ITEM, RANDOMIZE_MAP_SLOT);
 		
-		ArrayList<String> mapNameList = YamlReader.getMapNameList();
+		ArrayList<String> mapNameList = PreludeMap.getMapNameList();
 		mapNumber = mapNameList.size();
 		placeMapItems(mapNameList);
 		

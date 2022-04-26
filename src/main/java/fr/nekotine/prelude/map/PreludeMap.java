@@ -26,9 +26,9 @@ public class PreludeMap implements ConfigurationSerializable{
 	private static final String YAML_EXTENSION = ".yml";
 	private static File mapFolder;
 	
-	private final String name;
-	private final Location redSpawnLocation;
-	private final Location blueSpawnLocation;
+	private String name;
+	private Location redSpawnLocation;
+	private Location blueSpawnLocation;
 	
 	private ArrayList<Wall> walls = new ArrayList<>();
 	
@@ -97,7 +97,7 @@ public class PreludeMap implements ConfigurationSerializable{
 	public static void setMapFolder(File folder) {
 		mapFolder = folder;
 	}
-	public static ArrayList<String> getMapList() {
+	public static ArrayList<String> getMapNameList() {
 		ArrayList<String> finalList=new ArrayList<String>();
 		if (mapFolder==null || !mapFolder.exists()) return finalList;
 		String[] list = mapFolder.list();
@@ -174,6 +174,15 @@ public class PreludeMap implements ConfigurationSerializable{
 			teleportPlayer(blueSpawnLocation, player);
 			break;
 		}
+	}
+	public void setRedSpawnLocation(Location redSpawnLocation) {
+		this.redSpawnLocation = redSpawnLocation;
+	}
+	public void setBlueSpawnLocation(Location blueSpawnLocation) {
+		this.blueSpawnLocation = blueSpawnLocation;
+	}
+	public void setName(String name) {
+		this.name=name;
 	}
 	
 }

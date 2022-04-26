@@ -1,5 +1,6 @@
 package fr.nekotine.prelude;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Material;
@@ -128,11 +129,38 @@ public class Main extends JavaPlugin implements Listener{
 			return false;
 		}
 	}
+	public boolean isPlaying(Player player) {
+		return players.containsKey(player);
+	}
+	public ArrayList<Player> getPlayersInTeam(Team team) {
+		ArrayList<Player> inTeam = new ArrayList<>();
+		for(PlayerWrapper wrapper : players.values()) {
+			if(wrapper.getTeam()==team) inTeam.add(wrapper.getPlayer());
+		}
+		return inTeam;
+	}
+	public int getNumberOfPlayerInTeam(Team team) {
+		return getPlayersInTeam(team).size();
+	}
+	public boolean addPlayerInBestTeam(Player player) {
+		if(!players.containsKey(player)) {
+			
+			int playersInBlue = getNumberOfPlayerInTeam(Team.BLUE);
+			int playersInRed = getNumberOfPlayerInTeam(Team.RED);
+			if(playersInBlue>playersInRed) {
+				addPlayer(player, Team.RED);
+			}else {
+				addPlayer(player, Team.BLUE);
+			}
+			return true;
+		}
+		return false;
+	}
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		if(e.getItem()!=null && e.getItem().getType()==JOIN_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
-			addPlayer(e.getPlayer(), Team.RED);
+			addPlayerInBestTeam(e.getPlayer());
 			e.getPlayer().sendMessage("joined");
 		}
 		if(e.getItem()!=null && e.getItem().getType()==LEAVE_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
