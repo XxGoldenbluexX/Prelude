@@ -2,11 +2,16 @@ package fr.nekotine.prelude;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import fr.nekotine.prelude.inventories.MapInventory;
+import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.Team;
 
@@ -22,15 +27,24 @@ public class Main extends JavaPlugin implements Listener{
 		return questionMarkHeadUrl;
 	}
 	
+	private static final Material JOIN_GAME_MATERIAL = Material.SANDSTONE;
+	private static final Material LEAVE_GAME_MATERIAL = Material.OBSIDIAN;
+	
+	
 	private HashMap<Player, PlayerWrapper> players = new HashMap<Player, PlayerWrapper>();
 	private String mapName;
-	private final MapInventory mapInventory = new MapInventory();
+	private MapInventory mapInventory;
 	private boolean running = false;
+	
+	private PreludeMap map;
 	
 	@Override
 	public void onEnable() {
 		super.onEnable();
 		main=this;
+		
+		mapInventory = new MapInventory();
+		
 		EventRegisterer.registerEvent(this);
 	}
 	@Override
@@ -91,11 +105,39 @@ public class Main extends JavaPlugin implements Listener{
 	public void openMapInventory(Player player) {
 		mapInventory.open(player);
 	}
+	public void teleportPlayersToSpawn() {
+		for(PlayerWrapper wrapper : players.values()) {
+			map.teleportPlayer(wrapper.getTeam(), wrapper.getPlayer());
+		}
+	}
 	public boolean start() {
 		if(!running) {
+			map = PreludeMap.load(mapName);
+			map.enable();
+			teleportPlayersToSpawn();
 			return true;
 		}else {
 			return false;
+		}
+	}
+	public boolean end() {
+		if(running) {
+			map.unload();
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if(e.getItem()!=null && e.getItem().getType()==JOIN_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
+			addPlayer(e.getPlayer(), Team.RED);
+			e.getPlayer().sendMessage("joined");
+		}
+		if(e.getItem()!=null && e.getItem().getType()==LEAVE_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
+			removePlayer(e.getPlayer());
+			e.getPlayer().sendMessage("left");
 		}
 	}
 }

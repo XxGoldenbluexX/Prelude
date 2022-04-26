@@ -32,22 +32,22 @@ public class MapInventory extends BaseInventory{
 	private static final ItemStack BACK_ITEM = ItemStackMaker.make(Material.BARRIER, 1, ChatColor.RED+"Retour");
 	private static final int BACK_SLOT = 0;
 	
-	private static final ItemStack CURRENT_MAP_ITEM = ItemStackMaker.make(Material.BOOK, 1, ChatColor.AQUA+Main.getInstance().getMapName());
 	private static final int CURRENT_MAP_SLOT = 9;
 	
-	private static final ItemStack RANDOMIZE_MAP_ITEM = ItemStackMaker.make(Material.NOTE_BLOCK, 1, ChatColor.LIGHT_PURPLE+"Aléatoire");
+	private static final ItemStack RANDOMIZE_MAP_ITEM = ItemStackMaker.make(Material.NOTE_BLOCK, 1, ChatColor.LIGHT_PURPLE+"Aleatoire");
 	private static final int RANDOMIZE_MAP_SLOT = 18;
 	public MapInventory() {
 		super(null, TITLE, SIZE);
 		setItems(VOID_GLASS, VOID_GLASS_SLOTS);
 		
 		setItem(BACK_ITEM, BACK_SLOT);
-		setItem(CURRENT_MAP_ITEM, CURRENT_MAP_SLOT);
 		setItem(RANDOMIZE_MAP_ITEM, RANDOMIZE_MAP_SLOT);
 		
 		ArrayList<String> mapNameList = YamlReader.getMapNameList();
 		mapNumber = mapNameList.size();
 		placeMapItems(mapNameList);
+		
+		setCurrentMapItem(Main.getInstance().getMapName());
 	}
 	
 	private void placeMapItems(ArrayList<String> mapNameList) {
@@ -68,10 +68,14 @@ public class MapInventory extends BaseInventory{
 		
 		EventRegisterer.callInventoryClickEvent(inventoryView, SlotType.CONTAINER, chosenMapSlot, ClickType.UNKNOWN, InventoryAction.COLLECT_TO_CURSOR);
 	}
+	private void setCurrentMapItem(String mapName) {
+		ItemStack current_map_item = ItemStackMaker.make(Material.BOOK, 1, ChatColor.AQUA+mapName);
+		setItem(current_map_item, CURRENT_MAP_SLOT);
+	}
 
 	@Override
 	public void onInventoryClick(InventoryClickEvent e) {
-		if(e.getCurrentItem().getType()==Material.PAPER) {
+		if(e.getCurrentItem() !=null && e.getCurrentItem().getType()==Material.PAPER) {
 			String mapName = ComponentMaker.getText(e.getCurrentItem().displayName());
 			Main.getInstance().setMapName(mapName);
 		}else {
@@ -90,7 +94,6 @@ public class MapInventory extends BaseInventory{
 	
 	@EventHandler
 	public void onMapChange(MapChangeEvent e) {
-		ItemStack current_map_item = ItemStackMaker.make(Material.BOOK, 1, ChatColor.AQUA+e.getAfter());
-		setItem(current_map_item, CURRENT_MAP_SLOT);
+		setCurrentMapItem(e.getAfter());
 	}
 }

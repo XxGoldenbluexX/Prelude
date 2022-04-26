@@ -1,9 +1,10 @@
 package fr.nekotine.prelude.inventories;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.Main;
@@ -13,6 +14,8 @@ import fr.nekotine.prelude.utils.ItemStackMaker;
 import net.md_5.bungee.api.ChatColor;
 
 public class MenuInventory extends BaseInventory{
+	
+	private static final Material OPEN_INVENTORY_MATERIAL = Material.BEACON;
 	
 	private static final String TITLE = "Menu";
 	private static final int SIZE = 9*3;
@@ -29,11 +32,11 @@ public class MenuInventory extends BaseInventory{
 	private static final ItemStack BLUE_TEAM_ITEM = ItemStackMaker.make(Material.BLUE_CONCRETE, 1, ChatColor.AQUA+"Equipe Bleue");
 	private static final int TEAM_SLOT = 15;
 
-	private final PlayerWrapper wrapper;
+	private final PlayerWrapper holderWrapper;
 	
-	public MenuInventory(Player holder) {
-		super(holder, TITLE, SIZE);
-		wrapper = Main.getInstance().getWrapper(getHolder());
+	public MenuInventory(PlayerWrapper holderWrapper) {
+		super(holderWrapper.getPlayer(), TITLE, SIZE);
+		this.holderWrapper=holderWrapper;
 		
 		fillVoidGlass();
 		
@@ -47,7 +50,7 @@ public class MenuInventory extends BaseInventory{
 		}
 	}
 	private void setTeamItem() {
-		switch(wrapper.getTeam()) {
+		switch(holderWrapper.getTeam()) {
 		case RED:
 			setItem(RED_TEAM_ITEM, TEAM_SLOT);
 			break;
@@ -76,6 +79,14 @@ public class MenuInventory extends BaseInventory{
 	public void onTeamChange(PlayerChangeTeamEvent e) {
 		if(e.getPlayer().equals(getHolder())) {
 			setTeamItem();
+		}
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if(e.getItem()!=null && e.getPlayer().equals(getHolder()) && e.getItem().getType()==OPEN_INVENTORY_MATERIAL && e.getAction()!=Action.PHYSICAL) {
+			open(getHolder());
+			e.getPlayer().sendMessage("open");
 		}
 	}
 

@@ -18,7 +18,7 @@ public class PlayerWrapper {
 	public PlayerWrapper(Player player, Team team) {
 		this.player=player;
 		this.setTeam(team);
-		this.menuInventory = new MenuInventory(player);
+		this.menuInventory = new MenuInventory(this);
 	}
 
 	public Player getPlayer() {
@@ -48,7 +48,10 @@ public class PlayerWrapper {
 	}
 	
 	public void destroy() {
-		if(effigy != null) effigy.destroy();
+		menuInventory.destroy();
+		if(effigy != null) {
+			effigy.destroy();
+		}
 	}
 
 	public void openMenuInventory() {

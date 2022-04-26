@@ -18,7 +18,7 @@ public abstract class BaseInventory implements Listener{
 		EventRegisterer.registerEvent(this);
 	}
 	public void destroy() {
-		EventRegisterer.registerEvent(this);
+		EventRegisterer.unregisterEvent(this);
 	}
 	public void setItem(ItemStack item, int slot) {
 		inventory.setItem(slot, item);

@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.events.PlayerChangeEffigyEvent;
+import fr.nekotine.prelude.events.PlayerChangeMoneyEvent;
 import fr.nekotine.prelude.utils.ItemStackMaker;
 import fr.nekotine.prelude.utils.TagInjector;
 import net.md_5.bungee.api.ChatColor;
@@ -35,7 +36,6 @@ public class ShopInventory extends BaseInventory{
 	private static final ItemStack BACK_ITEM = ItemStackMaker.make(Material.BARRIER, 1, ChatColor.RED+"Retour");
 	private static final int BACK_SLOT = 0;
 	
-	private static final ItemStack MONEY_ITEM = ItemStackMaker.make(Material.GOLD_INGOT, 1, "");
 	private static final int MONEY_SLOT = 45;
 	
 	private static final ChatColor DEFAULT_COLOR = ChatColor.RED;
@@ -60,8 +60,8 @@ public class ShopInventory extends BaseInventory{
 		setItems(TIER_3_GLASS, TIER_3_GLASS_SLOTS);
 		
 		setItem(BACK_ITEM, BACK_SLOT);
-		setItem(MONEY_ITEM, MONEY_SLOT);
 		
+		setMoneyItem();
 		placeEffigy(defaultEffigy, EFFIGY_SLOT);
 		placeEffigies();
 	}
@@ -102,6 +102,11 @@ public class ShopInventory extends BaseInventory{
 			return DEFAULT_COLOR;
 		}
 	}
+	private void setMoneyItem() {
+		int money = Main.getInstance().getWrapper(getHolder()).getMoney();
+		ItemStack money_item = ItemStackMaker.make(Material.GOLD_INGOT, 1, ChatColor.GOLD+Integer.toString(money)+"$");
+		setItem(money_item, MONEY_SLOT);
+	}
 
 	@Override
 	public void onInventoryClick(InventoryClickEvent e) {
@@ -114,6 +119,12 @@ public class ShopInventory extends BaseInventory{
 	public void onPlayerChangeEffigy(PlayerChangeEffigyEvent e) {
 		if(e.getPlayer().equals(getHolder())) {
 			placeEffigy(e.getAfter(), EFFIGY_SLOT);
+		}
+	}
+	@EventHandler
+	public void onMoneyChange(PlayerChangeMoneyEvent e) {
+		if(e.getPlayer().equals(getHolder())) {
+			setMoneyItem();
 		}
 	}
 
