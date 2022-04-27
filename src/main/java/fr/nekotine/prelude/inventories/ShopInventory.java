@@ -3,13 +3,12 @@ package fr.nekotine.prelude.inventories;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.EffigyList;
-import fr.nekotine.prelude.Main;
+import fr.nekotine.prelude.PlayerWrapper;
 import fr.nekotine.prelude.events.PlayerChangeEffigyEvent;
 import fr.nekotine.prelude.events.PlayerChangeMoneyEvent;
 import fr.nekotine.prelude.utils.ItemStackMaker;
@@ -51,8 +50,12 @@ public class ShopInventory extends BaseInventory{
 	
 	private static final int EFFIGY_SLOT = 9;
 	
-	public ShopInventory(Player holder, EffigyList defaultEffigy) {
-		super(holder, TITLE, SIZE);
+	private static final ItemStack OPEN_SHOP_ITEM = ItemStackMaker.make(Material.GOLD_INGOT, 1, ChatColor.GOLD+"Boutique");
+	
+	private final PlayerWrapper holderWrapper;
+	public ShopInventory(PlayerWrapper holderWrapper) {
+		super(holderWrapper.getPlayer(), TITLE, SIZE);
+		this.holderWrapper=holderWrapper;
 		
 		setItems(VOID_GLASS, VOID_GLASS_SLOTS);
 		setItems(TIER_1_GLASS, TIER_1_GLASS_SLOTS);
@@ -62,7 +65,7 @@ public class ShopInventory extends BaseInventory{
 		setItem(BACK_ITEM, BACK_SLOT);
 		
 		setMoneyItem();
-		placeEffigy(defaultEffigy, EFFIGY_SLOT);
+		//placeEffigy(defaultEffigy, EFFIGY_SLOT);
 		placeEffigies();
 	}
 	
@@ -85,6 +88,9 @@ public class ShopInventory extends BaseInventory{
 			if(startingSlot>53) return;
 		}
 	}
+	private void giveShopItem() {
+		
+	}
 	private void placeEffigy(EffigyList effigy, int slot) {
 		ItemStack effigy_head = ItemStackMaker.makeHead(effigy.getUrlToHead(), getColorFromTier(effigy.getTier())+effigy.getName(), 1);
 		TagInjector.injectEffigyListTag(effigy_head, effigy);
@@ -103,7 +109,7 @@ public class ShopInventory extends BaseInventory{
 		}
 	}
 	private void setMoneyItem() {
-		int money = Main.getInstance().getWrapper(getHolder()).getMoney();
+		int money = holderWrapper.getMoney();
 		ItemStack money_item = ItemStackMaker.make(Material.GOLD_INGOT, 1, ChatColor.GOLD+Integer.toString(money)+"$");
 		setItem(money_item, MONEY_SLOT);
 	}
@@ -112,7 +118,7 @@ public class ShopInventory extends BaseInventory{
 	public void onInventoryClick(InventoryClickEvent e) {
 		ItemStack clicked = e.getCurrentItem();
 		EffigyList effigy = TagInjector.extractEffigyListTag(clicked);
-		if(effigy!=null) Main.getInstance().getWrapper(getHolder()).buyEffigy(effigy);
+		if(effigy!=null) holderWrapper.buyEffigy(effigy);
 	}
 	
 	@EventHandler

@@ -2,7 +2,9 @@ package fr.nekotine.prelude;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,12 +13,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
+import fr.nekotine.prelude.utils.Gameruler;
 import fr.nekotine.prelude.utils.Serializer;
 import fr.nekotine.prelude.utils.Team;
 
@@ -38,10 +43,12 @@ public class Main extends JavaPlugin implements Listener{
 	
 	private HashMap<Player, PlayerWrapper> players = new HashMap<Player, PlayerWrapper>();
 	private String mapName;
-	private MapInventory mapInventory;
 	private boolean running = false;
-	
 	private PreludeMap map;
+	
+	private MapInventory mapInventory;
+	private RoundManager roundManager;
+	private BukkitTask ticker;
 	
 	@Override
 	public void onEnable() {
@@ -64,10 +71,17 @@ public class Main extends JavaPlugin implements Listener{
 		}
 		PreludeMap.setMapFolder(mapf);
 		
+		Gameruler.enable();
+		
 		setMapName(PreludeMap.getMapNameList().get(0));
 		
+		roundManager = new RoundManager();
 		mapInventory = new MapInventory();
-		
+		ticker = (new BukkitRunnable() {
+				public void run() {
+					tick();
+				}
+			}).runTaskTimer(getInstance(), 0L, 1L);
 		
 	}
 	@Override
@@ -77,7 +91,19 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	@Override
 	public void onDisable() {
+		Gameruler.disable();
+		ticker.cancel();
+		
 		EventRegisterer.unregisterEvent(this);
+	}
+	
+	public void tick() {
+		if(running) {
+			for(PlayerWrapper wrapper : getWrappers()) {
+				wrapper.tick();
+			}
+			roundManager.tick();
+		}
 	}
 	
 	public boolean addPlayer(Player player, Team team) {
@@ -135,24 +161,31 @@ public class Main extends JavaPlugin implements Listener{
 	public void openMapInventory(Player player) {
 		mapInventory.open(player);
 	}
-	public void teleportPlayersToSpawn() {
-		for(PlayerWrapper wrapper : players.values()) {
-			map.teleportPlayer(wrapper.getTeam(), wrapper.getPlayer());
-		}
-	}
 	public boolean start() {
 		if(!running) {
+			System.out.println("mapname = "+mapName);
 			map = PreludeMap.load(mapName);
 			map.enable();
-			teleportPlayersToSpawn();
+			
+			roundManager.startRound();
+			
+			closeMenus();
+			
 			return true;
 		}else {
 			return false;
 		}
 	}
+	public void closeMenus() {
+		for(PlayerWrapper wrapper : getWrappers()) {
+			wrapper.closeMenuInventory();
+		}
+		mapInventory.closeInventoryForAll();
+	}
 	public boolean end() {
 		if(running) {
 			map.unload();
+			running = false;
 			return true;
 		}else {
 			return false;
@@ -167,6 +200,9 @@ public class Main extends JavaPlugin implements Listener{
 			if(wrapper.getTeam()==team) inTeam.add(wrapper.getPlayer());
 		}
 		return inTeam;
+	}
+	public PreludeMap getMap() {
+		return map;
 	}
 	public int getNumberOfPlayerInTeam(Team team) {
 		return getPlayersInTeam(team).size();
@@ -184,6 +220,12 @@ public class Main extends JavaPlugin implements Listener{
 			return true;
 		}
 		return false;
+	}
+	public Set<Player> getPlayers(){
+		return players.keySet();
+	}
+	public Collection<PlayerWrapper> getWrappers(){
+		return players.values();
 	}
 	
 	@EventHandler

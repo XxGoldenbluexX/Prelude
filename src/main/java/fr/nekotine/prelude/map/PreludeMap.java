@@ -198,5 +198,15 @@ public class PreludeMap implements ConfigurationSerializable{
 	public ArrayList<Wall> getWalls(){
 		return walls;
 	}
+	public void openWalls() {
+		for(Wall wall : walls) {
+			wall.setOpen(true);
+		}
+	}
+	public void closeWalls() {
+		for(Wall wall : walls) {
+			wall.setOpen(false);
+		}
+	}
 	
 }

@@ -53,7 +53,7 @@ public class MapInventory extends BaseInventory{
 	private void placeMapItems(ArrayList<String> mapNameList) {
 		int slot = 2;
 		for(String mapName : mapNameList) {
-			ItemStack mapItem = ItemStackMaker.make(Material.PAPER, 1, ChatColor.AQUA+mapName);
+			ItemStack mapItem = ItemStackMaker.make(Material.PAPER, 1, mapName);
 			if(slot%9==0) slot+=2;
 			setItem(mapItem, slot);
 			slot++;
