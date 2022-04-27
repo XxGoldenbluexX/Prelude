@@ -13,6 +13,7 @@ import org.bukkit.plugin.PluginManager;
 
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
+import fr.nekotine.prelude.events.MapChangeEvent;
 import fr.nekotine.prelude.events.PlayerChangeEffigyEvent;
 import fr.nekotine.prelude.events.PlayerChangeMoneyEvent;
 import fr.nekotine.prelude.events.PlayerChangeTeamEvent;
@@ -36,5 +37,8 @@ public class EventRegisterer {
 	}
 	public static void callPlayerChangeMoneyEvent(Player player, int before, int after) {
 		new PlayerChangeMoneyEvent(player, before, after).callEvent();
-	} 
+	}
+	public static void callMapChangeEvent(String before, String after) {
+		new MapChangeEvent(before, after).callEvent();
+	}
 }

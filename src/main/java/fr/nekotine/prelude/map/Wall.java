@@ -18,10 +18,14 @@ public class Wall implements ConfigurationSerializable{
 	private static final Material WALL_MATERIAL = Material.TINTED_GLASS;
 	private static final String FROM_LOCATION_FIELD = "from";
 	private static final String TO_LOCATION_FIELD = "to";
+	private static final String NAME_FIELD = "name";
 	private boolean open;
+	
+	private final String name;
 	private final Location from;
 	private final Location to;
-	public Wall(Location from, Location to) {
+	public Wall(String name, Location from, Location to) {
+		this.name=name;
 		this.from=from;
 		this.to=to;
 		
@@ -34,12 +38,13 @@ public class Wall implements ConfigurationSerializable{
 	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put(NAME_FIELD, name);
 		map.put(FROM_LOCATION_FIELD, from);
 		map.put(TO_LOCATION_FIELD, to);
 		return map;
 	}
 	public static Wall deserialize(Map<String, Object> args) {
-		return new Wall((Location)args.get(FROM_LOCATION_FIELD),(Location)args.get(TO_LOCATION_FIELD));
+		return new Wall((String)args.get(NAME_FIELD),(Location)args.get(FROM_LOCATION_FIELD),(Location)args.get(TO_LOCATION_FIELD));
 	}
 
 	public Location getFrom() {
@@ -47,6 +52,9 @@ public class Wall implements ConfigurationSerializable{
 	}
 	public Location getTo() {
 		return to;
+	}
+	public String getName() {
+		return name;
 	}
 	public boolean isOpen() {
 		return open;

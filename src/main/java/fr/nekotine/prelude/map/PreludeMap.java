@@ -184,5 +184,19 @@ public class PreludeMap implements ConfigurationSerializable{
 	public void setName(String name) {
 		this.name=name;
 	}
+	public Wall getWall(String name) {
+		for(Wall wall : walls) {
+			if(wall.getName().equals(name)) {
+				return wall;
+			}
+		}
+		return null;
+	}
+	public void removeWall(Wall wall) {
+		walls.remove(wall);
+	}
+	public ArrayList<Wall> getWalls(){
+		return walls;
+	}
 	
 }

@@ -8,8 +8,11 @@ import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.CustomArgument;
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.CustomArgument.MessageBuilder;
+import dev.jorel.commandapi.arguments.LocationArgument;
+import dev.jorel.commandapi.arguments.LocationType;
 import dev.jorel.commandapi.arguments.StringArgument;
 import fr.nekotine.prelude.map.PreludeMap;
+import fr.nekotine.prelude.map.Wall;
 
 public class Commands {
 	public static CommandAPICommand make() {
@@ -28,14 +31,16 @@ public class Commands {
 	}
 	private static CommandAPICommand gameJoin() {
 		return new CommandAPICommand("join")
-				.executesPlayer((sender,args)->{
-					Main.getInstance().addPlayerInBestTeam(sender);
+				.executesPlayer((player,args)->{
+					Main.getInstance().addPlayerInBestTeam(player);
+					player.sendMessage("game joined");
 				});
 	}
 	private static CommandAPICommand gameLeave() {
 		return new CommandAPICommand("leave")
-				.executesPlayer((sender,args)->{
-					Main.getInstance().removePlayer(sender);
+				.executesPlayer((player,args)->{
+					Main.getInstance().removePlayer(player);
+					player.sendMessage("game leaved");
 				});
 	}
 	private static CommandAPICommand gameStop() {
@@ -61,12 +66,19 @@ public class Commands {
 			}
 		}).replaceSuggestions(ArgumentSuggestions.strings(info -> {return PreludeMap.getMapNameList().toArray(String[]::new);}));
 		
+		Argument wallNameList = new StringArgument("wallList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+			return ((PreludeMap)info.previousArgs()[0]).getWalls().stream().map(Wall::getName).toArray(String[]::new);
+		}));
+		
 		return new CommandAPICommand("map")
 				.withSubcommand(mapCreate())
 				.withSubcommand(mapRemove(mapArgument))
 				.withSubcommand(mapSetRedSpawn(mapArgument))
 				.withSubcommand(mapSetBlueSpawn(mapArgument))
-				.withSubcommand(mapRename(mapArgument));
+				.withSubcommand(mapRename(mapArgument))
+				
+				.withSubcommand(mapWallAdd(mapArgument))
+				.withSubcommand(mapWallRemove(mapArgument, wallNameList));
 	}
 	public static CommandAPICommand mapCreate() {
 		return new CommandAPICommand("create")
@@ -74,11 +86,13 @@ public class Commands {
 				.executesPlayer((player,args)->{
 					String name = (String) args[0];
 					if (PreludeMap.getMapNameList().contains(name)) {
+						player.sendMessage("map already exist");
 						//ptit message
 					}else {
 						PreludeMap map = new PreludeMap(name,new Location(player.getWorld(),0,0,0),new Location(player.getWorld(),0,0,0));
 						PreludeMap.save(map);
 						map.unload();
+						player.sendMessage("map created");
 						//ptit message
 					}
 				});
@@ -89,8 +103,10 @@ public class Commands {
 				.executes((sender,args)->{
 					PreludeMap map = (PreludeMap)args[0];
 					if (PreludeMap.remove(map)) {
+						sender.sendMessage("map removed");
 						//ptit message
 					}else {
+						sender.sendMessage("map do not exist");
 						//ptit message
 					}
 				});
@@ -98,45 +114,86 @@ public class Commands {
 	public static CommandAPICommand mapSetRedSpawn(Argument mapArgument) {
 		return new CommandAPICommand("setRedSpawn")
 				.withArguments(mapArgument)
-				.executesPlayer((sender,args)->{
+				.executesPlayer((player,args)->{
 					PreludeMap map = (PreludeMap)args[0];
-					if(map!=null) {
-						map.setRedSpawnLocation(sender.getLocation());
-						//ptit message
-					}else {
-						//ptit message
-					}
+					map.setRedSpawnLocation(player.getLocation());
+					player.sendMessage("red spawn added");
+					PreludeMap.save(map);
+					//ptit message
+					map.unload();
 				});
 	}
 	public static CommandAPICommand mapSetBlueSpawn(Argument mapArgument) {
 		return new CommandAPICommand("setBlueSpawn")
 				.withArguments(mapArgument)
-				.executesPlayer((sender,args)->{
+				.executesPlayer((player,args)->{
 					PreludeMap map = (PreludeMap)args[0];
-					if(map != null) {
-						map.setBlueSpawnLocation(sender.getLocation());
-						//ptit message
-					}else {
-						//ptit message
-					}
-					
+					map.setBlueSpawnLocation(player.getLocation());
+					player.sendMessage("blue spawn added");
+					PreludeMap.save(map);
+					//ptit message
+					map.unload();
 				});
 	}
 	public static CommandAPICommand mapRename(Argument mapArgument) {
 		return new CommandAPICommand("rename")
 				.withArguments(mapArgument)
 				.withArguments(new StringArgument("name"))
-				.executesPlayer((sender,args)->{
+				.executes((sender,args)->{
 					PreludeMap map = (PreludeMap)args[0];
 					String newName = (String)args[1];
-					if(map!=null) {
-						map.setName(newName);
-						//ptit message
-					}else {
-						//ptit message
-					}
+					map.setName(newName);
+					sender.sendMessage("map renamed");
+					PreludeMap.save(map);
+					//ptit message
+					map.unload();
 				});
 	}
-	
+	public static CommandAPICommand mapWallAdd(Argument mapArgument) {
+		return new CommandAPICommand("addWall")
+				.withArguments(mapArgument)
+				.withArguments(new StringArgument("name"))
+				.withArguments(new LocationArgument("from", LocationType.BLOCK_POSITION))
+				.withArguments(new LocationArgument("to", LocationType.BLOCK_POSITION))
+				.executes((sender,args)->{
+					PreludeMap map = (PreludeMap)args[0];
+					String name = (String)args[1];
+					Location from = (Location)args[2];
+					Location to = (Location)args[3];
+					if(map.getWall(name) == null) {
+						map.addWall(new Wall(name, from, to));
+						sender.sendMessage("wall added");
+						PreludeMap.save(map);
+						//ptit message
+					}else {
+						sender.sendMessage("wall already exist");
+						//ptit message
+					}
+					map.unload();
+				});
+	}
+	public static CommandAPICommand mapWallRemove(Argument mapArgument, Argument wallNameList) {
+		return new CommandAPICommand("removeWall")
+				.withArguments(mapArgument)
+				.withArguments(wallNameList)
+				.executes((sender,args)->{
+					PreludeMap map = (PreludeMap)args[0];
+					String wallName = (String)args[1];
+					Wall wall = map.getWall(wallName);
+					if(wall != null) {
+						map.removeWall(wall);
+						sender.sendMessage("wall removed");
+						PreludeMap.save(map);
+						//ptit message
+					}else {
+						sender.sendMessage("wall do not exist");
+						//ptit message
+					}
+					
+					map.unload();
+		
+					
+				});
+	}
 	
 }

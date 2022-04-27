@@ -76,7 +76,7 @@ public class MapInventory extends BaseInventory{
 	@Override
 	public void onInventoryClick(InventoryClickEvent e) {
 		if(e.getCurrentItem() !=null && e.getCurrentItem().getType()==Material.PAPER) {
-			String mapName = ComponentMaker.getText(e.getCurrentItem().displayName());
+			String mapName = ComponentMaker.getText(e.getCurrentItem().getItemMeta().displayName());
 			Main.getInstance().setMapName(mapName);
 		}else {
 			switch(e.getSlot()) {

@@ -1,5 +1,6 @@
 package fr.nekotine.prelude;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,9 +12,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIConfig;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
+import fr.nekotine.prelude.utils.Serializer;
 import fr.nekotine.prelude.utils.Team;
 
 public class Main extends JavaPlugin implements Listener{
@@ -44,9 +48,32 @@ public class Main extends JavaPlugin implements Listener{
 		super.onEnable();
 		main=this;
 		
+		EventRegisterer.registerEvent(this);
+		
+		Serializer.register();
+		
+		Commands.make().register();
+		CommandAPI.onEnable(this);
+		
+		if (getDataFolder().exists()) {//making dataFolder
+			getDataFolder().mkdir();
+		}
+		File mapf = new File(getDataFolder(),"Maps");//making map Folder
+		if (!mapf.exists()){
+				mapf.mkdir();
+		}
+		PreludeMap.setMapFolder(mapf);
+		
+		setMapName(PreludeMap.getMapNameList().get(0));
+		
 		mapInventory = new MapInventory();
 		
-		EventRegisterer.registerEvent(this);
+		
+	}
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		CommandAPI.onLoad(new CommandAPIConfig());
 	}
 	@Override
 	public void onDisable() {
@@ -69,7 +96,9 @@ public class Main extends JavaPlugin implements Listener{
 		return false;
 	}
 	public void setMapName(String mapName) {
+		String before = this.mapName;
 		this.mapName=mapName;
+		EventRegisterer.callMapChangeEvent(before, mapName);
 	}
 	public String getMapName() {
 		return mapName;
