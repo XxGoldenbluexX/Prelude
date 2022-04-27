@@ -117,7 +117,7 @@ public enum EffigyList {
 	public static Effigy buildEffigy(PlayerWrapper w, EffigyList effigy) {
 		try {
 			return (Effigy)effigy.getEffigyClass().getConstructor(PlayerWrapper.class, EffigyList.class)
-			.newInstance(effigy.getEffigyClass(), effigy.getWeaponMaterial());
+			.newInstance(w, effigy);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();

@@ -43,11 +43,18 @@ public class RoundManager implements Listener{
 	private void preparationPhaseStart() {
 		Main.getInstance().getMap().closeWalls();
 		
+		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) wrapper.giveShopItem();
+		
 		preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
 		inPreparationPhase = true;
 	}
 	private void preparationPhaseEnd() {
 		inPreparationPhase = false;
+		
+		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+			wrapper.removeShopItem();
+			wrapper.closeShopInventory();
+		}
 		
 		Main.getInstance().getMap().openWalls();
 	}

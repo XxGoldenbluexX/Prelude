@@ -15,7 +15,7 @@ public class PlayerWrapper {
 	private Team team;
 	private Effigy effigy;
 	private int money = 0;
-	private boolean alive = true;
+	private boolean alive = false;
 	
 	
 	public PlayerWrapper(Player player, Team team) {
@@ -44,9 +44,11 @@ public class PlayerWrapper {
 
 	public void setEffigy(EffigyList effigytype) {
 		EffigyList before = null;
-		if(effigy!=null) before=effigy.getEffigyType();
-		
-		destroy();
+		if(effigy!=null) {
+			before=effigy.getEffigyType();
+			effigy.destroy();
+		}
+
 		effigy = EffigyList.buildEffigy(this, effigytype);
 		
 		EventRegisterer.callPlayerChangeEffigyEvent(player, before, effigytype);
@@ -79,7 +81,14 @@ public class PlayerWrapper {
 	public void closeShopInventory() {
 		shopInventory.closeInventory(player);
 	}
-
+	
+	public void giveShopItem() {
+		shopInventory.giveShopItem();	
+	}
+	
+	public void removeShopItem() {
+		shopInventory.removeShopItem();	
+	}
 
 	public int getMoney() {
 		return money;

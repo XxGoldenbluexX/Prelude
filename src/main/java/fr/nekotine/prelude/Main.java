@@ -163,7 +163,6 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public boolean start() {
 		if(!running) {
-			System.out.println("mapname = "+mapName);
 			map = PreludeMap.load(mapName);
 			map.enable();
 			
@@ -171,6 +170,7 @@ public class Main extends JavaPlugin implements Listener{
 			
 			closeMenus();
 			
+			running = true;
 			return true;
 		}else {
 			return false;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.EffigyList;
@@ -88,11 +89,20 @@ public class ShopInventory extends BaseInventory{
 			if(startingSlot>53) return;
 		}
 	}
-	private void giveShopItem() {
-		
+	public void giveShopItem() {
+		getHolder().getInventory().addItem(OPEN_SHOP_ITEM);
+	}
+	public void removeShopItem() {
+		getHolder().getInventory().removeItemAnySlot(OPEN_SHOP_ITEM);
+	}
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if(e.getPlayer().equals(getHolder()) && OPEN_SHOP_ITEM.equals(e.getItem())) {
+			open(getHolder());
+		}
 	}
 	private void placeEffigy(EffigyList effigy, int slot) {
-		ItemStack effigy_head = ItemStackMaker.makeHead(effigy.getUrlToHead(), getColorFromTier(effigy.getTier())+effigy.getName(), 1);
+		ItemStack effigy_head = ItemStackMaker.makeHead(getColorFromTier(effigy.getTier())+effigy.getName(), effigy.getUrlToHead(), 1);
 		TagInjector.injectEffigyListTag(effigy_head, effigy);
 		setItem(effigy_head, slot);
 	}
