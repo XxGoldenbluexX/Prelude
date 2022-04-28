@@ -38,16 +38,9 @@ public class ShopInventory extends BaseInventory{
 	
 	private static final int MONEY_SLOT = 45;
 	
-	private static final ChatColor DEFAULT_COLOR = ChatColor.RED;
-	
 	private static final int TIER_1_STARTING_SLOT = 2;
-	private static final ChatColor TIER_1_COLOR = ChatColor.BLUE;
-	
 	private static final int TIER_2_STARTING_SLOT = 20;
-	private static final ChatColor TIER_2_COLOR = ChatColor.LIGHT_PURPLE;
-	
 	private static final int TIER_3_STARTING_SLOT = 38;
-	private static final ChatColor TIER_3_COLOR = ChatColor.GOLD;
 	
 	private static final int EFFIGY_SLOT = 9;
 	
@@ -102,21 +95,9 @@ public class ShopInventory extends BaseInventory{
 		}
 	}
 	private void placeEffigy(EffigyList effigy, int slot) {
-		ItemStack effigy_head = ItemStackMaker.makeHead(getColorFromTier(effigy.getTier())+effigy.getName(), effigy.getUrlToHead(), 1);
+		ItemStack effigy_head = ItemStackMaker.makeHead(effigy.getName(), effigy.getUrlToHead(), 1);
 		TagInjector.injectEffigyListTag(effigy_head, effigy);
 		setItem(effigy_head, slot);
-	}
-	private ChatColor getColorFromTier(int tier) {
-		switch(tier) {
-		case 1:
-			return TIER_1_COLOR;
-		case 2:
-			return TIER_2_COLOR;
-		case 3:
-			return TIER_3_COLOR;
-		default:
-			return DEFAULT_COLOR;
-		}
 	}
 	private void setMoneyItem() {
 		int money = holderWrapper.getMoney();
@@ -127,8 +108,10 @@ public class ShopInventory extends BaseInventory{
 	@Override
 	public void onInventoryClick(InventoryClickEvent e) {
 		ItemStack clicked = e.getCurrentItem();
-		EffigyList effigy = TagInjector.extractEffigyListTag(clicked);
-		if(effigy!=null) holderWrapper.buyEffigy(effigy);
+		if(clicked != null) {
+			EffigyList effigy = TagInjector.extractEffigyListTag(clicked);
+			if(effigy!=null) holderWrapper.buyEffigy(effigy);
+		}
 	}
 	
 	@EventHandler

@@ -7,9 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import fr.nekotine.prelude.utils.EventRegisterer;
+import fr.nekotine.prelude.utils.RoundState;
 import fr.nekotine.prelude.utils.Team;
 
 public class RoundManager implements Listener{
+	private static final int STARTING_MONEY = 0;
 	private static final int POINT_RECQUIREMENT_TO_WIN = 5;
 	private static final int POINTS_PER_KILL = 1;
 	private static final int POINTS_PER_WIN = 2;
@@ -17,12 +19,14 @@ public class RoundManager implements Listener{
 	private static final int POINTS_PER_LOSING_STREAK = 2;
 	
 	private static final int PREPARATION_PHASE_DURATION_TICKS = 20*15;
+	private static final int ENDING_PHASE_DURATION_TICKS = 20*10;
 	
 	private static final EffigyList DEFAULT_EFFIGY = EffigyList.TestEffigy1;
 	
 	private Team wonLastRound;
-	private boolean inPreparationPhase = true;
+	private RoundState roundState = RoundState.PREPARATION;
 	private int preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
+	private int ending_phase_duration_left = ENDING_PHASE_DURATION_TICKS;
 	private int redScore = 0;
 	private int blueScore = 0;
 	
@@ -33,10 +37,15 @@ public class RoundManager implements Listener{
 		EventRegisterer.unregisterEvent(this);
 	}
 	public void tick() {
-		if(inPreparationPhase) {
+		if(roundState==RoundState.PREPARATION) {
 			preparation_phase_duration_left--;
 			if(preparation_phase_duration_left<=0) {
 				preparationPhaseEnd();
+			}
+		}else if(roundState==RoundState.ENDING) {
+			ending_phase_duration_left--;
+			if(ending_phase_duration_left<=0) {
+				startRound();
 			}
 		}
 	}
@@ -46,10 +55,12 @@ public class RoundManager implements Listener{
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) wrapper.giveShopItem();
 		
 		preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
-		inPreparationPhase = true;
+		roundState=RoundState.PREPARATION;
+		
+		System.out.println("preparation phase start");
 	}
 	private void preparationPhaseEnd() {
-		inPreparationPhase = false;
+		roundState=RoundState.PLAYING;
 		
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
 			wrapper.removeShopItem();
@@ -57,13 +68,15 @@ public class RoundManager implements Listener{
 		}
 		
 		Main.getInstance().getMap().openWalls();
+		
+		System.out.println("preparation phase end");
 	}
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player player = e.getPlayer();
 		PlayerWrapper wrapper = getWrapperOfPlayer(player);
-		if(wrapper != null && wrapper.isAlive()) {
-			wrapper.setAlive(false);
+		if(Main.getInstance().isRunning() && roundState==RoundState.PLAYING && wrapper != null && wrapper.isAlive()) {
+			setAlive(player, false);
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
 			
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
@@ -76,20 +89,50 @@ public class RoundManager implements Listener{
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
 			Main.getInstance().getMap().teleportPlayer(wrapper.getTeam(), wrapper.getPlayer());
 		}
+		System.out.println("teleported players");
+	}
+	private void setDefaultEffigy(Player player) {
+		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
+		wrapper.setEffigy(DEFAULT_EFFIGY);
+	}
+	private void setMoney(Player player, int money) {
+		Main.getInstance().getWrapper(player).setMoney(money);
+	}
+	private void setAlive(Player player, boolean alive) {
+		Main.getInstance().getWrapper(player).setAlive(alive);
 	}
 	private void resetEffigy(Player player) {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
-		if(!wrapper.isAlive()) wrapper.setEffigy(DEFAULT_EFFIGY);
+		if(!wrapper.isAlive()) setDefaultEffigy(player);
+	}
+	public void startGame() {
+		wonLastRound = null;
+		roundState=RoundState.PREPARATION;
+		preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
+		redScore = 0;
+		blueScore = 0;
+		
+		for(Player player : Main.getInstance().getPlayers()) {
+			player.getInventory().clear();
+			setDefaultEffigy(player);
+			setAlive(player, true);
+			setMoney(player, STARTING_MONEY);
+		}
+		
+		startRound();
 	}
 	public void startRound() {
 		preparationPhaseStart();
 		
 		for(Player player : Main.getInstance().getPlayers()) {
 			resetEffigy(player);
+			setAlive(player, true);
 			player.setGameMode(GameMode.ADVENTURE);
 		}
 		
 		teleportPlayersToSpawn();
+		
+		System.out.println("round started");
 	}
 	private PlayerWrapper getWrapperOfPlayer(Player player) {
 		if(Main.getInstance().isPlaying(player)) {
@@ -134,28 +177,34 @@ public class RoundManager implements Listener{
 			addMoney(player, points_won);
 		}
 	}
+	private void startEndingPhase() {
+		ending_phase_duration_left = ENDING_PHASE_DURATION_TICKS;
+		roundState=RoundState.ENDING;
+		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+			wrapper.roundEnded();
+		}
+	}
 	private void endRound() {
 		if(getNumberOfPlayersAliveInTeam(Team.RED) == 0) {
 			giveRoundPoints(Team.BLUE);
 			boolean ended = endGame();
-			if(!ended) startRound();
+			if(!ended) startEndingPhase();
+			System.out.println("round ended win blue");
 			
 		}else if(getNumberOfPlayersAliveInTeam(Team.BLUE) == 0) {
 			giveRoundPoints(Team.RED);
 			boolean ended = endGame();
-			if(!ended) startRound();
+			if(!ended) startEndingPhase();
+			System.out.println("round ended win red");
 		}
 	}
 	private boolean endGame() {
 		if(redScore>=POINT_RECQUIREMENT_TO_WIN || blueScore>=POINT_RECQUIREMENT_TO_WIN) {
-			wonLastRound = null;
-			inPreparationPhase = true;
-			preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
-			redScore = 0;
-			blueScore = 0;
 			
 			Main.getInstance().getMap().openWalls();
 			Main.getInstance().end();
+			
+			System.out.println("game ended");
 			return true;
 		}
 		return false;
@@ -171,6 +220,12 @@ public class RoundManager implements Listener{
 			teamLoseRound(Team.RED);
 			break;
 		}
+	}
+	public boolean isRoundPlaying() {
+		return roundState==RoundState.PLAYING;
+	}
+	public RoundState getRoundState() {
+		return roundState;
 	}
 	
 	

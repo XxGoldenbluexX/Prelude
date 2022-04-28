@@ -86,7 +86,6 @@ public class MenuInventory extends BaseInventory{
 	public void onInteract(PlayerInteractEvent e) {
 		if(e.getItem()!=null && e.getPlayer().equals(getHolder()) && e.getItem().getType()==OPEN_INVENTORY_MATERIAL && e.getAction()!=Action.PHYSICAL) {
 			open(getHolder());
-			e.getPlayer().sendMessage("open");
 		}
 	}
 

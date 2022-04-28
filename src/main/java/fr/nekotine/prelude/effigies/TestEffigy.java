@@ -18,4 +18,10 @@ public class TestEffigy extends Effigy{
 	protected void castSecondarySpell() {
 	}
 
+	@Override
+	protected void roundEnd() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

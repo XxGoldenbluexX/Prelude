@@ -108,6 +108,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public boolean addPlayer(Player player, Team team) {
 		if(!players.containsKey(player)) {
+			System.out.println("player added");
 			players.put(player, new PlayerWrapper(player, team));
 			return true;
 		}
@@ -124,6 +125,7 @@ public class Main extends JavaPlugin implements Listener{
 	public void setMapName(String mapName) {
 		String before = this.mapName;
 		this.mapName=mapName;
+		System.out.println("map set");
 		EventRegisterer.callMapChangeEvent(before, mapName);
 	}
 	public String getMapName() {
@@ -137,6 +139,7 @@ public class Main extends JavaPlugin implements Listener{
 			PlayerWrapper wrapper = getWrapper(player);
 			Team before = wrapper.getTeam();
 			getWrapper(player).setTeam(team);
+			System.out.println("team set");
 			EventRegisterer.callPlayerChangeTeamEvent(player, before, team);
 			return true;
 		}
@@ -165,12 +168,12 @@ public class Main extends JavaPlugin implements Listener{
 		if(!running) {
 			map = PreludeMap.load(mapName);
 			map.enable();
-			
-			roundManager.startRound();
-			
 			closeMenus();
-			
 			running = true;
+			
+			roundManager.startGame();
+
+			System.out.println("game started");
 			return true;
 		}else {
 			return false;
@@ -186,6 +189,7 @@ public class Main extends JavaPlugin implements Listener{
 		if(running) {
 			map.unload();
 			running = false;
+			System.out.println("game ended");
 			return true;
 		}else {
 			return false;
@@ -227,16 +231,20 @@ public class Main extends JavaPlugin implements Listener{
 	public Collection<PlayerWrapper> getWrappers(){
 		return players.values();
 	}
+	public boolean isRunning() {
+		return running;
+	}
+	public boolean isRoundPlaying() {
+		return roundManager.isRoundPlaying();
+	}
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		if(e.getItem()!=null && e.getItem().getType()==JOIN_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
 			addPlayerInBestTeam(e.getPlayer());
-			e.getPlayer().sendMessage("joined");
 		}
 		if(e.getItem()!=null && e.getItem().getType()==LEAVE_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
 			removePlayer(e.getPlayer());
-			e.getPlayer().sendMessage("left");
 		}
 	}
 }

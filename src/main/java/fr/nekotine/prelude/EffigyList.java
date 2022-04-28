@@ -3,6 +3,7 @@ package fr.nekotine.prelude;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import fr.nekotine.prelude.effigies.TestEffigy;
@@ -10,7 +11,7 @@ import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
 	TestEffigy1(
 			TestEffigy.class,
-			"Test",
+			ChatColor.RED+"Test",
 			Material.BEDROCK,
 			Main.getQuestionMarkHeadUrl(),
 			1,
@@ -60,14 +61,17 @@ public enum EffigyList {
 	private final DisguiseType disguiseType;
 	private final Class<? extends Effigy> effigyClass;
 	private final String name;
+	private final String[] description;
 	
-	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, String urlToHead, int tier, DisguiseType disguiseType) {
+	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, String urlToHead, int tier, DisguiseType disguiseType,
+				String... description) {
 		this.weaponMaterial=weaponMaterial;
 		this.tier=tier;
 		this.disguiseType = disguiseType;
 		this.effigyClass=effigyClass;
 		this.urlToHead=urlToHead;
 		this.name=name;
+		this.description=description;
 	}
 	
 	public static ArrayList<EffigyList> getTier(int tier){
@@ -116,6 +120,7 @@ public enum EffigyList {
 	
 	public static Effigy buildEffigy(PlayerWrapper w, EffigyList effigy) {
 		try {
+			System.out.println("Building effigy");
 			return (Effigy)effigy.getEffigyClass().getConstructor(PlayerWrapper.class, EffigyList.class)
 			.newInstance(w, effigy);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -123,5 +128,9 @@ public enum EffigyList {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public String[] getDescription() {
+		return description;
 	}
 }

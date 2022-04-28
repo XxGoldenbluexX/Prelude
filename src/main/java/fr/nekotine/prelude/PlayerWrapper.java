@@ -15,7 +15,7 @@ public class PlayerWrapper {
 	private Team team;
 	private Effigy effigy;
 	private int money = 0;
-	private boolean alive = false;
+	private boolean alive = true;
 	
 	
 	public PlayerWrapper(Player player, Team team) {
@@ -122,5 +122,8 @@ public class PlayerWrapper {
 
 	public void setAlive(boolean alive) {
 		this.alive = alive;
+	}
+	public void roundEnded() {
+		if(effigy!=null)effigy.roundEnd();
 	}
 }
