@@ -48,6 +48,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 	private MapInventory mapInventory;
 	private RoundManager roundManager;
+	private InGameScoreboard inGameScoreboard;
 	private BukkitTask ticker;
 	
 	@Override
@@ -103,6 +104,7 @@ public class Main extends JavaPlugin implements Listener{
 				wrapper.tick();
 			}
 			roundManager.tick();
+			inGameScoreboard.updateDisplay();
 		}
 	}
 	
@@ -168,11 +170,14 @@ public class Main extends JavaPlugin implements Listener{
 		if(!running) {
 			map = PreludeMap.load(mapName);
 			map.enable();
-			closeMenus();
-			running = true;
-			
-			roundManager.startGame();
 
+			roundManager.startGame();
+			
+			inGameScoreboard = new InGameScoreboard();
+			
+			closeMenus();
+			
+			running = true;
 			System.out.println("game started");
 			return true;
 		}else {
@@ -189,6 +194,9 @@ public class Main extends JavaPlugin implements Listener{
 		if(running) {
 			map.unload();
 			running = false;
+			
+			inGameScoreboard.destroy();
+			
 			System.out.println("game ended");
 			return true;
 		}else {
@@ -236,6 +244,9 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public boolean isRoundPlaying() {
 		return roundManager.isRoundPlaying();
+	}
+	public RoundManager getRoundManager() {
+		return roundManager;
 	}
 	
 	@EventHandler

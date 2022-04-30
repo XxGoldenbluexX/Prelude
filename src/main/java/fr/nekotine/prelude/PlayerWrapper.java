@@ -17,7 +17,7 @@ public class PlayerWrapper {
 	private int money = 0;
 	private boolean alive = true;
 	
-	
+	private String scoreboardEntry;
 	public PlayerWrapper(Player player, Team team) {
 		this.player=player;
 		this.setTeam(team);
@@ -125,5 +125,12 @@ public class PlayerWrapper {
 	}
 	public void roundEnded() {
 		if(effigy!=null)effigy.roundEnd();
+	}
+	
+	public void setScoreboardEntry(String scoreboardEntry) {
+		this.scoreboardEntry = scoreboardEntry;
+	}
+	public String getScoreboardEntry() {
+		return scoreboardEntry;
 	}
 }

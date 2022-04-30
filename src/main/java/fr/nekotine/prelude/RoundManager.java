@@ -227,6 +227,20 @@ public class RoundManager implements Listener{
 	public RoundState getRoundState() {
 		return roundState;
 	}
+	public int getScore(Team team) {
+		switch(team) {
+		case RED:
+			return redScore;
+		case BLUE:
+			return blueScore;
+		default:
+			return -1;
+		}
+	}
+	
+	public static int getPointRecquirementToWin() {
+		return POINT_RECQUIREMENT_TO_WIN;
+	}
 	
 	
 }
