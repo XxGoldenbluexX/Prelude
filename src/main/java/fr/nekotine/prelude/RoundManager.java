@@ -76,9 +76,10 @@ public class RoundManager implements Listener{
 		Player player = e.getPlayer();
 		PlayerWrapper wrapper = getWrapperOfPlayer(player);
 		if(Main.getInstance().isRunning() && roundState==RoundState.PLAYING && wrapper != null && wrapper.isAlive()) {
+			e.setCancelled(true);
+			
 			setAlive(player, false);
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
-			
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
 			if(wrapperOfKiller != null) addMoney(wrapperOfKiller.getPlayer(), POINTS_PER_KILL);
 			
