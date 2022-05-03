@@ -48,7 +48,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 	private MapInventory mapInventory;
 	private RoundManager roundManager;
-	private InGameScoreboard inGameScoreboard;
+	private GameScoreboard gameScoreboard;
 	private BukkitTask ticker;
 	
 	@Override
@@ -78,6 +78,8 @@ public class Main extends JavaPlugin implements Listener{
 		
 		roundManager = new RoundManager();
 		mapInventory = new MapInventory();
+		gameScoreboard = new GameScoreboard();
+		
 		ticker = (new BukkitRunnable() {
 				public void run() {
 					tick();
@@ -104,7 +106,6 @@ public class Main extends JavaPlugin implements Listener{
 				wrapper.tick();
 			}
 			roundManager.tick();
-			inGameScoreboard.updateDisplay();
 		}
 	}
 	
@@ -112,6 +113,8 @@ public class Main extends JavaPlugin implements Listener{
 		if(!players.containsKey(player)) {
 			System.out.println("player added");
 			players.put(player, new PlayerWrapper(player, team));
+			
+			gameScoreboard.addPlayer(player);
 			return true;
 		}
 		return false;
@@ -120,6 +123,8 @@ public class Main extends JavaPlugin implements Listener{
 		if(players.containsKey(player)) {
 			players.get(player).destroy();
 			players.remove(player);
+			
+			gameScoreboard.removePlayer(player);
 			return true;
 		}
 		return false;
@@ -172,9 +177,7 @@ public class Main extends JavaPlugin implements Listener{
 			map.enable();
 
 			roundManager.startGame();
-			
-			inGameScoreboard = new InGameScoreboard();
-			
+
 			closeMenus();
 			
 			running = true;
@@ -194,9 +197,7 @@ public class Main extends JavaPlugin implements Listener{
 		if(running) {
 			map.unload();
 			running = false;
-			
-			inGameScoreboard.destroy();
-			
+
 			System.out.println("game ended");
 			return true;
 		}else {
@@ -247,6 +248,9 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public RoundManager getRoundManager() {
 		return roundManager;
+	}
+	public GameScoreboard getScoreboard() {
+		return gameScoreboard;
 	}
 	
 	@EventHandler

@@ -24,9 +24,12 @@ public class RoundManager implements Listener{
 	private static final EffigyList DEFAULT_EFFIGY = EffigyList.TestEffigy1;
 	
 	private Team wonLastRound;
-	private RoundState roundState = RoundState.PREPARATION;
+	private RoundState roundState = RoundState.MENU;
+	
 	private int preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
+	private int game_duration = 0;
 	private int ending_phase_duration_left = ENDING_PHASE_DURATION_TICKS;
+	
 	private int redScore = 0;
 	private int blueScore = 0;
 	
@@ -37,16 +40,21 @@ public class RoundManager implements Listener{
 		EventRegisterer.unregisterEvent(this);
 	}
 	public void tick() {
-		if(roundState==RoundState.PREPARATION) {
+		if(getRoundState()==RoundState.PREPARATION) {
 			preparation_phase_duration_left--;
+			if(preparation_phase_duration_left % GameScoreboard.getUpdateDelayTicks() == 0) Main.getInstance().getScoreboard().updateStateDisplay();
 			if(preparation_phase_duration_left<=0) {
 				preparationPhaseEnd();
 			}
-		}else if(roundState==RoundState.ENDING) {
+		}else if(getRoundState()==RoundState.ENDING) {
 			ending_phase_duration_left--;
+			if(ending_phase_duration_left % GameScoreboard.getUpdateDelayTicks() == 0) Main.getInstance().getScoreboard().updateStateDisplay();
 			if(ending_phase_duration_left<=0) {
 				startRound();
 			}
+		}else if(getRoundState()==RoundState.PLAYING) {
+			game_duration++;
+			if(game_duration % GameScoreboard.getUpdateDelayTicks() == 0) Main.getInstance().getScoreboard().updateStateDisplay();
 		}
 	}
 	private void preparationPhaseStart() {
@@ -55,12 +63,21 @@ public class RoundManager implements Listener{
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) wrapper.giveShopItem();
 		
 		preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
-		roundState=RoundState.PREPARATION;
+		
+		setRoundState(RoundState.PREPARATION);
 		
 		System.out.println("preparation phase start");
 	}
+	private void setRoundState(RoundState state) {
+		roundState=state;
+		Main.getInstance().getScoreboard().updateStateDisplay();
+	}
+	public RoundState getRoundState() {
+		return roundState;
+	}
 	private void preparationPhaseEnd() {
-		roundState=RoundState.PLAYING;
+		game_duration = 0;
+		setRoundState(RoundState.PLAYING);
 		
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
 			wrapper.removeShopItem();
@@ -75,10 +92,11 @@ public class RoundManager implements Listener{
 	public void onDeath(PlayerDeathEvent e) {
 		Player player = e.getPlayer();
 		PlayerWrapper wrapper = getWrapperOfPlayer(player);
-		if(Main.getInstance().isRunning() && roundState==RoundState.PLAYING && wrapper != null && wrapper.isAlive()) {
+		if(Main.getInstance().isRunning() && getRoundState()==RoundState.PLAYING && wrapper != null && wrapper.isAlive()) {
 			e.setCancelled(true);
 			
 			setAlive(player, false);
+			
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
 			if(wrapperOfKiller != null) addMoney(wrapperOfKiller.getPlayer(), POINTS_PER_KILL);
@@ -101,6 +119,7 @@ public class RoundManager implements Listener{
 	}
 	private void setAlive(Player player, boolean alive) {
 		Main.getInstance().getWrapper(player).setAlive(alive);
+		Main.getInstance().getScoreboard().updatePlayerDisplay(player);
 	}
 	private void resetEffigy(Player player) {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
@@ -108,7 +127,7 @@ public class RoundManager implements Listener{
 	}
 	public void startGame() {
 		wonLastRound = null;
-		roundState=RoundState.PREPARATION;
+		setRoundState(RoundState.PREPARATION);
 		preparation_phase_duration_left = PREPARATION_PHASE_DURATION_TICKS;
 		redScore = 0;
 		blueScore = 0;
@@ -164,6 +183,7 @@ public class RoundManager implements Listener{
 	private void teamWinRound(Team team) {
 		
 		increaseScore(team);
+		Main.getInstance().getScoreboard().updateScoreDisplay();
 		
 		for(Player player : Main.getInstance().getPlayersInTeam(team)) {
 			addMoney(player, POINTS_PER_WIN);
@@ -180,7 +200,7 @@ public class RoundManager implements Listener{
 	}
 	private void startEndingPhase() {
 		ending_phase_duration_left = ENDING_PHASE_DURATION_TICKS;
-		roundState=RoundState.ENDING;
+		setRoundState(RoundState.ENDING);
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
 			wrapper.roundEnded();
 		}
@@ -205,6 +225,7 @@ public class RoundManager implements Listener{
 			Main.getInstance().getMap().openWalls();
 			Main.getInstance().end();
 			
+			setRoundState(RoundState.MENU);
 			System.out.println("game ended");
 			return true;
 		}
@@ -225,9 +246,6 @@ public class RoundManager implements Listener{
 	public boolean isRoundPlaying() {
 		return roundState==RoundState.PLAYING;
 	}
-	public RoundState getRoundState() {
-		return roundState;
-	}
 	public int getScore(Team team) {
 		switch(team) {
 		case RED:
@@ -237,6 +255,15 @@ public class RoundManager implements Listener{
 		default:
 			return -1;
 		}
+	}
+	public int getPreparationDurationLeft() {
+		return preparation_phase_duration_left;
+	}
+	public int getEndingDurationLeft() {
+		return ending_phase_duration_left;
+	}
+	public int getGameDuration() {
+		return game_duration;
 	}
 	
 	public static int getPointRecquirementToWin() {
