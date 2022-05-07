@@ -122,7 +122,7 @@ public class GameScoreboard {
 		
 		switch(wrapper.getTeam()) {
 		case RED:
-			addToScore(playersInBlueTeam + 2, 1);
+			addToScore(playersInBlueTeam + 3, 1);
 			
 			wrapper.setScoreboardEntry(playerString);
 			objective.getScore(playerString).setScore(playersInBlueTeam + 3);

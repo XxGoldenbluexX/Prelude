@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import fr.nekotine.prelude.effigies.TestEffigy;
+import fr.nekotine.prelude.effigies.Spider;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
 	TestEffigy1(
@@ -16,6 +17,14 @@ public enum EffigyList {
 			Main.getQuestionMarkHeadUrl(),
 			1,
 			DisguiseType.ARMOR_STAND
+			),
+	Spider(
+			Spider.class,
+			ChatColor.BLACK+"Araignee",
+			Material.COBWEB,
+			Main.getQuestionMarkHeadUrl(),
+			1,
+			DisguiseType.SPIDER
 			),
 	TestEffigy2(
 			TestEffigy.class,

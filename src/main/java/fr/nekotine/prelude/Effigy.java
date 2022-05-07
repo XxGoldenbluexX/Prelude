@@ -43,7 +43,7 @@ public abstract class Effigy implements Listener {
 	}
 	
 	@EventHandler
-	private void onPlayerInteract(PlayerInteractEvent event) {
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action a = event.getAction();
 		Player p = event.getPlayer();
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItem())) {
@@ -55,7 +55,7 @@ public abstract class Effigy implements Listener {
 	}
 	
 	@EventHandler
-	private void onPlayerDrop(PlayerDropItemEvent event) {
+	public void onPlayerDrop(PlayerDropItemEvent event) {
 		System.out.println("Player drop");
 		Player p = event.getPlayer();
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItemDrop().getItemStack())) {
