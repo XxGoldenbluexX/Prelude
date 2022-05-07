@@ -122,7 +122,7 @@ public class GameScoreboard {
 		
 		switch(wrapper.getTeam()) {
 		case RED:
-			addToScore(playersInBlueTeam + 3, 1);
+			addToScore(playersInBlueTeam + 2, 1);
 			
 			wrapper.setScoreboardEntry(playerString);
 			objective.getScore(playerString).setScore(playersInBlueTeam + 3);
@@ -157,6 +157,10 @@ public class GameScoreboard {
 			playersInBlueTeam--;
 			break;
 		}
+	}
+	public void updatePlayerDisplay(Player player) {
+		removePlayer(player);
+		addPlayer(player);
 	}
 	private void addToScore(int minimumScore, int toAdd) {
 		for(String entry : scoreboard.getEntries()) {
@@ -219,8 +223,10 @@ public class GameScoreboard {
 		switch(Main.getInstance().getRoundManager().getRoundState()) {
 		case MENU:
 			stateString += STATE_COLOR+MENU_DISPLAY;
+			break;
 		case PREPARATION:
 			timeString = ticksToTimeString(Main.getInstance().getRoundManager().getPreparationDurationLeft());
+			
 			stateString += STATE_COLOR+PREPARATION_DISPLAY;
 			stateString += TIME_COLOR+" ("+timeString+")";
 			break;
@@ -244,9 +250,14 @@ public class GameScoreboard {
 		int secondes = ticks/20;
 		int minutes = secondes / 60;
 		int reste = secondes % 60;
-		return Integer.toString(minutes)+":"+Integer.toString(reste);
+		if(reste < 10) {
+			return Integer.toString(minutes)+":"+"0"+Integer.toString(reste);
+		}else {
+			return Integer.toString(minutes)+":"+Integer.toString(reste);
+		}
+		
 	}
-	public void updatePlayerDisplay(Player player) {
+	public void updatePlayerAliveDisplay(Player player) {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
 		String scoreboardEntry = wrapper.getScoreboardEntry();
 		int score = objective.getScore(scoreboardEntry).getScore();

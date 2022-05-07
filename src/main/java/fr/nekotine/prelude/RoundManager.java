@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import fr.nekotine.prelude.utils.EventRegisterer;
+import fr.nekotine.prelude.utils.MessageSender;
 import fr.nekotine.prelude.utils.RoundState;
 import fr.nekotine.prelude.utils.Team;
 
@@ -77,15 +78,19 @@ public class RoundManager implements Listener{
 	}
 	private void preparationPhaseEnd() {
 		game_duration = 0;
-		setRoundState(RoundState.PLAYING);
 		
-		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
-			wrapper.removeShopItem();
-			wrapper.closeShopInventory();
+		boolean ended = endGame();
+		if(!ended) {
+			setRoundState(RoundState.PLAYING);
+			
+			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+				wrapper.removeShopItem();
+				wrapper.closeShopInventory();
+			}
+			
+			Main.getInstance().getMap().openWalls();
 		}
-		
-		Main.getInstance().getMap().openWalls();
-		
+
 		System.out.println("preparation phase end");
 	}
 	@EventHandler
@@ -96,6 +101,7 @@ public class RoundManager implements Listener{
 			e.setCancelled(true);
 			
 			setAlive(player, false);
+			MessageSender.sendToAll(MessageSender.getDeath(player));
 			
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
@@ -119,7 +125,7 @@ public class RoundManager implements Listener{
 	}
 	private void setAlive(Player player, boolean alive) {
 		Main.getInstance().getWrapper(player).setAlive(alive);
-		Main.getInstance().getScoreboard().updatePlayerDisplay(player);
+		Main.getInstance().getScoreboard().updatePlayerAliveDisplay(player);
 	}
 	private void resetEffigy(Player player) {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
@@ -208,14 +214,12 @@ public class RoundManager implements Listener{
 	private void endRound() {
 		if(getNumberOfPlayersAliveInTeam(Team.RED) == 0) {
 			giveRoundPoints(Team.BLUE);
-			boolean ended = endGame();
-			if(!ended) startEndingPhase();
+			startEndingPhase();
 			System.out.println("round ended win blue");
 			
 		}else if(getNumberOfPlayersAliveInTeam(Team.BLUE) == 0) {
 			giveRoundPoints(Team.RED);
-			boolean ended = endGame();
-			if(!ended) startEndingPhase();
+			startEndingPhase();
 			System.out.println("round ended win red");
 		}
 	}
@@ -224,6 +228,10 @@ public class RoundManager implements Listener{
 			
 			Main.getInstance().getMap().openWalls();
 			Main.getInstance().end();
+			
+			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+				wrapper.setAlive(true);
+			}
 			
 			setRoundState(RoundState.MENU);
 			System.out.println("game ended");

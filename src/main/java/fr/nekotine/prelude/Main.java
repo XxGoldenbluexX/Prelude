@@ -146,6 +146,9 @@ public class Main extends JavaPlugin implements Listener{
 			PlayerWrapper wrapper = getWrapper(player);
 			Team before = wrapper.getTeam();
 			getWrapper(player).setTeam(team);
+			
+			gameScoreboard.updatePlayerDisplay(player);
+			
 			System.out.println("team set");
 			EventRegisterer.callPlayerChangeTeamEvent(player, before, team);
 			return true;
