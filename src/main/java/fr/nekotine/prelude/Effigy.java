@@ -15,6 +15,7 @@ import fr.nekotine.prelude.utils.Ability;
 import fr.nekotine.prelude.utils.Disguiser;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.ItemStackMaker;
+import fr.nekotine.prelude.utils.MessageSender;
 
 public abstract class Effigy implements Listener {
 
@@ -56,6 +57,7 @@ public abstract class Effigy implements Listener {
 			event.setCancelled(true);
 			if (Main.getInstance().isRoundPlaying() && (a==Action.RIGHT_CLICK_AIR || a==Action.RIGHT_CLICK_BLOCK) && !primary_ability_on_cooldown) {
 				castPrimarySpell();
+				MessageSender.sendMessage(MessageSender.getSpell(effigyType.getPrimarySpellName()), p);
 			}
 		}
 	}
@@ -69,6 +71,7 @@ public abstract class Effigy implements Listener {
 			event.setCancelled(true);
 			if (Main.getInstance().isRoundPlaying() && !secondary_ability_on_cooldown) {
 				castSecondarySpell();
+				MessageSender.sendMessage(MessageSender.getSpell(effigyType.getSecondarySpellName()), p);
 			}
 		}
 	}

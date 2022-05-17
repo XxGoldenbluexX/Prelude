@@ -14,6 +14,8 @@ public enum EffigyList {
 			TestEffigy.class,
 			ChatColor.RED+"Test",
 			Material.BEDROCK,
+			"1",
+			"2",
 			10,
 			1,
 			Main.getQuestionMarkHeadUrl(),
@@ -24,6 +26,8 @@ public enum EffigyList {
 			Spider.class,
 			ChatColor.BLACK+"Araignee",
 			Material.COBWEB,
+			"1",
+			"2",
 			10,
 			1,
 			Main.getQuestionMarkHeadUrl(),
@@ -34,6 +38,8 @@ public enum EffigyList {
 			TestEffigy.class,
 			"Test",
 			Material.BEDROCK,
+			"1",
+			"2",
 			10,
 			1,
 			Main.getQuestionMarkHeadUrl(),
@@ -44,6 +50,8 @@ public enum EffigyList {
 			TestEffigy.class,
 			"Test",
 			Material.BEDROCK,
+			"1",
+			"2",
 			10,
 			1,
 			Main.getQuestionMarkHeadUrl(),
@@ -64,8 +72,11 @@ public enum EffigyList {
 	private final String[] description;
 	private final double health;
 	private final double damage;
+	private final String primarySpellName;
+	private final String secondarySpellName;
 	
-	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, int health, int damage, String urlToHead, int tier, DisguiseType disguiseType,
+	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, String primarySpellName, String secondarySpellName,
+				int health, int damage, String urlToHead, int tier, DisguiseType disguiseType,
 				String... description) {
 		this.weaponMaterial=weaponMaterial;
 		this.tier=tier;
@@ -76,6 +87,8 @@ public enum EffigyList {
 		this.description=description;
 		this.health=health;
 		this.damage=damage;
+		this.primarySpellName=primarySpellName;
+		this.secondarySpellName = secondarySpellName;
 	}
 	
 	public static ArrayList<EffigyList> getTier(int tier){
@@ -114,6 +127,12 @@ public enum EffigyList {
 	}
 	public double getDamage() {
 		return damage;
+	}
+	public String getPrimarySpellName() {
+		return primarySpellName;
+	}
+	public String getSecondarySpellName() {
+		return secondarySpellName;
 	}
 	public static int getCostFromTier(int tier) {
 		switch(tier) {

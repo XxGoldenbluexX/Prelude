@@ -21,6 +21,7 @@ public class PlayerWrapper {
 	public PlayerWrapper(Player player, Team team) {
 		this.player=player;
 		this.setTeam(team);
+		this.setMoney(money);
 		
 		this.menuInventory = new MenuInventory(this);
 		this.shopInventory = new ShopInventory(this);
@@ -59,6 +60,7 @@ public class PlayerWrapper {
 	}
 	
 	public void destroy() {
+		player.setTotalExperience(0);
 		menuInventory.destroy();
 		shopInventory.destroy();
 		if(effigy != null) {
@@ -97,6 +99,11 @@ public class PlayerWrapper {
 	public void setMoney(int money) {
 		int before = this.money;
 		this.money = money;
+		
+		player.setTotalExperience(0);
+		for(int level = 1; level <= money ; level++) {
+			player.setExp(1);
+		}
 		
 		EventRegisterer.callPlayerChangeMoneyEvent(player, before, money);
 	}
