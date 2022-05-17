@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
 
@@ -43,5 +44,32 @@ public class MessageSender {
 	}
 	public static String getSpell(String spellName) {
 		return PRELUDE_MESSAGE_PREFIX+ChatColor.GRAY+"Sort -> "+ChatColor.GREEN+spellName;
+	}
+	public static String ticksToTimeString(int ticks) {
+		int secondes = ticks/20;
+		int minutes = secondes / 60;
+		int reste = secondes % 60;
+		if(reste < 10) {
+			return Integer.toString(minutes)+":"+"0"+Integer.toString(reste);
+		}else {
+			return Integer.toString(minutes)+":"+Integer.toString(reste);
+		}
+	}
+	public static String getCooldownTimer(Effigy effigy) {
+		String message = " | ";
+		boolean primaryOnCD = effigy.isOnCooldown(Ability.PRIMARY);
+		int primaryCD = effigy.getCooldown(Ability.PRIMARY);
+		String primaryName = effigy.getEffigyType().getPrimarySpellName();
+		
+		boolean secondaryOnCD = effigy.isOnCooldown(Ability.SECONDARY);
+		int secondaryCD = effigy.getCooldown(Ability.SECONDARY);
+		String secondaryName = effigy.getEffigyType().getSecondarySpellName();
+		
+		if(secondaryOnCD) {
+			message+= ChatColor.RED+"(2)"+ChatColor.GRAY+" ("+ticksToTimeString(secondaryCD)+") "+ChatColor.WHITE+"|";
+		}else {
+			
+		}
+		return "";
 	}
 }

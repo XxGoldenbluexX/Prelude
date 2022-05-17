@@ -24,8 +24,8 @@ public abstract class Effigy implements Listener {
 	
 	private boolean primary_ability_on_cooldown = false;
 	private boolean secondary_ability_on_cooldown = false;
-	private long primary_ability_current_cooldown_ticks = 0;//current cooldown
-	private long secondary_ability_current_cooldown_ticks = 0;
+	private int primary_ability_current_cooldown_ticks = 0;//current cooldown
+	private int secondary_ability_current_cooldown_ticks = 0;
 	
 	private final ItemStack weapon;
 	public PlayerWrapper getWrapper() {
@@ -126,8 +126,30 @@ public abstract class Effigy implements Listener {
 	public void giveWeapon() {
 		wrapper.getPlayer().getInventory().addItem(weapon);
 	}
+	public boolean isOnCooldown(Ability ability) {
+		switch(ability) {
+		case PRIMARY:
+			return primary_ability_on_cooldown;
+		case SECONDARY:
+			return secondary_ability_on_cooldown;
+		default:
+			return false;
+		}
+	}
+	public int getCooldown(Ability ability) {
+		switch(ability) {
+		case PRIMARY:
+			return primary_ability_current_cooldown_ticks;
+		case SECONDARY:
+			return secondary_ability_current_cooldown_ticks;
+		default:
+			return -1;
+		}
+	}
 	
 	protected abstract void castPrimarySpell();
 	protected abstract void castSecondarySpell();
 	protected abstract void roundEnd();
+	
+	
 }

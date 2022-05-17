@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import fr.nekotine.prelude.utils.Team;
+import fr.nekotine.prelude.utils.MessageSender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -225,18 +226,18 @@ public class GameScoreboard {
 			stateString += STATE_COLOR+MENU_DISPLAY;
 			break;
 		case PREPARATION:
-			timeString = ticksToTimeString(Main.getInstance().getRoundManager().getPreparationDurationLeft());
+			timeString = MessageSender.ticksToTimeString(Main.getInstance().getRoundManager().getPreparationDurationLeft());
 			
 			stateString += STATE_COLOR+PREPARATION_DISPLAY;
 			stateString += TIME_COLOR+" ("+timeString+")";
 			break;
 		case PLAYING:
-			timeString = ticksToTimeString(Main.getInstance().getRoundManager().getGameDuration());
+			timeString = MessageSender.ticksToTimeString(Main.getInstance().getRoundManager().getGameDuration());
 			stateString += STATE_COLOR+PLAYING_DISPLAY;
 			stateString += TIME_COLOR+" ("+timeString+")";
 			break;
 		case ENDING:
-			timeString = ticksToTimeString(Main.getInstance().getRoundManager().getEndingDurationLeft());
+			timeString = MessageSender.ticksToTimeString(Main.getInstance().getRoundManager().getEndingDurationLeft());
 			stateString += STATE_COLOR+ENDING_DISPLAY;
 			stateString += TIME_COLOR+" ("+timeString+")";
 			break;
@@ -245,17 +246,6 @@ public class GameScoreboard {
 		if(stateEntry != null) scoreboard.resetScores(stateEntry);
 		stateEntry = stateString;
 		objective.getScore(stateEntry).setScore(position);
-	}
-	private String ticksToTimeString(int ticks) {
-		int secondes = ticks/20;
-		int minutes = secondes / 60;
-		int reste = secondes % 60;
-		if(reste < 10) {
-			return Integer.toString(minutes)+":"+"0"+Integer.toString(reste);
-		}else {
-			return Integer.toString(minutes)+":"+Integer.toString(reste);
-		}
-		
 	}
 	public void updatePlayerAliveDisplay(Player player) {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
