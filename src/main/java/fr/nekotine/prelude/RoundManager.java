@@ -1,6 +1,7 @@
 package fr.nekotine.prelude;
 
 import org.bukkit.GameMode;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -78,9 +79,9 @@ public class RoundManager implements Listener{
 	}
 	private void preparationPhaseEnd() {
 		game_duration = 0;
-		
-		boolean ended = endGame();
-		if(!ended) {
+		if(redScore>=POINT_RECQUIREMENT_TO_WIN || blueScore>=POINT_RECQUIREMENT_TO_WIN) {
+			endGame();
+		}else {
 			setRoundState(RoundState.PLAYING);
 			
 			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
@@ -90,7 +91,6 @@ public class RoundManager implements Listener{
 			
 			Main.getInstance().getMap().openWalls();
 		}
-
 		System.out.println("preparation phase end");
 	}
 	@EventHandler
@@ -145,6 +145,7 @@ public class RoundManager implements Listener{
 			setMoney(player, STARTING_MONEY);
 		}
 		
+		Main.getInstance().getBumperManager().activate(true);
 		startRound();
 	}
 	public void startRound() {
@@ -153,6 +154,7 @@ public class RoundManager implements Listener{
 		for(Player player : Main.getInstance().getPlayers()) {
 			resetEffigy(player);
 			setAlive(player, true);
+			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			player.setGameMode(GameMode.ADVENTURE);
 		}
 		
@@ -223,21 +225,18 @@ public class RoundManager implements Listener{
 			System.out.println("round ended win red");
 		}
 	}
-	private boolean endGame() {
-		if(redScore>=POINT_RECQUIREMENT_TO_WIN || blueScore>=POINT_RECQUIREMENT_TO_WIN) {
+	public void endGame() {
 			
-			Main.getInstance().getMap().openWalls();
-			Main.getInstance().end();
+		Main.getInstance().getMap().openWalls();
+		Main.getInstance().getBumperManager().activate(false);
+		Main.getInstance().end();
 			
-			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
-				wrapper.setAlive(true);
-			}
-			
-			setRoundState(RoundState.MENU);
-			System.out.println("game ended");
-			return true;
+		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+			wrapper.setAlive(true);
 		}
-		return false;
+			
+		setRoundState(RoundState.MENU);
+		System.out.println("game ended");
 	}
 	private void giveRoundPoints(Team winner) {
 		switch(winner) {

@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -49,6 +50,7 @@ public class Main extends JavaPlugin implements Listener{
 	private MapInventory mapInventory;
 	private RoundManager roundManager;
 	private GameScoreboard gameScoreboard;
+	private BumperManager bumperManager;
 	private BukkitTask ticker;
 	
 	@Override
@@ -79,6 +81,7 @@ public class Main extends JavaPlugin implements Listener{
 		roundManager = new RoundManager();
 		mapInventory = new MapInventory();
 		gameScoreboard = new GameScoreboard();
+		bumperManager = new BumperManager();
 		
 		ticker = (new BukkitRunnable() {
 				public void run() {
@@ -95,6 +98,14 @@ public class Main extends JavaPlugin implements Listener{
 	@Override
 	public void onDisable() {
 		Gameruler.disable();
+		roundManager.endGame();
+		roundManager.destroy();
+		gameScoreboard.destroy();
+		bumperManager.destroy();
+		mapInventory.destroy();
+		
+		end();
+		
 		ticker.cancel();
 		
 		EventRegisterer.unregisterEvent(this);
@@ -110,7 +121,7 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	
 	public boolean addPlayer(Player player, Team team) {
-		if(!players.containsKey(player)) {
+		if(!roundManager.isRoundPlaying() && !players.containsKey(player)) {
 			System.out.println("player added");
 			players.put(player, new PlayerWrapper(player, team));
 			
@@ -264,5 +275,12 @@ public class Main extends JavaPlugin implements Listener{
 		if(e.getItem()!=null && e.getItem().getType()==LEAVE_GAME_MATERIAL && e.getAction()!=Action.PHYSICAL) {
 			removePlayer(e.getPlayer());
 		}
+	}
+	@EventHandler
+	public void onDisconnext(PlayerQuitEvent e) {
+		if(players.containsKey(e.getPlayer())) removePlayer(e.getPlayer());
+	}
+	public BumperManager getBumperManager() {
+		return bumperManager;
 	}
 }

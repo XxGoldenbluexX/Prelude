@@ -1,9 +1,12 @@
 package fr.nekotine.prelude;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -38,6 +41,9 @@ public abstract class Effigy implements Listener {
 		weapon = ItemStackMaker.make(effigyType.getWeaponMaterial(), 1, effigyType.getName(), effigyType.getDescription());
 		giveWeapon();
 		
+		wrapper.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(effigyType.getHealth());
+		wrapper.getPlayer().setHealth(effigyType.getHealth());
+		
 		Disguiser.disguiseToAll(wrapper.getPlayer(), effigyType.getDisguiseType());
 		EventRegisterer.registerEvent(this);
 	}
@@ -64,6 +70,13 @@ public abstract class Effigy implements Listener {
 			if (Main.getInstance().isRoundPlaying() && !secondary_ability_on_cooldown) {
 				castSecondarySpell();
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onHit(EntityDamageByEntityEvent e) {
+		if(e.getDamager().equals(wrapper.getPlayer()) && e.getCause()==DamageCause.ENTITY_ATTACK) {
+			e.setDamage(effigyType.getDamage());
 		}
 	}
 	

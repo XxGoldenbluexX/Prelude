@@ -14,6 +14,8 @@ public enum EffigyList {
 			TestEffigy.class,
 			ChatColor.RED+"Test",
 			Material.BEDROCK,
+			10,
+			1,
 			Main.getQuestionMarkHeadUrl(),
 			1,
 			DisguiseType.ARMOR_STAND
@@ -22,6 +24,8 @@ public enum EffigyList {
 			Spider.class,
 			ChatColor.BLACK+"Araignee",
 			Material.COBWEB,
+			10,
+			1,
 			Main.getQuestionMarkHeadUrl(),
 			1,
 			DisguiseType.SPIDER
@@ -30,6 +34,8 @@ public enum EffigyList {
 			TestEffigy.class,
 			"Test",
 			Material.BEDROCK,
+			10,
+			1,
 			Main.getQuestionMarkHeadUrl(),
 			2,
 			DisguiseType.ARMOR_STAND
@@ -38,27 +44,12 @@ public enum EffigyList {
 			TestEffigy.class,
 			"Test",
 			Material.BEDROCK,
+			10,
+			1,
 			Main.getQuestionMarkHeadUrl(),
 			3,
 			DisguiseType.ARMOR_STAND
 			);
-	/*
-	Spider(
-			Spider.class,
-			"Araignée",
-			Material.COBWEB,
-			Main.getQuestionMarkHeadUrl(),
-			1,
-			DisguiseType.SPIDER),
-	Slime(
-			Slime.class,
-			"Slime",
-			Material.SLIME_BALL, 
-			Main.getQuestionMarkHeadUrl(),
-			1, 
-			DisguiseType.SLIME
-			);
-	*/
 	
 	private final static int TIER_1_EFFIGY_COST = 0;
 	private final static int TIER_2_EFFIGY_COST = 6;
@@ -71,8 +62,10 @@ public enum EffigyList {
 	private final Class<? extends Effigy> effigyClass;
 	private final String name;
 	private final String[] description;
+	private final double health;
+	private final double damage;
 	
-	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, String urlToHead, int tier, DisguiseType disguiseType,
+	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, int health, int damage, String urlToHead, int tier, DisguiseType disguiseType,
 				String... description) {
 		this.weaponMaterial=weaponMaterial;
 		this.tier=tier;
@@ -81,6 +74,8 @@ public enum EffigyList {
 		this.urlToHead=urlToHead;
 		this.name=name;
 		this.description=description;
+		this.health=health;
+		this.damage=damage;
 	}
 	
 	public static ArrayList<EffigyList> getTier(int tier){
@@ -113,6 +108,12 @@ public enum EffigyList {
 	}
 	public int getCost() {
 		return getCostFromTier(getTier());
+	}
+	public double getHealth() {
+		return health;
+	}
+	public double getDamage() {
+		return damage;
 	}
 	public static int getCostFromTier(int tier) {
 		switch(tier) {
