@@ -43,6 +43,9 @@ public class MenuInventory extends BaseInventory{
 		setItem(MAP_ITEM, MAP_SLOT);
 		setItem(START_ITEM, START_SLOT);
 		setTeamItem();
+		
+		holderWrapper.getPlayer().getInventory().clear();
+		holderWrapper.getPlayer().getInventory().addItem(new ItemStack(Material.BEACON));
 	}
 	private void fillVoidGlass() {
 		for(int i=0; i<SIZE; i++) {

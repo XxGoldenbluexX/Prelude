@@ -11,7 +11,7 @@ import fr.nekotine.prelude.utils.EventRegisterer;
 public class BumperManager implements Listener{
 	private boolean active = false;
 	private final Material[] BUMPERS = {Material.SLIME_BLOCK};
-	private final float UP_BOOST = 1;
+	private final float UP_BOOST = 1.2f;
 	public BumperManager() {
 		EventRegisterer.registerEvent(this);
 	}
@@ -31,8 +31,8 @@ public class BumperManager implements Listener{
 	
 	@EventHandler
 	public void onMove(PlayerMoveEvent e) {
-		if(active && isBumper(e.getTo().subtract(0, 1, 0).getBlock().getType())) {
-			e.getPlayer().getVelocity().add(new Vector(0, UP_BOOST, 0));
+		if(active && isBumper(e.getTo().clone().subtract(0, 1, 0).getBlock().getType())) {
+			e.getPlayer().setVelocity(new Vector(0, UP_BOOST, 0));
 		}
 	}
 }

@@ -99,11 +99,8 @@ public class PlayerWrapper {
 	public void setMoney(int money) {
 		int before = this.money;
 		this.money = money;
-		
-		player.setTotalExperience(0);
-		for(int level = 1; level <= money ; level++) {
-			player.setExp(1);
-		}
+		player.setLevel(money);
+		player.setExp(1);
 		
 		EventRegisterer.callPlayerChangeMoneyEvent(player, before, money);
 	}

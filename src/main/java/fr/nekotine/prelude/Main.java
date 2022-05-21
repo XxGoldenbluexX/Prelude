@@ -95,6 +95,7 @@ public class Main extends JavaPlugin implements Listener{
 		super.onLoad();
 		CommandAPI.onLoad(new CommandAPIConfig());
 	}
+	
 	@Override
 	public void onDisable() {
 		Gameruler.disable();
@@ -155,10 +156,11 @@ public class Main extends JavaPlugin implements Listener{
 	public boolean setTeam(Player player, Team team) {
 		if(players.containsKey(player)) {
 			PlayerWrapper wrapper = getWrapper(player);
+			
+			gameScoreboard.removePlayer(player);
 			Team before = wrapper.getTeam();
 			getWrapper(player).setTeam(team);
-			
-			gameScoreboard.updatePlayerDisplay(player);
+			gameScoreboard.addPlayer(player);
 			
 			System.out.println("team set");
 			EventRegisterer.callPlayerChangeTeamEvent(player, before, team);

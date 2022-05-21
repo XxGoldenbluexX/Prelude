@@ -159,10 +159,6 @@ public class GameScoreboard {
 			break;
 		}
 	}
-	public void updatePlayerDisplay(Player player) {
-		removePlayer(player);
-		addPlayer(player);
-	}
 	private void addToScore(int minimumScore, int toAdd) {
 		for(String entry : scoreboard.getEntries()) {
 			int score = objective.getScore(entry).getScore();
