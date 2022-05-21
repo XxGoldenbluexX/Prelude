@@ -48,8 +48,17 @@ public class MessageSender {
 		return PRELUDE_MESSAGE_PREFIX+getTeamColor(killedWrapper.getTeam())+killed.getName()+ChatColor.GRAY+" died to "
 				+getTeamColor(killerWrapper.getTeam())+killer.getName();
 	}
-	public static String getAddMoney(int money) {
-		return PRELUDE_MESSAGE_PREFIX + ChatColor.GREEN + "+" + money + ChatColor.GOLD+"$";
+	public static String getAddMoney(int money, int before) {
+		int after = money + before;
+		String message = PRELUDE_MESSAGE_PREFIX;
+		
+		if(money >= 0) {
+			message += ChatColor.GREEN+"+"+money;
+		}else {
+			message += ChatColor.RED+Integer.toString(money);
+		}
+		return message + ChatColor.GOLD+" $" + 
+				ChatColor.GRAY+" ("+before+" -> "+ after +")";
 	}
 	public static String getSpell(String spellName) {
 		return PRELUDE_MESSAGE_PREFIX+ChatColor.GRAY+"Sort -> "+ChatColor.GREEN+spellName;

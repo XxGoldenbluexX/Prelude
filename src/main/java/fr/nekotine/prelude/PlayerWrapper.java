@@ -107,14 +107,18 @@ public class PlayerWrapper {
 	}
 	
 	public void addMoney(int toAdd) {
-		setMoney( money + toAdd);
-		MessageSender.sendMessage(MessageSender.getAddMoney(toAdd), player);
+		if(toAdd != 0) {
+			int before = money;
+			setMoney( money + toAdd);
+			
+			MessageSender.sendMessage(MessageSender.getAddMoney(toAdd, before), player);
+		}
 	}
 	
 	public boolean buyEffigy(EffigyList effigy) {
 		int cost = effigy.getCost();
 		if(getMoney()>=cost) {
-			setMoney(getMoney() - cost);
+			addMoney(- cost);
 			setEffigy(effigy);
 			return true;
 		}else {
