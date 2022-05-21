@@ -101,11 +101,16 @@ public class RoundManager implements Listener{
 			e.setCancelled(true);
 			
 			setAlive(player, false);
-			MessageSender.sendToAll(MessageSender.getDeath(player));
+			
 			
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
-			if(wrapperOfKiller != null) addMoney(wrapperOfKiller.getPlayer(), POINTS_PER_KILL);
+			if(wrapperOfKiller != null) {
+				addMoney(wrapperOfKiller.getPlayer(), POINTS_PER_KILL);
+				MessageSender.sendToAll(MessageSender.getDeath(player, player.getKiller()));
+			}else {
+				MessageSender.sendToAll(MessageSender.getDeath(player));
+			}
 			
 			endRound();
 		}

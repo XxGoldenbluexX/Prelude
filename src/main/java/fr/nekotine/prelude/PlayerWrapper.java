@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import fr.nekotine.prelude.inventories.MenuInventory;
 import fr.nekotine.prelude.inventories.ShopInventory;
 import fr.nekotine.prelude.utils.EventRegisterer;
+import fr.nekotine.prelude.utils.MessageSender;
 import fr.nekotine.prelude.utils.Team;
 
 public class PlayerWrapper {
@@ -107,6 +108,7 @@ public class PlayerWrapper {
 	
 	public void addMoney(int toAdd) {
 		setMoney( money + toAdd);
+		MessageSender.sendMessage(MessageSender.getAddMoney(toAdd), player);
 	}
 	
 	public boolean buyEffigy(EffigyList effigy) {

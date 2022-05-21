@@ -42,6 +42,15 @@ public class MessageSender {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(killed);
 		return PRELUDE_MESSAGE_PREFIX+getTeamColor(wrapper.getTeam())+killed.getName()+ChatColor.GRAY+" died";
 	}
+	public static String getDeath(Player killed, Player killer) {
+		PlayerWrapper killedWrapper = Main.getInstance().getWrapper(killed);
+		PlayerWrapper killerWrapper = Main.getInstance().getWrapper(killer);
+		return PRELUDE_MESSAGE_PREFIX+getTeamColor(killedWrapper.getTeam())+killed.getName()+ChatColor.GRAY+" died to "
+				+getTeamColor(killerWrapper.getTeam())+killer.getName();
+	}
+	public static String getAddMoney(int money) {
+		return PRELUDE_MESSAGE_PREFIX + ChatColor.GREEN + "+" + money + ChatColor.GOLD+"$";
+	}
 	public static String getSpell(String spellName) {
 		return PRELUDE_MESSAGE_PREFIX+ChatColor.GRAY+"Sort -> "+ChatColor.GREEN+spellName;
 	}

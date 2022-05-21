@@ -11,7 +11,7 @@ import fr.nekotine.prelude.utils.EventRegisterer;
 public class BumperManager implements Listener{
 	private boolean active = false;
 	private final Material[] BUMPERS = {Material.SLIME_BLOCK};
-	private final float UP_BOOST = 1.2f;
+	private final float UP_BOOST = 1.1f;
 	public BumperManager() {
 		EventRegisterer.registerEvent(this);
 	}
