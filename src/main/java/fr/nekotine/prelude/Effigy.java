@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.prelude.utils.Ability;
+import fr.nekotine.prelude.utils.ComponentMaker;
 import fr.nekotine.prelude.utils.Disguiser;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.ItemStackMaker;
@@ -24,6 +25,8 @@ public abstract class Effigy implements Listener {
 	
 	private boolean primary_ability_on_cooldown = false;
 	private boolean secondary_ability_on_cooldown = false;
+	private int primary_ability_total_cooldown_ticks = 0;
+	private int secondary_ability_total_cooldown_ticks = 0;
 	private int primary_ability_current_cooldown_ticks = 0;//current cooldown
 	private int secondary_ability_current_cooldown_ticks = 0;
 	
@@ -86,6 +89,7 @@ public abstract class Effigy implements Listener {
 	
 	
 	public void tick() {
+		wrapper.getPlayer().sendActionBar(ComponentMaker.getComponent(MessageSender.getCooldownTimer(this)));
 		if(primary_ability_on_cooldown) {
 			primary_ability_current_cooldown_ticks--;
 			if(primary_ability_current_cooldown_ticks<=0) {
@@ -111,10 +115,12 @@ public abstract class Effigy implements Listener {
 		switch (ability) {
 		case PRIMARY:
 			primary_ability_current_cooldown_ticks = ticks_duration;
+			primary_ability_total_cooldown_ticks = ticks_duration;
 			primary_ability_on_cooldown = true;
 			break;
 		case SECONDARY:
 			secondary_ability_current_cooldown_ticks = ticks_duration;
+			secondary_ability_total_cooldown_ticks = ticks_duration;
 			secondary_ability_on_cooldown = true;
 			break;
 		}
@@ -146,10 +152,21 @@ public abstract class Effigy implements Listener {
 			return -1;
 		}
 	}
+	public int getTotalCooldown(Ability ability) {
+		switch(ability) {
+		case PRIMARY:
+			return primary_ability_total_cooldown_ticks;
+		case SECONDARY:
+			return secondary_ability_total_cooldown_ticks;
+		default:
+			return -1;
+		}
+	}
 	
 	protected abstract void castPrimarySpell();
 	protected abstract void castSecondarySpell();
 	protected abstract void roundEnd();
+	
 	
 	
 }
