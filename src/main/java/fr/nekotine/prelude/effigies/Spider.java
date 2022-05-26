@@ -29,16 +29,18 @@ public class Spider extends Effigy{
 	private PotionEffect poisonEffect;
 	public Spider(PlayerWrapper w, EffigyList effigyType) {
 		super(w, effigyType);
-		poisonEffect = new PotionEffect(PotionEffectType.POISON, 10, 0);
+		poisonEffect = new PotionEffect(PotionEffectType.POISON, 30, 0);
 	}
 	
 	@EventHandler
 	public void damageEvent(EntityDamageByEntityEvent e) {
 		if(e.getCause()==DamageCause.PROJECTILE && e.getDamager().equals(getWrapper().getPlayer())) {
+			System.out.println("OUI1");
 			e.setDamage(spell1Damage);
 			if (e.getEntity() instanceof LivingEntity) {
 				LivingEntity victim = (LivingEntity) e.getEntity();
 				victim.addPotionEffect(poisonEffect);
+				System.out.println("OUI2");
 			}
 		}
 	}
@@ -75,7 +77,7 @@ public class Spider extends Effigy{
 	protected void castPrimarySpell() {
 		Player p = getWrapper().getPlayer();
 		Location loc = p.getEyeLocation();
-		arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.6f, 0);
+		arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.7f, 0);
 		arrow.setColor(Color.GREEN);
 		arrow.setShooter(p);
 		setCooldown(Ability.PRIMARY, 200);
