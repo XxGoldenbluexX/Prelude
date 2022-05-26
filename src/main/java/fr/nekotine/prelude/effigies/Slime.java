@@ -54,13 +54,12 @@ public class Slime extends Effigy{
 	
 	@Override
 	protected void castPrimarySpell() {
-		Player p = getWrapper().getPlayer();
-		p.setVelocity(p.getVelocity().setY(JUMP_VELOCITY));
-		setCooldown(Ability.SECONDARY, PRIMARY_COOLDOWN);
 	}
 	@Override
 	protected void castSecondarySpell() {
-
+		Player p = getWrapper().getPlayer();
+		p.setVelocity(p.getVelocity().setY(JUMP_VELOCITY));
+		setCooldown(Ability.SECONDARY, PRIMARY_COOLDOWN);
 	}
 	@Override
 	protected void roundEnd() {
@@ -77,11 +76,15 @@ public class Slime extends Effigy{
 		slimes.clear();
 	}
 	
+	public void removeHealSlime(HealSlime slime) {
+		slimes.remove(slime);
+	}
+	
 	private static class HealSlime implements Listener{
 		private final org.bukkit.entity.Slime slime;
-		private final Effigy effigy;
+		private final Slime effigy;
 		
-		private HealSlime(Effigy effigy) {
+		private HealSlime(Slime effigy) {
 			this.effigy=effigy;
 			
 			Double invertX = Math.random();
@@ -123,7 +126,7 @@ public class Slime extends Effigy{
 		}
 		private void destroy() {
 			slime.remove();
-			((Slime)wrapper.getEffigy()).slimes.remove(this);
+			effigy.removeHealSlime(this);
 			EventRegisterer.unregisterEvent(this);
 		}
 	}

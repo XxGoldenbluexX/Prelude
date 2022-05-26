@@ -59,7 +59,6 @@ public class ShopInventory extends BaseInventory{
 		setItem(BACK_ITEM, BACK_SLOT);
 		
 		setMoneyItem();
-		//placeEffigy(defaultEffigy, EFFIGY_SLOT);
 		placeEffigies();
 	}
 	
@@ -107,6 +106,7 @@ public class ShopInventory extends BaseInventory{
 
 	@Override
 	public void onInventoryClick(InventoryClickEvent e) {
+		if(e.getSlot() == BACK_SLOT) e.getWhoClicked().closeInventory();
 		ItemStack clicked = e.getCurrentItem();
 		if(clicked != null) {
 			EffigyList effigy = TagInjector.extractEffigyListTag(clicked);

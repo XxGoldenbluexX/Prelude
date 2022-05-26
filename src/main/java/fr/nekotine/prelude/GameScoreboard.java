@@ -9,8 +9,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import fr.nekotine.prelude.utils.Team;
 import fr.nekotine.prelude.utils.MessageSender;
+import fr.nekotine.prelude.utils.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -57,11 +57,17 @@ public class GameScoreboard {
 		redTeam.setCanSeeFriendlyInvisibles(true);
 		blueTeam.setCanSeeFriendlyInvisibles(true);
 		
-		redTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
-		blueTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		redTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OTHER_TEAMS);
+		blueTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,org.bukkit.scoreboard.Team.OptionStatus.FOR_OTHER_TEAMS);
 		
 		redTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
 		blueTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE,org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+		
+		redTeam.setAllowFriendlyFire(false);
+		blueTeam.setAllowFriendlyFire(false);
+
+		redTeam.setCanSeeFriendlyInvisibles(true);
+		blueTeam.setCanSeeFriendlyInvisibles(true);
 		
 		objective = scoreboard.registerNewObjective("sidebar", "dummy",Component.text(ChatColor.BOLD+"Prelude").color((TextColor) NamedTextColor.GOLD));
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
