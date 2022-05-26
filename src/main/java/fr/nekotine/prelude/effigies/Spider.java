@@ -34,13 +34,11 @@ public class Spider extends Effigy{
 	
 	@EventHandler
 	public void damageEvent(EntityDamageByEntityEvent e) {
-		if(e.getCause()==DamageCause.PROJECTILE && e.getDamager().equals(getWrapper().getPlayer())) {
-			System.out.println("OUI1");
+		if(e.getCause()==DamageCause.PROJECTILE && e.getDamager() instanceof Arrow && ((Arrow)e.getDamager()).getShooter().equals(getWrapper().getPlayer())) {
 			e.setDamage(spell1Damage);
 			if (e.getEntity() instanceof LivingEntity) {
 				LivingEntity victim = (LivingEntity) e.getEntity();
 				victim.addPotionEffect(poisonEffect);
-				System.out.println("OUI2");
 			}
 		}
 	}
