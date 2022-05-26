@@ -109,7 +109,7 @@ public class Main extends JavaPlugin implements Listener{
 			TextComponent message = 
 					Component.text("["+ChatColor.AQUA+"Prelude"+ChatColor.WHITE+"]"+
 			ChatColor.GOLD+"La partie manque de monde! ("+players.size()+" joueurs en attente)");
-			message.hoverEvent(HoverEvent.showText(Component.text(ChatColor.GOLD+"Cliquez pour rejoindre")))
+			message = message.hoverEvent(HoverEvent.showText(Component.text(ChatColor.GOLD+"Cliquez pour rejoindre")))
 			.clickEvent(ClickEvent.runCommand("/prelude game join "));
 			event.getPlayer().sendMessage(message);
 		}
