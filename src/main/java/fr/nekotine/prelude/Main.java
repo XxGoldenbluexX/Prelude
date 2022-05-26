@@ -6,12 +6,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,8 +25,13 @@ import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.Gameruler;
+import fr.nekotine.prelude.utils.RoundState;
 import fr.nekotine.prelude.utils.Serializer;
 import fr.nekotine.prelude.utils.Team;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 
 public class Main extends JavaPlugin implements Listener{
 	
@@ -94,6 +101,17 @@ public class Main extends JavaPlugin implements Listener{
 	public void onLoad() {
 		super.onLoad();
 		CommandAPI.onLoad(new CommandAPIConfig());
+	}
+	
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (getRoundManager().getRoundState()==RoundState.MENU) {
+			TextComponent message = 
+					Component.text("["+ChatColor.AQUA+"Prelude"+ChatColor.WHITE+"]"+
+			ChatColor.GOLD+"La partie manque de monde! ("+players.size()+" joueurs en attente)");
+			message.hoverEvent(HoverEvent.showText(Component.text(ChatColor.GOLD+"Cliquez pour rejoindre")))
+			.clickEvent(ClickEvent.runCommand("/prelude game join "));
+			event.getPlayer().sendMessage(message);
+		}
 	}
 	
 	@Override
