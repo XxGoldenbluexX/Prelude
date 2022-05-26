@@ -82,7 +82,7 @@ public class MessageSender {
 		String primaryMessage = "";
 		if(primaryOnCD) {
 			primaryMessage += "|";
-			float ratio = primaryCD / primaryBaseCD;
+			float ratio = (float)primaryCD / primaryBaseCD;
 			int colored = Math.round(ratio * NUMBER_OF_BARS);
 			for(int i = 1 ; i <= colored ; i++) {
 				primaryMessage+=ChatColor.GREEN+":";
@@ -92,9 +92,9 @@ public class MessageSender {
 			}
 			primaryMessage += ChatColor.WHITE+"|";
 			
-			primaryMessage+= ChatColor.GRAY+" ("+ticksToTimeString(primaryCD)+"s) "+ChatColor.RED+"(1)";
+			primaryMessage+= ChatColor.GRAY+" ("+ticksToTimeString(primaryCD + 20)+"s) "+ChatColor.RED+"(1)";
 		}else {
-			primaryMessage+= ChatColor.AQUA+"["+primaryName+"]" + ChatColor.GREEN+"(1)";
+			primaryMessage+= ChatColor.AQUA+"["+primaryName+"]" + ChatColor.GREEN+" (1)";
 		}
 		
 		boolean secondaryOnCD = effigy.isOnCooldown(Ability.SECONDARY);
@@ -105,8 +105,8 @@ public class MessageSender {
 		
 		
 		if(secondaryOnCD) {
-			secondaryMessage+= ChatColor.RED+"(2)"+ChatColor.GRAY+" ("+ticksToTimeString(secondaryCD)+"s) "+ChatColor.WHITE+"|";
-			float ratio = secondaryCD / secondaryBaseCD;
+			secondaryMessage+= ChatColor.RED+"(2)"+ChatColor.GRAY+" ("+ticksToTimeString(secondaryCD + 20)+"s) "+ChatColor.WHITE+"|";
+			float ratio = (float) secondaryCD / secondaryBaseCD;
 			int colored = Math.round(ratio * NUMBER_OF_BARS);
 			for(int i = 1 ; i <= NUMBER_OF_BARS - colored ; i++) {
 				secondaryMessage+=ChatColor.GRAY+":";
@@ -116,19 +116,9 @@ public class MessageSender {
 			}
 			secondaryMessage += ChatColor.WHITE+"|";
 		}else {
-			secondaryMessage+= ChatColor.GREEN+"(2)" + ChatColor.AQUA+"["+secondaryName+"]";
+			secondaryMessage+= ChatColor.GREEN+"(2) " + ChatColor.AQUA+"["+secondaryName+"]";
 		}
-		
-		int primaryMessageLength = primaryMessage.length();
-		int secondaryMessageLength = secondaryMessage.length();
-		if(primaryMessageLength < secondaryMessageLength) {
-			int difference = secondaryMessageLength - primaryMessageLength;
-			primaryMessage = " ".repeat(difference) + primaryMessage;
-		}else {
-			int difference = primaryMessageLength - secondaryMessageLength;
-			secondaryMessage = secondaryMessage + " ".repeat(difference);
-		}
-		String message = primaryMessage + " | " + secondaryMessage;
+		String message = primaryMessage + ChatColor.WHITE+ " | " + secondaryMessage;
 		return message;
 	}
 }

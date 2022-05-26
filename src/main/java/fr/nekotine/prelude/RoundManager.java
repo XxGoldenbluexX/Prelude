@@ -23,7 +23,7 @@ public class RoundManager implements Listener{
 	private static final int PREPARATION_PHASE_DURATION_TICKS = 20*15;
 	private static final int ENDING_PHASE_DURATION_TICKS = 20*10;
 	
-	private static final EffigyList DEFAULT_EFFIGY = EffigyList.TestEffigy1;
+	private static final EffigyList DEFAULT_EFFIGY = EffigyList.SPIDER;
 	
 	private Team wonLastRound;
 	private RoundState roundState = RoundState.MENU;
@@ -105,7 +105,7 @@ public class RoundManager implements Listener{
 			
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
-			if(wrapperOfKiller != null) {
+			if(wrapperOfKiller != null && wrapperOfKiller.getTeam()==wrapper.getTeam()) {
 				addMoney(wrapperOfKiller.getPlayer(), POINTS_PER_KILL);
 				MessageSender.sendToAll(MessageSender.getDeath(player, player.getKiller()));
 			}else {

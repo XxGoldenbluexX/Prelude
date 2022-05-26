@@ -6,23 +6,11 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import fr.nekotine.prelude.effigies.TestEffigy;
 import fr.nekotine.prelude.effigies.Spider;
+import fr.nekotine.prelude.effigies.Slime;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
-	TestEffigy1(
-			TestEffigy.class,
-			ChatColor.RED+"Test",
-			Material.BEDROCK,
-			"1",
-			"2",
-			10,
-			1,
-			Main.getQuestionMarkHeadUrl(),
-			1,
-			DisguiseType.ARMOR_STAND
-			),
-	Spider(
+	SPIDER(
 			Spider.class,
 			ChatColor.BLACK+"Araignee",
 			Material.COBWEB,
@@ -34,29 +22,17 @@ public enum EffigyList {
 			1,
 			DisguiseType.SPIDER
 			),
-	TestEffigy2(
-			TestEffigy.class,
-			"Test",
-			Material.BEDROCK,
+	SLIME(
+			Slime.class,
+			ChatColor.GREEN+"Slime",
+			Material.SLIME_BALL,
 			"1",
 			"2",
 			10,
 			1,
 			Main.getQuestionMarkHeadUrl(),
-			2,
-			DisguiseType.ARMOR_STAND
-			),
-	TestEffigy3(
-			TestEffigy.class,
-			"Test",
-			Material.BEDROCK,
-			"1",
-			"2",
-			10,
 			1,
-			Main.getQuestionMarkHeadUrl(),
-			3,
-			DisguiseType.ARMOR_STAND
+			DisguiseType.SLIME
 			);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;

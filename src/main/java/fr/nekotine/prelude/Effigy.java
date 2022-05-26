@@ -67,10 +67,8 @@ public abstract class Effigy implements Listener {
 	
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent event) {
-		System.out.println("Player drop");
 		Player p = event.getPlayer();
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItemDrop().getItemStack())) {
-			System.out.println("Its him");
 			event.setCancelled(true);
 			if (Main.getInstance().isRoundPlaying() && !secondary_ability_on_cooldown) {
 				castSecondarySpell();
@@ -107,6 +105,7 @@ public abstract class Effigy implements Listener {
 	public void destroy() {
 		System.out.println("destroy");
 		removeWeapon();
+		getWrapper().getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 		Disguiser.undisguise(wrapper.getPlayer());
 		EventRegisterer.unregisterEvent(this);
 	}
@@ -166,7 +165,7 @@ public abstract class Effigy implements Listener {
 	protected abstract void castPrimarySpell();
 	protected abstract void castSecondarySpell();
 	protected abstract void roundEnd();
-	
+	protected abstract void death();
 	
 	
 }

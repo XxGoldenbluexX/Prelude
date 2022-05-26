@@ -132,9 +132,10 @@ public class PlayerWrapper {
 
 	public void setAlive(boolean alive) {
 		this.alive = alive;
+		if(!alive && effigy != null) effigy.death();
 	}
 	public void roundEnded() {
-		if(effigy!=null)effigy.roundEnd();
+		if(effigy!=null) effigy.roundEnd();
 	}
 	
 	public void setScoreboardEntry(String scoreboardEntry) {

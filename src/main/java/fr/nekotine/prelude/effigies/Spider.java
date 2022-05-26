@@ -49,7 +49,7 @@ public class Spider extends Effigy{
 					}
 				}.runTaskTimer(Main.getInstance(), 0, levitationDuration);
 			}else {
-				runnable.cancel();
+				if(runnable != null) runnable.cancel();
 			}
 		}
 	}
@@ -79,6 +79,9 @@ public class Spider extends Effigy{
 
 	@Override
 	protected void roundEnd() {
+	}
+	@Override
+	protected void death() {
 	}
 	
 }
