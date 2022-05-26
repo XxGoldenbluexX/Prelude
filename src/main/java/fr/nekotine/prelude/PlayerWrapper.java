@@ -1,5 +1,6 @@
 package fr.nekotine.prelude;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import fr.nekotine.prelude.inventories.MenuInventory;
@@ -61,6 +62,7 @@ public class PlayerWrapper {
 	}
 	
 	public void destroy() {
+		player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 		player.setTotalExperience(0);
 		menuInventory.destroy();
 		shopInventory.destroy();
