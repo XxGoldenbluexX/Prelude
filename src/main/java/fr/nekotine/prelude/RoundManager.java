@@ -16,7 +16,8 @@ import fr.nekotine.prelude.utils.Team;
 
 public class RoundManager implements Listener{
 	private static final int STARTING_MONEY = 0;
-	private static final int POINT_RECQUIREMENT_TO_WIN = 5;
+	private static final int POINT_RECQUIREMENT_TO_WIN = 6;
+	
 	private static final int POINTS_PER_KILL = 1;
 	private static final int POINTS_PER_WIN = 2;
 	private static final int POINTS_PER_LOSS = 1;
@@ -83,18 +84,13 @@ public class RoundManager implements Listener{
 	}
 	private void preparationPhaseEnd() {
 		game_duration = 0;
-		if(redScore>=POINT_RECQUIREMENT_TO_WIN || blueScore>=POINT_RECQUIREMENT_TO_WIN) {
-			endGame();
-		}else {
-			setRoundState(RoundState.PLAYING);
-			
-			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
-				wrapper.removeShopItem();
-				wrapper.closeShopInventory();
-			}
-			
-			Main.getInstance().getMap().openWalls();
+		setRoundState(RoundState.PLAYING);
+		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+			wrapper.removeShopItem();
+			wrapper.closeShopInventory();
 		}
+		Main.getInstance().getMap().openWalls();
+		
 		System.out.println("preparation phase end");
 	}
 	@EventHandler
@@ -159,18 +155,23 @@ public class RoundManager implements Listener{
 		startRound();
 	}
 	public void startRound() {
-		preparationPhaseStart();
-		
-		for(Player player : Main.getInstance().getPlayers()) {
-			resetEffigy(player);
-			setAlive(player, true);
-			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-			player.setGameMode(GameMode.ADVENTURE);
+		if(redScore>=POINT_RECQUIREMENT_TO_WIN || blueScore>=POINT_RECQUIREMENT_TO_WIN) {
+			endGame();
+		}else {
+			preparationPhaseStart();
+			
+			for(Player player : Main.getInstance().getPlayers()) {
+				resetEffigy(player);
+				setAlive(player, true);
+				player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				player.setGameMode(GameMode.ADVENTURE);
+			}
+			
+			teleportPlayersToSpawn();
+			
+			System.out.println("round started");
 		}
 		
-		teleportPlayersToSpawn();
-		
-		System.out.println("round started");
 	}
 	private PlayerWrapper getWrapperOfPlayer(Player player) {
 		if(Main.getInstance().isPlaying(player)) {
@@ -236,7 +237,7 @@ public class RoundManager implements Listener{
 		}
 	}
 	public void endGame() {
-		if(roundState==RoundState.PLAYING || roundState==RoundState.ENDING) {
+		if(roundState!=RoundState.MENU) {
 			Main.getInstance().getMap().openWalls();
 			Main.getInstance().getBumperManager().activate(false);
 			Main.getInstance().end();
