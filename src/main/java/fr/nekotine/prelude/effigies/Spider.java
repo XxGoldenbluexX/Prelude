@@ -1,6 +1,9 @@
 package fr.nekotine.prelude.effigies;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -11,28 +14,32 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import fr.nekotine.prelude.Main;
-
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
+import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
 import fr.nekotine.prelude.utils.Ability;
 
 public class Spider extends Effigy{
 	
 	private final int levitationDuration=5;
-	private final double spell1DamageMultiplyer=2;
+	private final double spell1Damage=2;
 	private BukkitTask runnable;
-	private boolean reinforcedAuto=false;
+	private Arrow arrow;
+	private PotionEffect poisonEffect;
 	public Spider(PlayerWrapper w, EffigyList effigyType) {
 		super(w, effigyType);
+		poisonEffect = new PotionEffect(PotionEffectType.POISON, 10, 0);
 	}
 	
 	@EventHandler
 	public void damageEvent(EntityDamageByEntityEvent e) {
-		if(e.getCause()==DamageCause.ENTITY_ATTACK && e.getDamager().equals(getWrapper().getPlayer()) && reinforcedAuto) {
-			e.setDamage(e.getDamage()*spell1DamageMultiplyer);
-			reinforcedAuto=false;
+		if(e.getCause()==DamageCause.PROJECTILE && e.getDamager().equals(getWrapper().getPlayer())) {
+			e.setDamage(spell1Damage);
+			if (e.getEntity() instanceof LivingEntity) {
+				LivingEntity victim = (LivingEntity) e.getEntity();
+				victim.addPotionEffect(poisonEffect);
+			}
 		}
 	}
 	
@@ -66,14 +73,18 @@ public class Spider extends Effigy{
 
 	@Override
 	protected void castPrimarySpell() {
-		reinforcedAuto=true;
+		Player p = getWrapper().getPlayer();
+		Location loc = p.getEyeLocation();
+		arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.6f, 0);
+		arrow.setColor(Color.GREEN);
+		arrow.setShooter(p);
 		setCooldown(Ability.PRIMARY, 200);
 	}
 
 	@Override
 	protected void castSecondarySpell() {
 		Player p = getWrapper().getPlayer();
-		p.setVelocity(p.getEyeLocation().getDirection().multiply(1));
+		p.setVelocity(p.getEyeLocation().getDirection());
 		setCooldown(Ability.SECONDARY, 200);
 	}
 
