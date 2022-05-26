@@ -236,17 +236,18 @@ public class RoundManager implements Listener{
 		}
 	}
 	public void endGame() {
-			
-		Main.getInstance().getMap().openWalls();
-		Main.getInstance().getBumperManager().activate(false);
-		Main.getInstance().end();
-			
-		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
-			wrapper.setAlive(true);
+		if(roundState==RoundState.PLAYING || roundState==RoundState.ENDING) {
+			Main.getInstance().getMap().openWalls();
+			Main.getInstance().getBumperManager().activate(false);
+			Main.getInstance().end();
+				
+			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+				wrapper.setAlive(true);
+			}
+				
+			setRoundState(RoundState.MENU);
+			System.out.println("game ended");
 		}
-			
-		setRoundState(RoundState.MENU);
-		System.out.println("game ended");
 	}
 	private void giveRoundPoints(Team winner) {
 		switch(winner) {
