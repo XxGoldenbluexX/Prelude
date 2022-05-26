@@ -47,7 +47,7 @@ public abstract class Effigy implements Listener {
 		
 		wrapper.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(effigyType.getHealth());
 		wrapper.getPlayer().setHealth(effigyType.getHealth());
-		
+
 		Disguiser.disguiseToAll(wrapper.getPlayer(), effigyType.getDisguiseType());
 		EventRegisterer.registerEvent(this);
 	}
