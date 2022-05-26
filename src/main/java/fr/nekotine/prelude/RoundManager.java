@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.MessageSender;
@@ -24,6 +26,8 @@ public class RoundManager implements Listener{
 	private static final int ENDING_PHASE_DURATION_TICKS = 20*10;
 	
 	private static final EffigyList DEFAULT_EFFIGY = EffigyList.SPIDER;
+	
+	private static final PotionEffect SATURATION_EFFECT = new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false);
 	
 	private Team wonLastRound;
 	private RoundState roundState = RoundState.MENU;
@@ -148,6 +152,7 @@ public class RoundManager implements Listener{
 			setDefaultEffigy(player);
 			setAlive(player, true);
 			setMoney(player, STARTING_MONEY);
+			player.addPotionEffect(SATURATION_EFFECT);
 		}
 		
 		Main.getInstance().getBumperManager().activate(true);
