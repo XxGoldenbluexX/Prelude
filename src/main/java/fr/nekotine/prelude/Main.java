@@ -151,10 +151,11 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public boolean removePlayer(Player player) {
 		if(players.containsKey(player)) {
+			gameScoreboard.removePlayer(player);
+			
 			players.get(player).destroy();
 			players.remove(player);
-			
-			gameScoreboard.removePlayer(player);
+	
 			return true;
 		}
 		return false;
