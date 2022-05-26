@@ -25,11 +25,10 @@ public class Spider extends Effigy{
 	private final int levitationDuration=5;
 	private final double spell1Damage=2;
 	private BukkitTask runnable;
-	private Arrow arrow;
 	private PotionEffect poisonEffect;
 	public Spider(PlayerWrapper w, EffigyList effigyType) {
 		super(w, effigyType);
-		poisonEffect = new PotionEffect(PotionEffectType.POISON, 30, 0);
+		poisonEffect = new PotionEffect(PotionEffectType.POISON, 40, 0);
 	}
 	
 	@EventHandler
@@ -75,7 +74,7 @@ public class Spider extends Effigy{
 	protected void castPrimarySpell() {
 		Player p = getWrapper().getPlayer();
 		Location loc = p.getEyeLocation();
-		arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.7f, 0);
+		final Arrow arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.9f, 0);
 		arrow.setColor(Color.GREEN);
 		arrow.setShooter(p);
 		setCooldown(Ability.PRIMARY, 200);
