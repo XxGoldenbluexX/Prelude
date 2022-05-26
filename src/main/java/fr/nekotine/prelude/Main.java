@@ -103,6 +103,7 @@ public class Main extends JavaPlugin implements Listener{
 		CommandAPI.onLoad(new CommandAPIConfig());
 	}
 	
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (getRoundManager().getRoundState()==RoundState.MENU) {
 			TextComponent message = 
