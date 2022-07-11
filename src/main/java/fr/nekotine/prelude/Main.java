@@ -21,6 +21,13 @@ import org.bukkit.scheduler.BukkitTask;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import fr.nekotine.core.arrache.TickManager;
+import fr.nekotine.core.bowcharge.BowChargeManager;
+import fr.nekotine.core.charge.ChargeManager;
+import fr.nekotine.core.damage.DamageManager;
+import fr.nekotine.core.itemcharge.SwordChargeManager;
+import fr.nekotine.core.module.ModuleManager;
+import fr.nekotine.core.projectile.ProjectileManager;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
@@ -35,6 +42,16 @@ import net.kyori.adventure.text.event.HoverEvent;
 
 public class Main extends JavaPlugin implements Listener{
 	
+	@SuppressWarnings("unchecked")
+	public Main() {
+		moduleManager = new ModuleManager();
+		moduleManager.Load(this, ChargeManager.class);
+		moduleManager.Load(this, TickManager.class);
+		moduleManager.Load(this, SwordChargeManager.class);
+		moduleManager.Load(this, ProjectileManager.class);
+		moduleManager.Load(this, DamageManager.class);
+		moduleManager.Load(this, BowChargeManager.class);
+	}
 	private static Main main;
 	public static Main getInstance() {
 		return main;
@@ -48,6 +65,8 @@ public class Main extends JavaPlugin implements Listener{
 	private static final Material JOIN_GAME_MATERIAL = Material.SANDSTONE;
 	private static final Material LEAVE_GAME_MATERIAL = Material.OBSIDIAN;
 	
+	
+	private ModuleManager moduleManager;
 	
 	private HashMap<Player, PlayerWrapper> players = new HashMap<Player, PlayerWrapper>();
 	private String mapName;
@@ -64,6 +83,8 @@ public class Main extends JavaPlugin implements Listener{
 	public void onEnable() {
 		super.onEnable();
 		main=this;
+		
+		moduleManager.enableAll();
 		
 		EventRegisterer.registerEvent(this);
 		
@@ -127,6 +148,8 @@ public class Main extends JavaPlugin implements Listener{
 		end();
 		
 		ticker.cancel();
+		
+		moduleManager.disableAll();
 		
 		EventRegisterer.unregisterEvent(this);
 	}
@@ -304,5 +327,9 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public BumperManager getBumperManager() {
 		return bumperManager;
+	}
+	
+	public ModuleManager getModuleManager() {
+		return moduleManager;
 	}
 }
