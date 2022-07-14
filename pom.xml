@@ -83,6 +83,13 @@
     		<version>1.5.25</version>
     		<scope>provided</scope>
 		</dependency>
+		<dependency>
+     		<groupId>fr.nekotine</groupId>
+	    	<artifactId>NekotineCore</artifactId>
+	    	<scope>system</scope>
+	     	<version>0.0.1-SNAPHOT</version>
+	     	<systemPath>I:\Eclipse\workspace\NekotineCore\build\NekotineCore.jar</systemPath>
+ 	 </dependency>
 	</dependencies>
 	
 	<properties>
