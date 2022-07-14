@@ -5,12 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.prelude.utils.Ability;
 import fr.nekotine.prelude.utils.ComponentMaker;
 import fr.nekotine.prelude.utils.Disguiser;
@@ -23,6 +23,8 @@ public abstract class Effigy implements Listener {
 	private final PlayerWrapper wrapper;
 	private final EffigyList effigyType;
 	
+	private boolean primary_ability_locked = false;
+	private boolean secondary_ability_locked = false;
 	private boolean primary_ability_on_cooldown = false;
 	private boolean secondary_ability_on_cooldown = false;
 	private int primary_ability_total_cooldown_ticks = 0;
@@ -58,7 +60,7 @@ public abstract class Effigy implements Listener {
 		Player p = event.getPlayer();
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItem())) {
 			event.setCancelled(true);
-			if (Main.getInstance().isRoundPlaying() && (a==Action.RIGHT_CLICK_AIR || a==Action.RIGHT_CLICK_BLOCK) && !primary_ability_on_cooldown) {
+			if (Main.getInstance().isRoundPlaying() && (a==Action.RIGHT_CLICK_AIR || a==Action.RIGHT_CLICK_BLOCK) && !primary_ability_locked && !primary_ability_on_cooldown) {
 				castPrimarySpell();
 				MessageSender.sendMessage(MessageSender.getSpell(effigyType.getPrimarySpellName()), p);
 			}
@@ -70,7 +72,7 @@ public abstract class Effigy implements Listener {
 		Player p = event.getPlayer();
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItemDrop().getItemStack())) {
 			event.setCancelled(true);
-			if (Main.getInstance().isRoundPlaying() && !secondary_ability_on_cooldown) {
+			if (Main.getInstance().isRoundPlaying() && !secondary_ability_locked && !secondary_ability_on_cooldown) {
 				castSecondarySpell();
 				MessageSender.sendMessage(MessageSender.getSpell(effigyType.getSecondarySpellName()), p);
 			}
@@ -78,9 +80,10 @@ public abstract class Effigy implements Listener {
 	}
 	
 	@EventHandler
-	public void onHit(EntityDamageByEntityEvent e) {
-		if(e.getDamager().equals(wrapper.getPlayer()) && e.getCause()==DamageCause.ENTITY_ATTACK) {
-			e.setDamage(effigyType.getDamage());
+	public void onHit(LivingEntityDamageEvent e) {
+		if(wrapper.getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK) {
+			e.SetDamage(effigyType.getDamage());
+			e.SetIgnoreArmor(true);
 		}
 	}
 	
@@ -88,13 +91,13 @@ public abstract class Effigy implements Listener {
 	
 	public void tick() {
 		wrapper.getPlayer().sendActionBar(ComponentMaker.getComponent(MessageSender.getCooldownTimer(this)));
-		if(primary_ability_on_cooldown) {
+		if(!primary_ability_locked && primary_ability_on_cooldown) {
 			primary_ability_current_cooldown_ticks--;
 			if(primary_ability_current_cooldown_ticks<=0) {
 				primary_ability_on_cooldown = false;
 			}
 		}
-		if(secondary_ability_on_cooldown) {
+		if(!secondary_ability_locked && secondary_ability_on_cooldown) {
 			secondary_ability_current_cooldown_ticks--;
 			if(secondary_ability_current_cooldown_ticks<=0) {
 				secondary_ability_on_cooldown = false;
@@ -159,6 +162,16 @@ public abstract class Effigy implements Listener {
 			return secondary_ability_total_cooldown_ticks;
 		default:
 			return -1;
+		}
+	}
+	public void setAbilityLocked(Ability ability, boolean locked) {
+		switch(ability) {
+		case PRIMARY:
+			primary_ability_locked = locked;
+			break;
+		case SECONDARY:
+			secondary_ability_locked = locked;
+			break;
 		}
 	}
 	

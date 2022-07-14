@@ -2,4 +2,4 @@ name: Prelude
 version: 1.0
 main: fr.nekotine.prelude.Main
 api-version: 1.18
-depend: [CommandAPI,ProtocolLib,LibsDisguises]
+depend: [NekotineCore,CommandAPI,ProtocolLib,LibsDisguises]

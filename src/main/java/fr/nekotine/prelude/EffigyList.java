@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import fr.nekotine.prelude.effigies.Spider;
+import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
@@ -33,6 +34,18 @@ public enum EffigyList {
 			Main.getQuestionMarkHeadUrl(),
 			1,
 			DisguiseType.SLIME
+			),
+	SKELETON(
+			Skeleton.class,
+			ChatColor.WHITE+"Skeleton",
+			Material.BONE,
+			"1",
+			"2",
+			10,
+			1,
+			Main.getQuestionMarkHeadUrl(),
+			1,
+			DisguiseType.SKELETON
 			);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;
