@@ -20,7 +20,6 @@ public class BumperManager implements Listener{
 	public void activate(boolean active) {
 		this.active = active;
 	}
-	
 	private boolean isBumper(Material mat) {
 		for(Material bumper : BUMPERS) {
 			if(bumper==mat) return true;

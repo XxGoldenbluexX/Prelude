@@ -2,7 +2,6 @@ package fr.nekotine.prelude.effigies;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import fr.nekotine.core.bowcharge.IBowCharge;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;

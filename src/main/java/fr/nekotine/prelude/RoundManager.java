@@ -99,9 +99,8 @@ public class RoundManager implements Listener{
 		PlayerWrapper wrapper = getWrapperOfPlayer(player);
 		if(Main.getInstance().isRunning() && getRoundState()==RoundState.PLAYING && wrapper != null && wrapper.isAlive()) {
 			e.setCancelled(true);
-			
+			System.out.println("cancelmled");
 			setAlive(player, false);
-			
 			
 			wrapper.getPlayer().setGameMode(GameMode.SPECTATOR);
 			PlayerWrapper wrapperOfKiller = getWrapperOfPlayer(player.getKiller());
