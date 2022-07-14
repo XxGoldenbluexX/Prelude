@@ -8,10 +8,12 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -97,6 +99,14 @@ public class Main extends JavaPlugin implements Listener{
 			}).runTaskTimer(getInstance(), 0L, 1L);
 		
 	}
+	
+	@EventHandler
+	public void onArrowLand(ProjectileHitEvent evt) {
+		if (evt.getEntityType() == EntityType.ARROW) {
+			evt.getEntity().remove();
+		}
+	}
+	
 	@Override
 	public void onLoad() {
 		super.onLoad();
