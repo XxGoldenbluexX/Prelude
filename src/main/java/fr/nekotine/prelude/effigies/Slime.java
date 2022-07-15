@@ -49,7 +49,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	
 	@EventHandler
 	public void onDamage(LivingEntityDamageEvent e) {
-		if(e.GetDamaged().equals(getWrapper().getPlayer())) {
+		if(!e.IsCancelled() && e.GetDamaged().equals(getWrapper().getPlayer())) {
 			slimes.summon(e.GetDamaged().getLocation(), true);
 		}
 	}	
@@ -57,7 +57,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	public void entityDamage(LivingEntityDamageEvent e) {
 		if(getWrapper().getPlayer().equals(e.GetDamager())
 			&& e.GetCause()==DamageCause.ENTITY_ATTACK
-			&& !UtilEntity.IsOnSolidBlock(e.GetDamager())){
+			&& !UtilEntity.IsOnGround(e.GetDamager())){
 			e.GetDamaged().addPotionEffect(SLOW);
 		}
 	}
