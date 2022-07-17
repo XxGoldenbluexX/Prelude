@@ -13,13 +13,13 @@ import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
 	SPIDER(
 			Spider.class,
-			ChatColor.BLACK+"Araignee",
+			ChatColor.DARK_GRAY+"Araignee",
 			Material.COBWEB,
-			"1",
-			"2",
-			10,
-			1,
-			Main.getQuestionMarkHeadUrl(),
+			"Tir empoisonne",
+			"Saut",
+			14,
+			1.5,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJiNjczMmVhYTk3ODg0NTg0NjhmNTk3Njk0Mzk4NjQ2NDk3NGFmMzVmZWFmYjRmY2FkMDVhN2EzMDhjMmE2NyJ9fX0=",
 			1,
 			DisguiseType.SPIDER
 			),
@@ -27,23 +27,23 @@ public enum EffigyList {
 			Slime.class,
 			ChatColor.GREEN+"Slime",
 			Material.SLIME_BALL,
-			"1",
-			"2",
-			10,
+			"Lance-Slime",
+			"Propulsion",
+			24,
 			1,
-			Main.getQuestionMarkHeadUrl(),
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjFhZmZkMzFlZmMzN2JhODRmNTAxODczOTRkODY4ODM0NGNjZDA2Y2RjOTI2ZGRmY2YyZGYxMTY5ODZkY2E5In19fQ==",
 			1,
 			DisguiseType.SLIME
 			),
 	SKELETON(
 			Skeleton.class,
-			ChatColor.WHITE+"Skeleton",
+			ChatColor.WHITE+"Squelette",
 			Material.BONE,
-			"1",
-			"2",
-			10,
+			"Tir ameliore",
+			"Aide du Wither",
+			12,
 			1,
-			Main.getQuestionMarkHeadUrl(),
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ3YjFkNGVhYmYzNTM1MDM4MmI0NjU2NDk5NjRhNGY1YWQ4MWZiYzBjOWY0MTQ5NjM0ODI5ZGI4M2Q2OWEzIn19fQ==",
 			1,
 			DisguiseType.SKELETON
 			);
@@ -65,7 +65,7 @@ public enum EffigyList {
 	private final String secondarySpellName;
 	
 	EffigyList(Class<? extends Effigy> effigyClass, String name, Material weaponMaterial, String primarySpellName, String secondarySpellName,
-				int health, int damage, String urlToHead, int tier, DisguiseType disguiseType,
+				int health, double damage, String urlToHead, int tier, DisguiseType disguiseType,
 				String... description) {
 		this.weaponMaterial=weaponMaterial;
 		this.tier=tier;

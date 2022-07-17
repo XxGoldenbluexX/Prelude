@@ -85,10 +85,10 @@ public class MessageSender {
 			float ratio = (float)primaryCD / primaryBaseCD;
 			int colored = Math.round(ratio * NUMBER_OF_BARS);
 			for(int i = 1 ; i <= colored ; i++) {
-				primaryMessage+=ChatColor.GREEN+":";
+				primaryMessage+=ChatColor.RED+":";
 			}
 			for(int i = 1 ; i <= NUMBER_OF_BARS - colored ; i++) {
-				primaryMessage+=ChatColor.GRAY+":";
+				primaryMessage+=ChatColor.GREEN+":";
 			}
 			primaryMessage += ChatColor.WHITE+"|";
 			
@@ -109,15 +109,16 @@ public class MessageSender {
 			float ratio = (float) secondaryCD / secondaryBaseCD;
 			int colored = Math.round(ratio * NUMBER_OF_BARS);
 			for(int i = 1 ; i <= NUMBER_OF_BARS - colored ; i++) {
-				secondaryMessage+=ChatColor.GRAY+":";
+				secondaryMessage+=ChatColor.GREEN+":";
 			}
 			for(int i = 1 ; i <= colored ; i++) {
-				secondaryMessage+=ChatColor.GREEN+":";
+				secondaryMessage+=ChatColor.RED+":";
 			}
 			secondaryMessage += ChatColor.WHITE+"|";
 		}else {
 			secondaryMessage+= ChatColor.GREEN+"(2) " + ChatColor.AQUA+"["+secondaryName+"]";
 		}
+
 		String message = primaryMessage + ChatColor.WHITE+ " | " + secondaryMessage;
 		return message;
 	}

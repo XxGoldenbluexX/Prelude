@@ -157,6 +157,9 @@ public class RoundManager implements Listener{
 		if(redScore>=POINT_RECQUIREMENT_TO_WIN || blueScore>=POINT_RECQUIREMENT_TO_WIN) {
 			endGame();
 		}else {
+			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+				wrapper.roundEnded();
+			}
 			preparationPhaseStart();
 			
 			for(Player player : Main.getInstance().getPlayers()) {
@@ -219,9 +222,6 @@ public class RoundManager implements Listener{
 	private void startEndingPhase() {
 		ending_phase_duration_left = ENDING_PHASE_DURATION_TICKS;
 		setRoundState(RoundState.ENDING);
-		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
-			wrapper.roundEnded();
-		}
 	}
 	private void endRound() {
 		if(getNumberOfPlayersAliveInTeam(Team.RED) == 0) {
@@ -237,6 +237,9 @@ public class RoundManager implements Listener{
 	}
 	public void endGame() {
 		if(roundState!=RoundState.MENU) {
+			for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
+				wrapper.roundEnded();
+			}
 			Main.getInstance().getMap().openWalls();
 			Main.getInstance().getBumperManager().activate(false);
 			Main.getInstance().end();

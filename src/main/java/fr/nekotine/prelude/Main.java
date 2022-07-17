@@ -16,11 +16,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import fr.nekotine.core.arrache.TickEvent;
 import fr.nekotine.core.arrache.TickManager;
 import fr.nekotine.core.bowcharge.BowChargeManager;
 import fr.nekotine.core.charge.ChargeManager;
@@ -77,7 +76,6 @@ public class Main extends JavaPlugin implements Listener{
 	private RoundManager roundManager;
 	private GameScoreboard gameScoreboard;
 	private BumperManager bumperManager;
-	private BukkitTask ticker;
 	
 	@Override
 	public void onEnable() {
@@ -110,13 +108,6 @@ public class Main extends JavaPlugin implements Listener{
 		mapInventory = new MapInventory();
 		gameScoreboard = new GameScoreboard();
 		bumperManager = new BumperManager();
-		
-		ticker = (new BukkitRunnable() {
-				public void run() {
-					tick();
-				}
-			}).runTaskTimer(getInstance(), 0L, 1L);
-		
 	}
 	@Override
 	public void onLoad() {
@@ -147,14 +138,13 @@ public class Main extends JavaPlugin implements Listener{
 		
 		end();
 		
-		ticker.cancel();
-		
 		moduleManager.disableAll();
 		
 		EventRegisterer.unregisterEvent(this);
 	}
 	
-	public void tick() {
+	@EventHandler
+	public void tick(TickEvent e) {
 		if(running) {
 			for(PlayerWrapper wrapper : getWrappers()) {
 				wrapper.tick();

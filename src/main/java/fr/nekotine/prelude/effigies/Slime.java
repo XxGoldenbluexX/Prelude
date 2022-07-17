@@ -1,6 +1,7 @@
 package fr.nekotine.prelude.effigies;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -32,34 +33,39 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	public Slime(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
 	}
-	private static final int PRIMARY_COOLDOWN = 300;
-	private static final int SECONDARY_COOLDOWN = 300;
 	
-	private static final long PRIMARY_CHARGE_DURATION = 3 * 1000;
+	//
+	
+	private static final double PASSIVE_PROBABILITY = 0.5;
+	
+	private static final int PRIMARY_COOLDOWN = 5 * 20;
+	private static final int SECONDARY_COOLDOWN = 9 * 20;
+	
+	private static final long PRIMARY_CHARGE_DURATION = 2 * 1000;
 	private static final long PRIMARY_MAX_SIZE = 3;
-	private static final double PRIMARY_DAMAGE_PER_SIZE = 2;
+	private static final double PRIMARY_DAMAGE = 1;
+	private static final long PRIMARY_AUDIO_BIP = PRIMARY_MAX_SIZE;
 	
 	private static final double SPAWN_OFFSET = 2;
 	private static final double HEAL_AMOUNT = 1;
 	private static final float JUMP_VELOCITY = 1;
 	private static final PotionEffect SLOW = new PotionEffect(PotionEffectType.SLOW, 2, 1, false, false, false);
 	
+	//
 	
 	private final HealSlimeManager slimes = new HealSlimeManager(this);
 	
+	//
+	
 	@EventHandler
 	public void onDamage(LivingEntityDamageEvent e) {
-		if(!e.IsCancelled() && e.GetDamaged().equals(getWrapper().getPlayer())) {
+		if(!e.IsCancelled() && e.GetDamage() > 0 && e.GetDamaged().equals(getWrapper().getPlayer()) && Math.random() >= PASSIVE_PROBABILITY) 
 			slimes.summon(e.GetDamaged().getLocation(), true);
-		}
 	}	
 	@EventHandler
 	public void entityDamage(LivingEntityDamageEvent e) {
-		if(getWrapper().getPlayer().equals(e.GetDamager())
-			&& e.GetCause()==DamageCause.ENTITY_ATTACK
-			&& !UtilEntity.IsOnGround(e.GetDamager())){
+		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && !UtilEntity.IsOnGround(e.GetDamager()))
 			e.GetDamaged().addPotionEffect(SLOW);
-		}
 	}
 	
 	@Override
@@ -70,11 +76,13 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 				"SlimePrimary",
 				PRIMARY_CHARGE_DURATION,
 				true,
+				true,
+				true,
+				PRIMARY_AUDIO_BIP,
 				CustomAction.RIGHT_CLICK,
 				false,
 				null,
 				this);
-		
 	}
 	@Override
 	protected void castSecondarySpell() {
@@ -91,39 +99,44 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		slimes.remove();
 	}
 	
-	
-	
+	//
 
 	@Override
 	public void Ended(Player arg0, String arg1) {
 	}
 	@Override
 	public void Released(Player player, String arg1, long left) {
-		int size = (int)Math.ceil( (( PRIMARY_CHARGE_DURATION - left) / PRIMARY_CHARGE_DURATION) * PRIMARY_MAX_SIZE );
+		int size = 1 + (int)Math.floor( ((double)( PRIMARY_CHARGE_DURATION - left) / PRIMARY_CHARGE_DURATION) * (PRIMARY_MAX_SIZE-1) );
 		org.bukkit.entity.Slime slime = UtilEntity.SpawnSlime(getWrapper().getPlayer().getLocation().add(0, 2, 0), SpawnReason.CUSTOM, size);
 		slime.setCollidable(false);
 		slime.setInvulnerable(true);
 		UtilMobAi.clearBrain(slime);
 		
+		LivingEntity[] self = {player};
+		Material[] barrier = {Material.BARRIER};
 		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
 				slime,
 				player,
 				this,
-				player.getEyeLocation().getDirection().multiply(1.5),
+				player.getEyeLocation().getDirection().multiply(size / 2f),
 				10 * 1000,
 				true,
-				true);
+				true,
+				self,
+				barrier);
 		
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		setAbilityLocked(Ability.PRIMARY, false);
 	}
+	
+	//
 	
 	@Override
 	public void Faded(CustomProjectile proj) {
 		proj.GetProjectile().remove();
 	}
 	@Override
-	public void Triggered(CustomProjectile arg0) {
+	public void Triggered(CustomProjectile proj) {
 	}
 	@Override
 	public void Hit(LivingEntity hitE, Block hitB, CustomProjectile proj) {
@@ -131,9 +144,9 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 			proj.SetCancelled(true);
 			return;
 		}
+		
 		if(hitE != null) {
-			double damage = ((org.bukkit.entity.Slime)proj.GetProjectile()).getSize() * PRIMARY_DAMAGE_PER_SIZE;
-			Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(hitE, getWrapper().getPlayer(), null, DamageCause.PROJECTILE, damage, false, true);
+			Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(hitE, getWrapper().getPlayer(), null, DamageCause.PROJECTILE, PRIMARY_DAMAGE, false, true, null);
 		}
 		Location spawnLoc = proj.GetProjectile().getLocation();
 		proj.GetProjectile().remove();
@@ -150,7 +163,6 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		}
 		
 		public void summon(Location location, boolean offset) {
-			
 			if(offset) {
 				Double invertX = Math.random();
 				Double invertZ = Math.random();
