@@ -1,6 +1,8 @@
 package fr.nekotine.prelude.effigies;
 
 import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
@@ -32,13 +34,14 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final long PASSIVE_CHARGE_TIME = 2500;
 	private static final int PASSIVE_BONUS_ARROWS = 3;
 	private static final int PASSIVE_SPREAD = 6;
-	private static final long PASSIVE_AUDIO_BIP = PASSIVE_BONUS_ARROWS;
+	private static final long PASSIVE_AUDIO_BIP = PASSIVE_BONUS_ARROWS - 1;
 	
 	private static final float DAMAGE_MULTIPLYER = 2;
 	private static boolean multiplyer_active = false;
 	
 	private static final float SECONDARY_SPEED = 1.5f;
 	private static final float SECONDARY_DAMAGE = 1;
+	private static final double SECONDARY_RADIUS = 3;
 	
 	//
 	
@@ -120,21 +123,21 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 
 	@Override
 	public void Hit(LivingEntity hitEntity, Block hitBlock, CustomProjectile projectile) {
-		getWrapper().getPlayer().sendMessage("hit");
 		if(hitEntity != null && hitEntity.equals(getWrapper().getPlayer())) {
 			projectile.SetCancelled(true);
 			return;
 		}
+		projectile.GetProjectile().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, projectile.GetProjectile().getLocation(), 1);
+		projectile.GetProjectile().getWorld().playSound(projectile.GetProjectile().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 3, 0);
 		Main.getInstance().getModuleManager().Get(DamageManager.class).Explode(
 				getWrapper().getPlayer(), 
-				DAMAGE_MULTIPLYER, 
+				SECONDARY_RADIUS, 
 				DamageCause.CUSTOM, 
 				SECONDARY_DAMAGE, 
 				true, 
 				false, 
 				projectile.GetProjectile().getLocation(), 
-				false, 
-				Particle.EXPLOSION_NORMAL);
+				false);
 		
 		projectile.GetProjectile().remove();
 	}
