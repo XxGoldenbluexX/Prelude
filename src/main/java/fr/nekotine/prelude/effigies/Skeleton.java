@@ -1,5 +1,8 @@
 package fr.nekotine.prelude.effigies;
 
+import java.util.function.Consumer;
+
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -12,6 +15,9 @@ import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 import fr.nekotine.core.bowcharge.BowChargeManager;
 import fr.nekotine.core.bowcharge.IBowCharge;
@@ -20,6 +26,8 @@ import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
 import fr.nekotine.core.projectile.ProjectileManager;
+import fr.nekotine.core.usable.Usable;
+import fr.nekotine.core.usable.UsableManager;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
@@ -37,16 +45,50 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final long PASSIVE_AUDIO_BIP = PASSIVE_BONUS_ARROWS - 1;
 	
 	private static final float DAMAGE_MULTIPLYER = 2;
-	private static boolean multiplyer_active = false;
 	
 	private static final float SECONDARY_SPEED = 1.5f;
 	private static final float SECONDARY_DAMAGE = 1;
 	private static final double SECONDARY_RADIUS = 3;
 	
+	private static final Consumer<PlayerDropItemEvent> CANCEL_DROP_EVENT = new Consumer<PlayerDropItemEvent>() {
+		@Override
+		public void accept(PlayerDropItemEvent e) {
+			e.setCancelled(true);
+		}
+	};
+	private static final Consumer<EntityShootBowEvent> CANCEL_ARROW_CONSUMPTION = new Consumer<EntityShootBowEvent>() {
+		@Override
+		public void accept(EntityShootBowEvent e) {
+			e.setConsumeItem(false);
+		}
+	};
+	
+	private boolean multiplyer_active = false;
+	
+	private final Usable bow;
+	private final Usable arrow;
+	
 	//
 	
 	public Skeleton(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
+		this.bow = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
+				new ItemStack(Material.BOW), 
+				getWrapper().getPlayer().getInventory());
+		this.bow.SetUnbreakable(true);
+		this.bow.HideUnbreakable(true);
+		this.bow.OnDrop(CANCEL_DROP_EVENT);
+		this.bow.SetEnchantedText(false);
+		this.bow.OnBowShoot(CANCEL_ARROW_CONSUMPTION);
+		
+		this.arrow = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
+				new ItemStack(Material.ARROW), 
+				getWrapper().getPlayer().getInventory());
+		this.arrow.OnDrop(CANCEL_DROP_EVENT);
+		
+		this.bow.Give();
+		this.arrow.Give();
+		
 		addCharge();
 	}
 	
@@ -56,6 +98,8 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	protected void castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		multiplyer_active = true;
+		this.bow.SetEnchantedGlow(true);
+		
 	}
 	@Override
 	protected void castSecondarySpell() {
@@ -78,6 +122,8 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	}
 	@Override
 	protected void roundEnd() {
+		this.bow.Remove();
+		this.arrow.Remove();
 	}
 	@Override
 	protected void death() {
@@ -90,13 +136,13 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		if(!getWrapper().getPlayer().equals(e.GetDamager())) return;
 		if(e.GetProjectile() == null) return;
 		if(e.GetProjectile().getType() != EntityType.ARROW) return;
-		
+
 		e.SetDamage(ARROW_DAMAGE);
 		if(multiplyer_active) {
 			e.AddFinalMult(DAMAGE_MULTIPLYER);
 			multiplyer_active = false;
+			this.bow.SetEnchantedGlow(false);
 		}
-		
 	}
 	
 	//

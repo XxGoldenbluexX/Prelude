@@ -27,6 +27,7 @@ import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.itemcharge.SwordChargeManager;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileManager;
+import fr.nekotine.core.usable.UsableManager;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
@@ -50,6 +51,7 @@ public class Main extends JavaPlugin implements Listener{
 		moduleManager.Load(this, ProjectileManager.class);
 		moduleManager.Load(this, DamageManager.class);
 		moduleManager.Load(this, BowChargeManager.class);
+		moduleManager.Load(this, UsableManager.class);
 	}
 	private static Main main;
 	public static Main getInstance() {
