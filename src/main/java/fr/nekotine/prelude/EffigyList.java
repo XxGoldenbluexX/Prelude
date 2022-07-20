@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import fr.nekotine.prelude.effigies.Spider;
 import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
+import fr.nekotine.prelude.effigies.Spider;
+import fr.nekotine.prelude.effigies.Witch;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
 	SPIDER(
@@ -46,6 +47,18 @@ public enum EffigyList {
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ3YjFkNGVhYmYzNTM1MDM4MmI0NjU2NDk5NjRhNGY1YWQ4MWZiYzBjOWY0MTQ5NjM0ODI5ZGI4M2Q2OWEzIn19fQ==",
 			1,
 			DisguiseType.SKELETON
+			),
+	WITCH(
+			Witch.class,
+			ChatColor.LIGHT_PURPLE+"Sorciere",
+			Material.NETHER_WART,
+			"Breuvage mortel",
+			"Sacrifice",
+			16,
+			2,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmNlNjYwNDE1N2ZjNGFiNTU5MWU0YmNmNTA3YTc0OTkxOGVlOWM0MWUzNTdkNDczNzZlMGVlNzM0MjA3NGM5MCJ9fX0=",
+			1,
+			DisguiseType.WITCH
 			);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;

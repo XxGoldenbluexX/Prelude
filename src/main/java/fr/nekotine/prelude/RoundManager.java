@@ -88,6 +88,7 @@ public class RoundManager implements Listener{
 		for(PlayerWrapper wrapper : Main.getInstance().getWrappers()) {
 			wrapper.removeShopItem();
 			wrapper.closeShopInventory();
+			wrapper.getEffigy().roundStart();
 		}
 		Main.getInstance().getMap().openWalls();
 		

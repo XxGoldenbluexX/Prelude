@@ -13,9 +13,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,7 +41,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final float ARROW_DAMAGE = 2;
 	private static final long PASSIVE_CHARGE_TIME = 2500;
 	private static final int PASSIVE_BONUS_ARROWS = 3;
-	private static final int PASSIVE_SPREAD = 6;
+	private static final int PASSIVE_SPREAD = 7;
 	private static final long PASSIVE_AUDIO_BIP = PASSIVE_BONUS_ARROWS - 1;
 	
 	private static final float DAMAGE_MULTIPLYER = 2;
@@ -64,6 +64,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	};
 	
 	private boolean multiplyer_active = false;
+	private boolean canShoot = false;
 	
 	private final Usable bow;
 	private final Usable arrow;
@@ -104,29 +105,37 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	@Override
 	protected void castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
-		
-		WitherSkull head = (WitherSkull)getWrapper().getPlayer().getWorld().spawnEntity(getWrapper().getPlayer().getEyeLocation(), EntityType.WITHER_SKULL, SpawnReason.CUSTOM);
-		head.setDirection(getWrapper().getPlayer().getEyeLocation().getDirection());
+		Player player = getWrapper().getPlayer();
+		WitherSkull head = player.launchProjectile(WitherSkull.class);
+		head.setDirection(player.getEyeLocation().getDirection());
 		head.setCharged(false);
 		head.setInvulnerable(true);
-		head.setShooter(getWrapper().getPlayer());
+		head.setShooter(player);
 
 		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
 				head, 
-				getWrapper().getPlayer(), 
+				player, 
 				this, 
-				getWrapper().getPlayer().getEyeLocation().getDirection().multiply(SECONDARY_SPEED),
+				player.getEyeLocation().getDirection().multiply(SECONDARY_SPEED),
 				10 * 1000, 
 				true,
 				true);
 	}
 	@Override
 	protected void roundEnd() {
-		this.bow.Remove();
-		this.arrow.Remove();
 	}
 	@Override
 	protected void death() {
+	}
+	@Override
+	protected void destroy() {
+		this.bow.Remove();
+		this.arrow.Remove();
+		super.destroy();
+	}
+	@Override
+	protected void roundStart() {
+		canShoot = true;
 	}
 	
 	//
@@ -136,13 +145,30 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		if(!getWrapper().getPlayer().equals(e.GetDamager())) return;
 		if(e.GetProjectile() == null) return;
 		if(e.GetProjectile().getType() != EntityType.ARROW) return;
-
-		e.SetDamage(ARROW_DAMAGE);
+		
+		e.SetDamage(Math.min(e.GetDamage(), ARROW_DAMAGE));
+		getWrapper().getPlayer().sendMessage(""+e.GetDamage());
 		if(multiplyer_active) {
 			e.AddFinalMult(DAMAGE_MULTIPLYER);
 			multiplyer_active = false;
 			this.bow.SetEnchantedGlow(false);
 		}
+	}
+	@EventHandler
+	public void OnHit(ProjectileHitEvent e) {
+		if(!multiplyer_active) return;
+		if(!getWrapper().getPlayer().equals( e.getEntity().getShooter()) ) return;
+		if(!(e.getEntity() instanceof Arrow)) return;
+		if(e.getHitBlock() == null) return;
+		
+		multiplyer_active = false;
+		this.bow.SetEnchantedGlow(false);
+	}
+	@EventHandler
+	public void OnShoot(EntityShootBowEvent e) {
+		if(canShoot) return;
+		if(!getWrapper().getPlayer().equals(e.getEntity())) return;
+		e.setCancelled(true);
 	}
 	
 	//

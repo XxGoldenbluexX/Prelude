@@ -36,6 +36,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	
 	//
 	
+	private boolean canUsePassive = false;
 	private static final double PASSIVE_PROBABILITY = 0.5;
 	
 	private static final int PRIMARY_COOLDOWN = 5 * 20;
@@ -59,6 +60,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	
 	@EventHandler
 	public void onDamage(LivingEntityDamageEvent e) {
+		if(!canUsePassive) return;
 		if(!e.IsCancelled() && e.GetDamage() > 0 && e.GetDamaged().equals(getWrapper().getPlayer()) && Math.random() >= PASSIVE_PROBABILITY) 
 			slimes.summon(e.GetDamaged().getLocation(), true);
 	}	
@@ -97,6 +99,10 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	@Override
 	protected void death() {
 		slimes.remove();
+	}
+	@Override
+	protected void roundStart() {
+		canUsePassive = true;
 	}
 	
 	//

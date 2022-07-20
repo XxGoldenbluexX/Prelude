@@ -1,11 +1,13 @@
 package fr.nekotine.prelude;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -90,7 +92,12 @@ public abstract class Effigy implements Listener {
 		}
 	}
 	
-	
+	@EventHandler
+	public void OnHitBlock(ProjectileHitEvent e) {
+		if(wrapper.getPlayer().equals( e.getEntity().getShooter() ) && e.getEntity() instanceof Arrow && e.getHitBlock() != null) {
+			e.getEntity().remove();
+		}
+	}
 	
 	public void tick() {
 		wrapper.getPlayer().sendActionBar(ComponentMaker.getComponent(MessageSender.getCooldownTimer(this)));
@@ -108,7 +115,7 @@ public abstract class Effigy implements Listener {
 		}
 	}
 	
-	public void destroy() {
+	protected void destroy() {
 		System.out.println("destroy");
 		Main.getInstance().getModuleManager().Get(SwordChargeManager.class).DestroyFromPlayer(wrapper.getPlayer());
 		Main.getInstance().getModuleManager().Get(BowChargeManager.class).DestroyFromPlayer(wrapper.getPlayer());
@@ -185,6 +192,6 @@ public abstract class Effigy implements Listener {
 	protected abstract void castSecondarySpell();
 	protected abstract void roundEnd();
 	protected abstract void death();
-	
+	protected abstract void roundStart();
 	
 }

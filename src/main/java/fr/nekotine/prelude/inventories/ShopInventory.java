@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -126,5 +127,8 @@ public class ShopInventory extends BaseInventory{
 			setMoneyItem();
 		}
 	}
-
+	@EventHandler
+	public void OnDrop(PlayerDropItemEvent e) {
+		if(OPEN_SHOP_ITEM.equals(e.getItemDrop().getItemStack())) e.setCancelled(true);
+	}
 }

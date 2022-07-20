@@ -22,6 +22,7 @@ import fr.nekotine.prelude.utils.Ability;
 
 public class Spider extends Effigy{
 	
+	private boolean canClimb = false;
 	private final int levitationDuration=5;
 	private final double spell1Damage=2;
 	private BukkitTask runnable;
@@ -44,6 +45,7 @@ public class Spider extends Effigy{
 	
 	@EventHandler
 	public void onSneaking(PlayerToggleSneakEvent e) {
+		if(!canClimb) return;
 		if(e.getPlayer().equals(getWrapper().getPlayer())) {
 			if(e.isSneaking()) {
 				runnable = new BukkitRunnable() {
@@ -92,6 +94,10 @@ public class Spider extends Effigy{
 	}
 	@Override
 	protected void death() {
+	}
+	@Override
+	protected void roundStart() {
+		canClimb = true;
 	}
 	
 }

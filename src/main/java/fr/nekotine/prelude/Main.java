@@ -24,6 +24,7 @@ import fr.nekotine.core.arrache.TickManager;
 import fr.nekotine.core.bowcharge.BowChargeManager;
 import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.damage.DamageManager;
+import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.itemcharge.SwordChargeManager;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileManager;
@@ -316,6 +317,20 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onDisconnext(PlayerQuitEvent e) {
 		if(players.containsKey(e.getPlayer())) removePlayer(e.getPlayer());
+	}
+	@EventHandler
+	public void OnDamage(LivingEntityDamageEvent e) {
+		if(e.GetDamaged() instanceof Player && e.GetDamager() instanceof Player) {
+			Player damaged = (Player)e.GetDamaged();
+			Player damager = (Player)e.GetDamager();
+			if(inSameTeam(damaged, damager) && e.GetDamage() >= 0) e.SetCancelled(true); 
+		}
+	}
+	public boolean inSameTeam(Player player1, Player player2) {
+		PlayerWrapper damaged = getWrapper(player1);
+		PlayerWrapper damager = getWrapper(player2);
+		
+		return damaged != null && damager != null && damaged.getTeam()==damager.getTeam(); 
 	}
 	public BumperManager getBumperManager() {
 		return bumperManager;
