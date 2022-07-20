@@ -53,7 +53,7 @@ public enum EffigyList {
 			Witch.class,
 			ChatColor.LIGHT_PURPLE+"Sorciere",
 			Material.NETHER_WART,
-			"Breuvage mortel",
+			"Breuvage",
 			"Sacrifice",
 			16,
 			2,
@@ -65,12 +65,12 @@ public enum EffigyList {
 			Creeper.class,
 			ChatColor.GREEN+"Creeper",
 			Material.GUNPOWDER,
-			"",
-			"",
+			"Bond",
+			"Explosion",
 			14,
 			1.25,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTliMDFkNzNhMWM5MmM0NDkxYjU3OWRmZDk3YTk5MjhhYzNjYzM2ZmRlNDMxZjlkYTA5MzJlMGY1ZWJhYjhjNSJ9fX0=",
-			1,
+			2,
 			DisguiseType.CREEPER
 			);
 	
