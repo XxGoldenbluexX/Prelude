@@ -19,8 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import fr.nekotine.core.arrache.TickEvent;
-import fr.nekotine.core.arrache.TickManager;
 import fr.nekotine.core.bowcharge.BowChargeManager;
 import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.damage.DamageManager;
@@ -28,6 +26,8 @@ import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.itemcharge.SwordChargeManager;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileManager;
+import fr.nekotine.core.ticking.TickingModule;
+import fr.nekotine.core.ticking.event.TickElapsedEvent;
 import fr.nekotine.core.usable.UsableManager;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
@@ -47,7 +47,7 @@ public class Main extends JavaPlugin implements Listener{
 	public Main() {
 		moduleManager = new ModuleManager();
 		moduleManager.Load(this, ChargeManager.class);
-		moduleManager.Load(this, TickManager.class);
+		moduleManager.Load(this, TickingModule.class);
 		moduleManager.Load(this, SwordChargeManager.class);
 		moduleManager.Load(this, ProjectileManager.class);
 		moduleManager.Load(this, DamageManager.class);
@@ -147,7 +147,7 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	
 	@EventHandler
-	public void tick(TickEvent e) {
+	public void tick(TickElapsedEvent e) {
 		if(running) {
 			for(PlayerWrapper wrapper : getWrappers()) {
 				wrapper.tick();
