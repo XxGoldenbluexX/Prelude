@@ -22,11 +22,13 @@ import fr.nekotine.prelude.utils.Disguiser;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.ItemStackMaker;
 import fr.nekotine.prelude.utils.MessageSender;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 
 public abstract class Effigy implements Listener {
 
 	private final PlayerWrapper wrapper;
 	private final EffigyList effigyType;
+	private final MobDisguise disguise;
 	
 	private boolean primary_ability_locked = false;
 	private boolean secondary_ability_locked = false;
@@ -55,7 +57,7 @@ public abstract class Effigy implements Listener {
 		wrapper.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(effigyType.getHealth());
 		wrapper.getPlayer().setHealth(effigyType.getHealth());
 
-		Disguiser.disguiseToAll(wrapper.getPlayer(), effigyType.getDisguiseType());
+		disguise = Disguiser.disguiseToAll(wrapper.getPlayer(), effigyType.getDisguiseType());
 		EventRegisterer.registerEvent(this);
 	}
 	
@@ -186,6 +188,9 @@ public abstract class Effigy implements Listener {
 			secondary_ability_locked = locked;
 			break;
 		}
+	}
+	public MobDisguise getDisguise() {
+		return disguise;
 	}
 	
 	protected abstract void castPrimarySpell();

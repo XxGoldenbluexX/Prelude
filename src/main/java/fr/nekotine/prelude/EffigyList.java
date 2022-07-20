@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import fr.nekotine.prelude.effigies.Creeper;
 import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
 import fr.nekotine.prelude.effigies.Spider;
@@ -59,6 +60,18 @@ public enum EffigyList {
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmNlNjYwNDE1N2ZjNGFiNTU5MWU0YmNmNTA3YTc0OTkxOGVlOWM0MWUzNTdkNDczNzZlMGVlNzM0MjA3NGM5MCJ9fX0=",
 			1,
 			DisguiseType.WITCH
+			),
+	CREEPER(
+			Creeper.class,
+			ChatColor.GREEN+"Creeper",
+			Material.GUNPOWDER,
+			"",
+			"",
+			14,
+			1.25,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTliMDFkNzNhMWM5MmM0NDkxYjU3OWRmZDk3YTk5MjhhYzNjYzM2ZmRlNDMxZjlkYTA5MzJlMGY1ZWJhYjhjNSJ9fX0=",
+			1,
+			DisguiseType.CREEPER
 			);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;

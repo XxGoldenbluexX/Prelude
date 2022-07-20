@@ -96,14 +96,17 @@ public class Witch extends Effigy implements ICharge{
 	@Override
 	protected void roundEnd() {
 		CancelCharge();
+		RemoveBats();
 	}
 	@Override
 	protected void death() {
 		CancelCharge();
+		RemoveBats();
 	}
 	@Override
 	protected void destroy() {
 		CancelCharge();
+		RemoveBats();
 		super.destroy();
 	}
 	@Override
@@ -193,5 +196,11 @@ public class Witch extends Effigy implements ICharge{
 				false, 
 				0,
 				this);
+	}
+	private void RemoveBats() {
+		for(Bat bat : bats){
+			bat.remove();
+		}
+		bats.clear();
 	}
 }
