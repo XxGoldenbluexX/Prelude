@@ -34,12 +34,12 @@ public class Witch extends Effigy implements ICharge{
 	private static final long PASSIVE_BAT_GENERATION = 5 * 1000;
 	private static final Color DAMAGE_POTION_COLOR = Color.fromRGB(68, 10, 9);
 	private static final Color SLOW_POTION_COLOR = Color.GRAY;
-	private static final PotionEffect SLOW_POTION_EFFECT = new PotionEffect(PotionEffectType.SLOW, 5 * 20, 2, false, false, false);
-	private static final PotionEffect SPEED_POTION_EFFECT = new PotionEffect(PotionEffectType.SPEED, 5 * 20, 1, false, false, false);
+	private static final PotionEffect SLOW_POTION_EFFECT = new PotionEffect(PotionEffectType.SLOW, 5 * 20, 2, false, false, true);
+	private static final PotionEffect SPEED_POTION_EFFECT = new PotionEffect(PotionEffectType.SPEED, 5 * 20, 1, false, false, true);
 	private static final long BAT_CAP = 5;
 	
-	private static final long PRIMARY_DAMAGE = 2;
-	private static final long PRIMARY_HEAL = 1;
+	private static final double PRIMARY_DAMAGE = 1 * 2;
+	private static final double PRIMARY_HEAL = 0.5 * 2;
 	
 	private static final Component SECONDARY_POTION_NAME = Component.text("WitchSecondary");
 	
@@ -125,7 +125,7 @@ public class Witch extends Effigy implements ICharge{
 				
 				if(DAMAGE_POTION_COLOR.equals(e.getPotion().getPotionMeta().getColor())) {
 					
-					long damage = PRIMARY_DAMAGE;
+					double damage = PRIMARY_DAMAGE;
 					if(hit instanceof Player && Main.getInstance().inSameTeam(player, (Player)hit)) damage = -PRIMARY_HEAL;
 					Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
 							hit,

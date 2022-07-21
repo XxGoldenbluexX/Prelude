@@ -38,7 +38,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final int PRIMARY_COOLDOWN = 4 * 20;
 	private static final int SECONDARY_COOLDOWN = 10 * 20;
 	
-	private static final float ARROW_DAMAGE = 2;
+	private static final float ARROW_DAMAGE = 1 * 2;
 	private static final long PASSIVE_CHARGE_TIME = 2500;
 	private static final int PASSIVE_BONUS_ARROWS = 3;
 	private static final int PASSIVE_SPREAD = 7;
@@ -47,7 +47,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final float DAMAGE_MULTIPLYER = 2;
 	
 	private static final float SECONDARY_SPEED = 1.5f;
-	private static final float SECONDARY_DAMAGE = 1;
+	private static final double SECONDARY_DAMAGE = 1 * 2;
 	private static final double SECONDARY_RADIUS = 3;
 	
 	private static final Consumer<PlayerDropItemEvent> CANCEL_DROP_EVENT = new Consumer<PlayerDropItemEvent>() {

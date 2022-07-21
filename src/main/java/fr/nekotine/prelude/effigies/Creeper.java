@@ -6,6 +6,8 @@ import org.bukkit.SoundCategory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+
 import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
 import fr.nekotine.core.damage.DamageManager;
@@ -21,7 +23,7 @@ public class Creeper extends Effigy implements ICharge{
 	private static final int PRIMARY_COOLDOWN = 50;
 	private static final int SECONDARY_COOLDOWN = 9 * 20;
 	
-	private static final double PASSIVE_DAMAGE = 0.75;
+	private static final double PASSIVE_DAMAGE = 0.75 * 2;
 	private static final double PASSIVE_RADIUS = 2;
 	
 	private static final float PRIMARY_DASH = 0.75f;
@@ -30,8 +32,8 @@ public class Creeper extends Effigy implements ICharge{
 	private static final String SECONDARY_CHARGE_NAME = "CreeperSecondary";
 	private static final long SECONDARY_CHARGE_TIME = 1500;
 	private static final long SECONDARY_CHARGE_AUDIO_BIP = 2;
-	private static final double SECONDARY_DAMAGE = 4.25;
-	private static final double SECONDARY_SELF_DAMAGE = 0.5;
+	private static final double SECONDARY_DAMAGE = 4.25 * 2;
+	private static final double SECONDARY_SELF_DAMAGE = 0.5 * 2;
 	private static final double SECONDARY_RADIUS = 4;
 	
 	//
@@ -55,6 +57,7 @@ public class Creeper extends Effigy implements ICharge{
 		getWrapper().getPlayer().setWalkSpeed(0);
 		
 		Disguiser.setIgnitedCreeper(getDisguise(), true);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 0);
 		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
 				getWrapper().getPlayer().getName(), 
 				SECONDARY_CHARGE_NAME, 
@@ -82,6 +85,7 @@ public class Creeper extends Effigy implements ICharge{
 	
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
+		//Thorns
 		if(getWrapper().getPlayer().equals(e.GetDamaged()) && !e.GetDamaged().equals(e.GetDamager())) {
 			getWrapper().getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, getWrapper().getPlayer().getLocation().add(0, 0.5, 0), 1);
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 0.5f, 1);
@@ -95,6 +99,14 @@ public class Creeper extends Effigy implements ICharge{
 					getWrapper().getPlayer().getLocation(), 
 					true);
 		}
+		//AA lors du secondaire
+		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsCharging()) {
+			e.SetCancelled(true);
+		}
+	}
+	@EventHandler
+	public void OnJump(PlayerJumpEvent e) {
+		if(getWrapper().getPlayer().equals(e.getPlayer()) && IsCharging()) e.setCancelled(true);
 	}
 
 	//
@@ -135,5 +147,8 @@ public class Creeper extends Effigy implements ICharge{
 	
 	private void CancelCharge() {
 		Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);
+	}
+	private boolean IsCharging() {
+		return Main.getInstance().getModuleManager().Get(ChargeManager.class).Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
 	}
 }

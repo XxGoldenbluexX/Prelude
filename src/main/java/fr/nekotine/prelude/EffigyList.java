@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import fr.nekotine.prelude.effigies.Blaze;
 import fr.nekotine.prelude.effigies.Creeper;
 import fr.nekotine.prelude.effigies.Pigman;
 import fr.nekotine.prelude.effigies.Skeleton;
@@ -20,8 +21,8 @@ public enum EffigyList {
 			Material.COBWEB,
 			"Tir empoisonne",
 			"Saut",
-			14,
-			1.5,
+			7 * 2,
+			1.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJiNjczMmVhYTk3ODg0NTg0NjhmNTk3Njk0Mzk4NjQ2NDk3NGFmMzVmZWFmYjRmY2FkMDVhN2EzMDhjMmE2NyJ9fX0=",
 			1,
 			DisguiseType.SPIDER
@@ -32,8 +33,8 @@ public enum EffigyList {
 			Material.SLIME_BALL,
 			"Lance-Slime",
 			"Propulsion",
-			24,
-			1,
+			12 * 2,
+			0.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjFhZmZkMzFlZmMzN2JhODRmNTAxODczOTRkODY4ODM0NGNjZDA2Y2RjOTI2ZGRmY2YyZGYxMTY5ODZkY2E5In19fQ==",
 			1,
 			DisguiseType.SLIME
@@ -44,8 +45,8 @@ public enum EffigyList {
 			Material.BONE,
 			"Tir ameliore",
 			"Aide du Wither",
-			12,
-			1,
+			6 * 2,
+			0.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ3YjFkNGVhYmYzNTM1MDM4MmI0NjU2NDk5NjRhNGY1YWQ4MWZiYzBjOWY0MTQ5NjM0ODI5ZGI4M2Q2OWEzIn19fQ==",
 			1,
 			DisguiseType.SKELETON
@@ -56,8 +57,8 @@ public enum EffigyList {
 			Material.NETHER_WART,
 			"Breuvage",
 			"Sacrifice",
-			16,
-			2,
+			8 * 2,
+			1 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmNlNjYwNDE1N2ZjNGFiNTU5MWU0YmNmNTA3YTc0OTkxOGVlOWM0MWUzNTdkNDczNzZlMGVlNzM0MjA3NGM5MCJ9fX0=",
 			1,
 			DisguiseType.WITCH
@@ -68,8 +69,8 @@ public enum EffigyList {
 			Material.GUNPOWDER,
 			"Bond",
 			"Explosion",
-			14,
-			1.25,
+			7 * 2,
+			1.25 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTliMDFkNzNhMWM5MmM0NDkxYjU3OWRmZDk3YTk5MjhhYzNjYzM2ZmRlNDMxZjlkYTA5MzJlMGY1ZWJhYjhjNSJ9fX0=",
 			2,
 			DisguiseType.CREEPER
@@ -80,12 +81,22 @@ public enum EffigyList {
 			Material.RAW_GOLD,
 			"Faux-filet",
 			"Degustation",
-			16,
-			2,
+			8 * 2,
+			1 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTkzNTg0MmFmNzY5MzgwZjc4ZThiOGE4OGQxZWE2Y2EyODA3YzFlNTY5M2MyY2Y3OTc0NTY2MjA4MzNlOTM2ZiJ9fX0=",
 			2,
-			DisguiseType.ZOMBIFIED_PIGLIN
-			);
+			DisguiseType.ZOMBIFIED_PIGLIN),
+	BLAZE(
+			Blaze.class,
+			ChatColor.RED+"Blaze",
+			Material.BLAZE_POWDER,
+			"Lance-flamme",
+			"Immolation",
+			7 * 2,
+			0.5 * 2,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=",
+			2,
+			DisguiseType.BLAZE);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;
 	private final static int TIER_2_EFFIGY_COST = 6;

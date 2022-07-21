@@ -44,13 +44,13 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	
 	private static final long PRIMARY_CHARGE_DURATION = 2 * 1000;
 	private static final long PRIMARY_MAX_SIZE = 3;
-	private static final double PRIMARY_DAMAGE = 1;
+	private static final double PRIMARY_DAMAGE = 0.5 * 2;
 	private static final long PRIMARY_AUDIO_BIP = PRIMARY_MAX_SIZE - 1;
 	
 	private static final double SPAWN_OFFSET = 2;
-	private static final double HEAL_AMOUNT = 1;
+	private static final double HEAL_AMOUNT = 0.5 * 2;
 	private static final float JUMP_VELOCITY = 1;
-	private static final PotionEffect SLOW = new PotionEffect(PotionEffectType.SLOW, 2, 1, false, false, false);
+	private static final PotionEffect SLOW = new PotionEffect(PotionEffectType.SLOW, 2, 1, false, false, true);
 	
 	//
 	

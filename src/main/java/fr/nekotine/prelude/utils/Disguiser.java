@@ -30,4 +30,7 @@ public class Disguiser {
 		CreeperWatcher cw = (CreeperWatcher)creeperDisguise.getWatcher();
 		cw.setIgnited(ignited);		
 	}
+	public static void setBurning(MobDisguise disguise, boolean burning) {
+		disguise.getWatcher().setBurning(burning);	
+	}
 }

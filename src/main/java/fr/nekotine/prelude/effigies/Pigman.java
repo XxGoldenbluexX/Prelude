@@ -33,15 +33,15 @@ public class Pigman extends Effigy implements IProjectile{
 	
 	private static final Material MEAT_MATERIAL = Material.COOKED_PORKCHOP;
 	private static final Material NO_MEAT_MATERIAL = Material.PORKCHOP;
-	private static final double DAMAGE_BOOST_PER_MEAT = 1;
+	private static final double DAMAGE_BOOST_PER_MEAT = 0.5 * 2;
 	
 	private static final int PRIMARY_COOLDOWN_REDUCTION = 1 * 20;
-	private static final double PRIMARY_DAMAGE = 1;
+	private static final double PRIMARY_DAMAGE = 0.5 * 2;
 	private static final int PRIMARY_MEAT_COST = 1;
 	private static final float PRIMARY_MEAT_VELOCITY = 1.5f;
 	private static final Material[] PRIMARY_BARRIER = {Material.BARRIER};
 	
-	private static final double SECONDARY_HEAL_PER_MEAT = 1;
+	private static final double SECONDARY_HEAL_PER_MEAT = 0.5 * 2;
 	
 	private Usable meat;
 	private static final Consumer<PlayerDropItemEvent> CANCEL_DROP_EVENT = new Consumer<PlayerDropItemEvent>() {
@@ -163,7 +163,7 @@ public class Pigman extends Effigy implements IProjectile{
 			meat.SetEnchantedGlow(false);
 			return;
 		}
-		meat.SetAmount(meat.GetAmount() - toRemove);
+		meat.AddAmount(-toRemove);
 	}
 	private void AddMeat(int toAdd) {
 		if(meat.GetMaterial() == NO_MEAT_MATERIAL) {
@@ -172,7 +172,7 @@ public class Pigman extends Effigy implements IProjectile{
 			meat.SetEnchantedGlow(true);
 			return;
 		}
-		meat.SetAmount(meat.GetAmount() + toAdd);
+		meat.AddAmount(toAdd);
 	}
 	
 	//
