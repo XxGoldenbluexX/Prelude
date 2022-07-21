@@ -81,11 +81,13 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		this.bow.OnDrop(CANCEL_DROP_EVENT);
 		this.bow.SetEnchantedText(false);
 		this.bow.OnBowShoot(CANCEL_ARROW_CONSUMPTION);
+		this.bow.SetName("Arc");
 		
 		this.arrow = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
 				new ItemStack(Material.ARROW), 
 				getWrapper().getPlayer().getInventory());
 		this.arrow.OnDrop(CANCEL_DROP_EVENT);
+		this.arrow.SetName("Fleche");
 		
 		this.bow.Give();
 		this.arrow.Give();

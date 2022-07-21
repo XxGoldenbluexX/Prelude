@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import fr.nekotine.prelude.effigies.Creeper;
+import fr.nekotine.prelude.effigies.Pigman;
 import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
 import fr.nekotine.prelude.effigies.Spider;
@@ -72,6 +73,18 @@ public enum EffigyList {
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTliMDFkNzNhMWM5MmM0NDkxYjU3OWRmZDk3YTk5MjhhYzNjYzM2ZmRlNDMxZjlkYTA5MzJlMGY1ZWJhYjhjNSJ9fX0=",
 			2,
 			DisguiseType.CREEPER
+			),
+	PIGMAN(
+			Pigman.class,
+			ChatColor.GOLD+"Pigman",
+			Material.RAW_GOLD,
+			"Faux-filet",
+			"Degustation",
+			16,
+			2,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTkzNTg0MmFmNzY5MzgwZjc4ZThiOGE4OGQxZWE2Y2EyODA3YzFlNTY5M2MyY2Y3OTc0NTY2MjA4MzNlOTM2ZiJ9fX0=",
+			2,
+			DisguiseType.ZOMBIFIED_PIGLIN
 			);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;
