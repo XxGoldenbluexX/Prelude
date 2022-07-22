@@ -3,6 +3,7 @@ package fr.nekotine.prelude.effigies;
 import java.util.ArrayList;
 
 import org.bukkit.Color;
+import org.bukkit.Sound;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -61,7 +62,7 @@ public class Witch extends Effigy implements ICharge{
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
 		Player player = getWrapper().getPlayer();
-		
+		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_THROW, 1, 0);
 		ThrownPotion potion = player.launchProjectile(ThrownPotion.class);
 		PotionMeta meta = potion.getPotionMeta();
 		meta.setColor(DAMAGE_POTION_COLOR);
@@ -89,6 +90,8 @@ public class Witch extends Effigy implements ICharge{
 			bat.remove();
 		}
 		bats.clear();
+		
+		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
 		
 		if(!Main.getInstance().getModuleManager().Get(ChargeManager.class).Exist(getWrapper().getPlayer().getName(), CHARGE_NAME)) AddCharge();
 		

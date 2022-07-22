@@ -47,6 +47,7 @@ public class Creeper extends Effigy implements ICharge{
 	@Override
 	protected void castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_CREEPER_DEATH, 1, 0);
 		getWrapper().getPlayer().setVelocity(getWrapper().getPlayer().getEyeLocation().getDirection().multiply(PRIMARY_DASH));
 	}
 	@Override

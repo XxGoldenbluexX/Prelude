@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -87,6 +88,8 @@ public class Pigman extends Effigy implements IProjectile{
 		
 		getWrapper().getPlayer().setVelocity(UtilMath.GetTrajectory3d(getWrapper().getPlayer().getLocation(), hitE.getLocation()));
 		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, 1, 0);
+		
 		if(isOnCooldown(Ability.PRIMARY)) setCooldown(Ability.PRIMARY, getCooldown(Ability.PRIMARY) - PRIMARY_COOLDOWN_REDUCTION);
 		
 		proj.GetProjectile().remove();
@@ -117,6 +120,8 @@ public class Pigman extends Effigy implements IProjectile{
 				true,
 				inTeam.toArray(new LivingEntity[inTeam.size()]),
 				PRIMARY_BARRIER);
+		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_DEATH, 1, 0);
 	}
 	@Override
 	protected void castSecondarySpell() {

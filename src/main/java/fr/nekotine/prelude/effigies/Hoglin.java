@@ -2,6 +2,7 @@ package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
 
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -57,6 +58,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 	protected void castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_CONVERTED_TO_ZOMBIFIED, 1, 0);
 		primaryVelocity = getWrapper().getPlayer().getEyeLocation().getDirection().multiply(PRIMARY_SPEED).setY(0);
 		primaryDamaged.clear();
 		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
@@ -71,6 +73,8 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 	@Override
 	protected void castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
+		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_ANGRY, 1, 0);
 		getWrapper().getPlayer().addPotionEffect(SECONDARY_SPEED_EFFECT);
 		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
 				getWrapper().getPlayer().getName(), 
@@ -109,6 +113,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 			e.GetDamaged().addPotionEffect(SECONDARY_SLOW_EFFECT);
 			e.AddBaseMod(SECONDARY_BONUS_DAMAGE);
 			Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);
+			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_ANGRY, 1, 0);
 		}
 	}
 	@EventHandler

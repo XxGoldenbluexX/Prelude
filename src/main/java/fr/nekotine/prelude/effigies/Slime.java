@@ -2,6 +2,7 @@ package fr.nekotine.prelude.effigies;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -94,6 +95,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		Player p = getWrapper().getPlayer();
 		p.setVelocity(p.getVelocity().setY(JUMP_VELOCITY));
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
+		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_JUMP, 1, 0);
 	}
 	@Override
 	protected void roundEnd() {
@@ -120,6 +122,8 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		slime.setCollidable(false);
 		slime.setInvulnerable(true);
 		UtilMobAi.clearBrain(slime);
+		
+		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_JUMP, 1, 0);
 		
 		LivingEntity[] self = {player};
 		Material[] barrier = {Material.BARRIER};
@@ -153,6 +157,8 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 			proj.SetCancelled(true);
 			return;
 		}
+		
+		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_ATTACK, 1, 0);
 		
 		if(hitE != null) {
 			Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(hitE, getWrapper().getPlayer(), null, DamageCause.PROJECTILE, PRIMARY_DAMAGE, false, true, null);
