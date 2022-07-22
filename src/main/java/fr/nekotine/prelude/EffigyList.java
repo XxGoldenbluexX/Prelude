@@ -8,6 +8,7 @@ import org.bukkit.Material;
 
 import fr.nekotine.prelude.effigies.Blaze;
 import fr.nekotine.prelude.effigies.Creeper;
+import fr.nekotine.prelude.effigies.Hoglin;
 import fr.nekotine.prelude.effigies.Pigman;
 import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
@@ -65,7 +66,7 @@ public enum EffigyList {
 			),
 	CREEPER(
 			Creeper.class,
-			ChatColor.GREEN+"Creeper",
+			ChatColor.DARK_GREEN+"Creeper",
 			Material.GUNPOWDER,
 			"Bond",
 			"Explosion",
@@ -96,7 +97,18 @@ public enum EffigyList {
 			0.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=",
 			2,
-			DisguiseType.BLAZE);
+			DisguiseType.BLAZE),
+	HOGLIN(
+			Hoglin.class,
+			ChatColor.LIGHT_PURPLE+"Hoglin",
+			Material.PORKCHOP,
+			"Charge",
+			"Elan",
+			12 * 2,
+			1 * 2,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWJiOWJjMGYwMWRiZDc2MmEwOGQ5ZTc3YzA4MDY5ZWQ3Yzk1MzY0YWEzMGNhMTA3MjIwODU2MWI3MzBlOGQ3NSJ9fX0=",
+			2,
+			DisguiseType.HOGLIN);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;
 	private final static int TIER_2_EFFIGY_COST = 6;

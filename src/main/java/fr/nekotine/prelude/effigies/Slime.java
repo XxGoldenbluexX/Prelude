@@ -66,8 +66,11 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	}	
 	@EventHandler
 	public void entityDamage(LivingEntityDamageEvent e) {
-		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && !UtilEntity.IsOnGround(e.GetDamager()))
+		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && !UtilEntity.IsOnGround(e.GetDamager())) {
 			e.GetDamaged().addPotionEffect(SLOW);
+		}else if(e.GetCause() == DamageCause.ENTITY_ATTACK && e.GetDamager()!=null && Main.getInstance().getModuleManager().Get(ProjectileManager.class).Exist(e.GetDamager())) {
+			e.SetCancelled(true);
+		}
 	}
 	
 	@Override
