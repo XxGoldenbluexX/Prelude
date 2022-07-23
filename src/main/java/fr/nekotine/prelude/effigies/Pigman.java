@@ -121,7 +121,7 @@ public class Pigman extends Effigy implements IProjectile{
 				inTeam.toArray(new LivingEntity[inTeam.size()]),
 				PRIMARY_BARRIER);
 		
-		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_DEATH, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_AMBIENT, 1, 0);
 	}
 	@Override
 	protected void castSecondarySpell() {
@@ -138,6 +138,8 @@ public class Pigman extends Effigy implements IProjectile{
 				true, 
 				false, 
 				null);
+		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, 1, 0);
 		
 		RemoveMeat(meat.GetAmount());
 	}

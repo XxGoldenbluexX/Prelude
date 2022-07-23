@@ -224,7 +224,10 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		
 		e.setCancelled(true);
 		getWrapper().getPlayer().setAllowFlight(false);
-		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_BURN, 1, 0);
+		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ITEM_FIRECHARGE_USE, 0.3f, 1.5f);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ITEM_HOE_TILL, 1, 0.1f);
+		
 		getWrapper().getPlayer().setVelocity(getWrapper().getPlayer().getVelocity().setY(DOUBLE_JUMP_HEIGHT));
 	}
 	@EventHandler

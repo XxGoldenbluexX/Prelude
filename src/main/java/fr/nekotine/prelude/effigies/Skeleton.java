@@ -153,7 +153,6 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		if(e.GetProjectile().getType() != EntityType.ARROW) return;
 		
 		e.SetDamage(Math.min(e.GetDamage(), ARROW_DAMAGE));
-		getWrapper().getPlayer().sendMessage(""+e.GetDamage());
 		if(multiplyer_active) {
 			e.AddFinalMult(DAMAGE_MULTIPLYER);
 			multiplyer_active = false;
