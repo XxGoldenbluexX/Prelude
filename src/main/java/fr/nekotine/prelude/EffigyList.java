@@ -13,6 +13,7 @@ import fr.nekotine.prelude.effigies.Pigman;
 import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
 import fr.nekotine.prelude.effigies.Spider;
+import fr.nekotine.prelude.effigies.Trader;
 import fr.nekotine.prelude.effigies.Witch;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 public enum EffigyList {
@@ -108,7 +109,18 @@ public enum EffigyList {
 			1 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWJiOWJjMGYwMWRiZDc2MmEwOGQ5ZTc3YzA4MDY5ZWQ3Yzk1MzY0YWEzMGNhMTA3MjIwODU2MWI3MzBlOGQ3NSJ9fX0=",
 			2,
-			DisguiseType.HOGLIN);
+			DisguiseType.HOGLIN),
+	TRADER(
+			Trader.class,
+			ChatColor.AQUA+"Marchand",
+			Material.EMERALD,
+			"Lamasticot",
+			"Echange",
+			9 * 2,
+			0.75 * 2,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWYxMzc5YTgyMjkwZDdhYmUxZWZhYWJiYzcwNzEwZmYyZWMwMmRkMzRhZGUzODZiYzAwYzkzMGM0NjFjZjkzMiJ9fX0=",
+			2,
+			DisguiseType.WANDERING_TRADER);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;
 	private final static int TIER_2_EFFIGY_COST = 6;

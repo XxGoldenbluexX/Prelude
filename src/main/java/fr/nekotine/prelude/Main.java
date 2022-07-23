@@ -24,6 +24,7 @@ import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.itemcharge.SwordChargeManager;
+import fr.nekotine.core.module.EntityVisibilityModule;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileManager;
 import fr.nekotine.core.ticking.TickingModule;
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin implements Listener{
 		moduleManager.Load(this, DamageManager.class);
 		moduleManager.Load(this, BowChargeManager.class);
 		moduleManager.Load(this, UsableManager.class);
+		moduleManager.Load(this, EntityVisibilityModule.class);
 	}
 	private static Main main;
 	public static Main getInstance() {

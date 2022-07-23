@@ -95,7 +95,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		Player p = getWrapper().getPlayer();
 		p.setVelocity(p.getVelocity().setY(JUMP_VELOCITY));
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_JUMP, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_JUMP, 1, 0);
 	}
 	@Override
 	protected void roundEnd() {
@@ -118,12 +118,13 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	@Override
 	public void Released(Player player, String arg1, long left) {
 		int size = 1 + (int)Math.floor( ((double)( PRIMARY_CHARGE_DURATION - left) / PRIMARY_CHARGE_DURATION) * (PRIMARY_MAX_SIZE-1) );
-		org.bukkit.entity.Slime slime = UtilEntity.SpawnSlime(getWrapper().getPlayer().getLocation().add(0, 2, 0), SpawnReason.CUSTOM, size);
+		org.bukkit.entity.Slime slime = UtilEntity.SpawnSlime(new Location(player.getWorld(), 0, 0, 0), SpawnReason.CUSTOM, size);
 		slime.setCollidable(false);
 		slime.setInvulnerable(true);
 		UtilMobAi.clearBrain(slime);
+		slime.teleport(player.getLocation().add(0,2,0));
 		
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_JUMP, 1, 0);
+		player.getWorld().playSound(player, Sound.ENTITY_SLIME_JUMP, 1, 0);
 		
 		LivingEntity[] self = {player};
 		Material[] barrier = {Material.BARRIER};
@@ -158,7 +159,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 			return;
 		}
 		
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_ATTACK, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_ATTACK, 1, 0);
 		
 		if(hitE != null) {
 			Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(hitE, getWrapper().getPlayer(), null, DamageCause.PROJECTILE, PRIMARY_DAMAGE, false, true, null);
@@ -191,10 +192,11 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 				location.add(0, 0.5, 0);
 			}
 
-			org.bukkit.entity.Slime slime = UtilEntity.SpawnSlime(location, SpawnReason.CUSTOM, 1);
+			org.bukkit.entity.Slime slime = UtilEntity.SpawnSlime(new Location(location.getWorld(), 0, 0, 0), SpawnReason.CUSTOM, 1);
 			slime.setInvulnerable(true);
 			slime.setCollidable(false);
 			UtilMobAi.clearBrain(slime);
+			slime.teleport(location);
 			
 			Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
 					slime,

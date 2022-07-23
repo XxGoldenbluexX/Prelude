@@ -78,7 +78,7 @@ public class Spider extends Effigy{
 		Player p = getWrapper().getPlayer();
 		Location loc = p.getEyeLocation();
 		final Arrow arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.9f, 0);
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SPIDER_HURT, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SPIDER_HURT, 1, 0);
 		arrow.setColor(Color.GREEN);
 		arrow.setShooter(p);
 		setCooldown(Ability.PRIMARY, 200);
@@ -88,7 +88,7 @@ public class Spider extends Effigy{
 	protected void castSecondarySpell() {
 		Player p = getWrapper().getPlayer();
 		p.setVelocity(p.getEyeLocation().getDirection());
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_SPIDER_AMBIENT, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SPIDER_AMBIENT, 1, 0);
 		setCooldown(Ability.SECONDARY, 200);
 	}
 

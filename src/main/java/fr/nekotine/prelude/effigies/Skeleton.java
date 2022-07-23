@@ -104,7 +104,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		multiplyer_active = true;
 		this.bow.SetEnchantedGlow(true);
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ITEM_CROSSBOW_QUICK_CHARGE_1, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ITEM_CROSSBOW_QUICK_CHARGE_1, 1, 0);
 	}
 	@Override
 	protected void castSecondarySpell() {
@@ -125,7 +125,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 				true,
 				true);
 		
-		getWrapper().getPlayer().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITHER_SHOOT, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITHER_SHOOT, 1, 0);
 	}
 	@Override
 	protected void roundEnd() {
