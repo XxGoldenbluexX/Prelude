@@ -74,7 +74,7 @@ public enum EffigyList {
 			7 * 2,
 			1.25 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTliMDFkNzNhMWM5MmM0NDkxYjU3OWRmZDk3YTk5MjhhYzNjYzM2ZmRlNDMxZjlkYTA5MzJlMGY1ZWJhYjhjNSJ9fX0=",
-			2,
+			1,
 			DisguiseType.CREEPER
 			),
 	PIGMAN(
@@ -86,7 +86,7 @@ public enum EffigyList {
 			8 * 2,
 			1 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTkzNTg0MmFmNzY5MzgwZjc4ZThiOGE4OGQxZWE2Y2EyODA3YzFlNTY5M2MyY2Y3OTc0NTY2MjA4MzNlOTM2ZiJ9fX0=",
-			2,
+			1,
 			DisguiseType.ZOMBIFIED_PIGLIN),
 	BLAZE(
 			Blaze.class,
@@ -97,7 +97,7 @@ public enum EffigyList {
 			7 * 2,
 			0.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=",
-			2,
+			1,
 			DisguiseType.BLAZE),
 	HOGLIN(
 			Hoglin.class,
@@ -108,7 +108,7 @@ public enum EffigyList {
 			12 * 2,
 			1 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWJiOWJjMGYwMWRiZDc2MmEwOGQ5ZTc3YzA4MDY5ZWQ3Yzk1MzY0YWEzMGNhMTA3MjIwODU2MWI3MzBlOGQ3NSJ9fX0=",
-			2,
+			1,
 			DisguiseType.HOGLIN),
 	TRADER(
 			Trader.class,
@@ -119,7 +119,7 @@ public enum EffigyList {
 			9 * 2,
 			0.75 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWYxMzc5YTgyMjkwZDdhYmUxZWZhYWJiYzcwNzEwZmYyZWMwMmRkMzRhZGUzODZiYzAwYzkzMGM0NjFjZjkzMiJ9fX0=",
-			2,
+			1,
 			DisguiseType.WANDERING_TRADER);
 	
 	private final static int TIER_1_EFFIGY_COST = 0;

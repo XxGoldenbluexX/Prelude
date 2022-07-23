@@ -77,11 +77,11 @@ public class Trader extends Effigy implements ICharge{
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WANDERING_TRADER_DISAPPEARED, 1, 0);
 		
-		for(Player player : Main.getInstance().getPlayers()) {
+		/*for(Player player : Main.getInstance().getPlayers()) {
 			if(Main.getInstance().inSameTeam(player, getWrapper().getPlayer())) continue;
 			
 			Main.getInstance().getModuleManager().Get(EntityVisibilityModule.class).hideFrom(getWrapper().getPlayer(), player);
-		}
+		}*/
 		
 		Location temp = lama.getLocation();
 		lama.teleport(getWrapper().getPlayer());
@@ -140,11 +140,11 @@ public class Trader extends Effigy implements ICharge{
 			AddPassiveCharge();
 			
 		}else {
-			for(Player player : Main.getInstance().getPlayers()) {
+			/*for(Player player : Main.getInstance().getPlayers()) {
 				if(Main.getInstance().inSameTeam(player, getWrapper().getPlayer())) continue;
 				
 				Main.getInstance().getModuleManager().Get(EntityVisibilityModule.class).showFrom(getWrapper().getPlayer(), player);
-			}
+			}*/
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WANDERING_TRADER_REAPPEARED, 1, 0);
 		}
 		

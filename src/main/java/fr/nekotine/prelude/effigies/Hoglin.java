@@ -62,11 +62,11 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 		primaryVelocity = getWrapper().getPlayer().getEyeLocation().getDirection().multiply(PRIMARY_SPEED).setY(0);
 		primaryDamaged.clear();
 		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
-				getDisguise().getEntity(),
+				getWrapper().getPlayer(),
 				getWrapper().getPlayer(),
 				this, 
-				primaryVelocity, 
-				PRIMARY_DURATION, 
+				primaryVelocity,
+				PRIMARY_DURATION,
 				true, 
 				false);
 	}

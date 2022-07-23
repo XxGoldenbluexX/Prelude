@@ -34,7 +34,7 @@ public class Creeper extends Effigy implements ICharge{
 	private static final long SECONDARY_CHARGE_AUDIO_BIP = 2;
 	private static final double SECONDARY_DAMAGE = 4.25 * 2;
 	private static final double SECONDARY_SELF_DAMAGE = 0.5 * 2;
-	private static final double SECONDARY_RADIUS = 4;
+	private static final double SECONDARY_RADIUS = 5;
 	
 	//
 	

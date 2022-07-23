@@ -109,6 +109,7 @@ public class Pigman extends Effigy implements IProjectile{
 		RemoveMeat(PRIMARY_MEAT_COST);
 		
 		Item meatItem = getWrapper().getPlayer().getWorld().dropItem(getWrapper().getPlayer().getLocation().add(0, 1.5, 0), new ItemStack(MEAT_MATERIAL));
+		meatItem.setInvulnerable(true);
 		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
 		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
 				meatItem, 

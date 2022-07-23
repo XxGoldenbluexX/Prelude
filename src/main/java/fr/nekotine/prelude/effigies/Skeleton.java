@@ -41,7 +41,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final float ARROW_DAMAGE = 1 * 2;
 	private static final long PASSIVE_CHARGE_TIME = 2500;
 	private static final int PASSIVE_BONUS_ARROWS = 3;
-	private static final int PASSIVE_SPREAD = 7;
+	private static final int PASSIVE_SPREAD = 5;
 	private static final long PASSIVE_AUDIO_BIP = PASSIVE_BONUS_ARROWS - 1;
 	
 	private static final float DAMAGE_MULTIPLYER = 2;

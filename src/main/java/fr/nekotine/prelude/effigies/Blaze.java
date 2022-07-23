@@ -107,6 +107,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1, 0);
 		
 		Fireball fireball = getWrapper().getPlayer().launchProjectile(Fireball.class);
+		fireball.setInvulnerable(true);
 		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
 		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
 				fireball, 
