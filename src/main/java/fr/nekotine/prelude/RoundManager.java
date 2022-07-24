@@ -134,7 +134,11 @@ public class RoundManager implements Listener{
 	}
 	private void resetEffigy(Player player) {
 		PlayerWrapper wrapper = Main.getInstance().getWrapper(player);
-		if(!wrapper.isAlive()) setDefaultEffigy(player);
+		if(!wrapper.isAlive()) {
+			setDefaultEffigy(player);
+		}else {
+			wrapper.setEffigy(wrapper.getEffigy().getEffigyType());
+		}
 	}
 	public void startGame() {
 		wonLastRound = null;

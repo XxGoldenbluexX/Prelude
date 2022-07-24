@@ -12,13 +12,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.projectile.ProjectileManager;
 import fr.nekotine.core.ticking.event.TickElapsedEvent;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
@@ -61,7 +58,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_CONVERTED_TO_ZOMBIFIED, 1, 0);
 		primaryVelocity = getWrapper().getPlayer().getEyeLocation().getDirection().multiply(PRIMARY_SPEED).setY(0);
 		primaryDamaged.clear();
-		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
+		Main.getInstance().getProjectileModule().AddProjectile(
 				getWrapper().getPlayer(),
 				getWrapper().getPlayer(),
 				this, 
@@ -76,7 +73,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_ANGRY, 1, 0);
 		getWrapper().getPlayer().addPotionEffect(SECONDARY_SPEED_EFFECT);
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				SECONDARY_CHARGE_NAME, 
 				SECONDARY_DURATION, 
@@ -112,13 +109,13 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsSecondaryActive()) {
 			e.GetDamaged().addPotionEffect(SECONDARY_SLOW_EFFECT);
 			e.AddBaseMod(SECONDARY_BONUS_DAMAGE);
-			Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);
+			Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_ANGRY, 1, 0);
 		}
 	}
 	@EventHandler
 	public void OnTick(TickElapsedEvent e) {
-		if(Main.getInstance().getModuleManager().Get(ProjectileManager.class).Exist(getWrapper().getPlayer())) {
+		if(Main.getInstance().getProjectileModule().Exist(getWrapper().getPlayer())) {
 			//getWrapper().getPlayer().teleport(getWrapper().getPlayer().getLocation().setDirection(primaryVelocity));
 			getWrapper().getPlayer().setVelocity(primaryVelocity.setY(getWrapper().getPlayer().getVelocity().getY()));
 		}	
@@ -127,7 +124,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 	//
 	
 	private boolean IsSecondaryActive() {
-		return Main.getInstance().getModuleManager().Get(ChargeManager.class).Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
+		return Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
 	}
 	
 	//
@@ -141,7 +138,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 		if(primaryDamaged.contains(hitE)) return;
 		
 		hitE.setVelocity(hitE.getVelocity().setY(PRIMARY_BUMP_HEIGHT));
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+		Main.getInstance().getDamageModule().Damage(
 				hitE, 
 				getWrapper().getPlayer(), 
 				null, 

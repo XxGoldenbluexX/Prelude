@@ -16,15 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.projectile.ProjectileManager;
 import fr.nekotine.core.usable.Usable;
-import fr.nekotine.core.usable.UsableManager;
 import fr.nekotine.core.util.UtilEntity;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
@@ -64,7 +60,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		super(wrapper, effigyType);
 		wrapper.getPlayer().addPotionEffect(PASSIVE_SLOW_FALLING);
 		
-		fireballs = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
+		fireballs = Main.getInstance().getUsableModule().AddUsable(
 				new ItemStack(NO_FIREBALL_MATERIAL), 
 				getWrapper().getPlayer().getInventory());
 		fireballs.SetName("Charges");
@@ -78,7 +74,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	}
 	@Override
 	public void Hit(LivingEntity hitE, Block arg1, CustomProjectile proj) {
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+		 Main.getInstance().getDamageModule().Damage(
 				hitE, 
 				getWrapper().getPlayer(), 
 				(Fireball)proj.GetProjectile(), 
@@ -109,7 +105,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		Fireball fireball = getWrapper().getPlayer().launchProjectile(Fireball.class);
 		fireball.setInvulnerable(true);
 		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
-		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
+		 Main.getInstance().getProjectileModule().AddProjectile(
 				fireball, 
 				getWrapper().getPlayer(), 
 				this, 
@@ -128,7 +124,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);
 		
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		 Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				SECONDARY_CHARGE_NAME, 
 				SECONDARY_DURATION, 
@@ -154,7 +150,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		getWrapper().getPlayer().removePotionEffect(PASSIVE_SLOW_FALLING.getType());
 		fireballs.Remove();
 		getWrapper().getPlayer().setAllowFlight(true);
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), PASSIVE_CHARGE_NAME, true);
+		 Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), PASSIVE_CHARGE_NAME, true);
 		super.destroy();
 	}
 	
@@ -187,7 +183,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		return fireballs.GetMaterial()==NO_FIREBALL_MATERIAL || fireballs.GetAmount() < MAX_FIREBALL;
 	}
 	private void AddCharge() {
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		 Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				PASSIVE_CHARGE_NAME, 
 				PASSIVE_CHARGE_TIME, 
@@ -197,7 +193,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 				this);
 	}
 	private boolean IsBurning() {
-		return Main.getInstance().getModuleManager().Get(ChargeManager.class).Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
+		return  Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
 	}
 	
 	//

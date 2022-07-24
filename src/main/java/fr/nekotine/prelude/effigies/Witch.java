@@ -18,9 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
@@ -95,7 +93,7 @@ public class Witch extends Effigy implements ICharge{
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
 		
-		if(!Main.getInstance().getModuleManager().Get(ChargeManager.class).Exist(getWrapper().getPlayer().getName(), CHARGE_NAME)) AddCharge();
+		if(!Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), CHARGE_NAME)) AddCharge();
 		
 	}
 	@Override
@@ -132,7 +130,7 @@ public class Witch extends Effigy implements ICharge{
 					
 					double damage = PRIMARY_DAMAGE;
 					if(hit instanceof Player && Main.getInstance().inSameTeam(player, (Player)hit)) damage = -PRIMARY_HEAL;
-					Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+					Main.getInstance().getDamageModule().Damage(
 							hit,
 							player, 
 							e.getPotion(),
@@ -189,11 +187,11 @@ public class Witch extends Effigy implements ICharge{
 		}
 	}
 	private void CancelCharge() {
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), CHARGE_NAME, true);
+		Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), CHARGE_NAME, true);
 	}
 	private void AddCharge() {
 		if(bats.size() >= BAT_CAP) return;
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				CHARGE_NAME, 
 				PASSIVE_BAT_GENERATION, 

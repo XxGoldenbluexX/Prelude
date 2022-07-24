@@ -8,9 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
-import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
@@ -59,7 +57,7 @@ public class Creeper extends Effigy implements ICharge{
 		
 		Disguiser.setIgnitedCreeper(getDisguise(), true);
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 0);
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		 Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				SECONDARY_CHARGE_NAME, 
 				SECONDARY_CHARGE_TIME, 
@@ -90,7 +88,7 @@ public class Creeper extends Effigy implements ICharge{
 		if(getWrapper().getPlayer().equals(e.GetDamaged()) && !e.GetDamaged().equals(e.GetDamager())) {
 			getWrapper().getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, getWrapper().getPlayer().getLocation().add(0, 0.5, 0), 1);
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 0.5f, 1);
-			Main.getInstance().getModuleManager().Get(DamageManager.class).Explode(
+			 Main.getInstance().getDamageModule().Explode(
 					getWrapper().getPlayer(), 
 					PASSIVE_RADIUS, 
 					DamageCause.THORNS, 
@@ -121,7 +119,7 @@ public class Creeper extends Effigy implements ICharge{
 		
 		getWrapper().getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_HUGE, getWrapper().getPlayer().getLocation(), 1);
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 3, 0);
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Explode(
+		 Main.getInstance().getDamageModule().Explode(
 				getWrapper().getPlayer(), 
 				SECONDARY_RADIUS, 
 				DamageCause.CUSTOM, 
@@ -131,7 +129,7 @@ public class Creeper extends Effigy implements ICharge{
 				getWrapper().getPlayer().getLocation(), 
 				true);
 		
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+		 Main.getInstance().getDamageModule().Damage(
 				getWrapper().getPlayer(),
 				null,
 				null, 
@@ -147,9 +145,9 @@ public class Creeper extends Effigy implements ICharge{
 	//
 	
 	private void CancelCharge() {
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);
+		 Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);
 	}
 	private boolean IsCharging() {
-		return Main.getInstance().getModuleManager().Get(ChargeManager.class).Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
+		return Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
 	}
 }

@@ -1,7 +1,5 @@
 package fr.nekotine.prelude.effigies;
 
-import java.util.function.Consumer;
-
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -19,15 +17,12 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import fr.nekotine.core.bowcharge.BowChargeManager;
 import fr.nekotine.core.bowcharge.IBowCharge;
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.projectile.ProjectileManager;
+import fr.nekotine.core.usable.Function2;
 import fr.nekotine.core.usable.Usable;
-import fr.nekotine.core.usable.UsableManager;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
@@ -50,15 +45,15 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final double SECONDARY_DAMAGE = 1 * 2;
 	private static final double SECONDARY_RADIUS = 3;
 	
-	private static final Consumer<PlayerDropItemEvent> CANCEL_DROP_EVENT = new Consumer<PlayerDropItemEvent>() {
+	private static final Function2<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new Function2<PlayerDropItemEvent, Class<?>[]>() {
 		@Override
-		public void accept(PlayerDropItemEvent e) {
+		public void run(PlayerDropItemEvent e, Class<?>[] classes) {
 			e.setCancelled(true);
 		}
 	};
-	private static final Consumer<EntityShootBowEvent> CANCEL_ARROW_CONSUMPTION = new Consumer<EntityShootBowEvent>() {
+	private static final Function2<EntityShootBowEvent, Class<?>[]> CANCEL_ARROW_CONSUMPTION = new Function2<EntityShootBowEvent, Class<?>[]>() {
 		@Override
-		public void accept(EntityShootBowEvent e) {
+		public void run(EntityShootBowEvent e, Class<?>[] classes) {
 			e.setConsumeItem(false);
 		}
 	};
@@ -73,7 +68,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	
 	public Skeleton(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
-		this.bow = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
+		this.bow = Main.getInstance().getUsableModule().AddUsable(
 				new ItemStack(Material.BOW), 
 				getWrapper().getPlayer().getInventory());
 		this.bow.SetUnbreakable(true);
@@ -83,7 +78,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		this.bow.OnBowShoot(CANCEL_ARROW_CONSUMPTION);
 		this.bow.SetName("Arc");
 		
-		this.arrow = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
+		this.arrow = Main.getInstance().getUsableModule().AddUsable(
 				new ItemStack(Material.ARROW), 
 				getWrapper().getPlayer().getInventory());
 		this.arrow.OnDrop(CANCEL_DROP_EVENT);
@@ -116,7 +111,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		head.setInvulnerable(true);
 		head.setShooter(player);
 
-		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
+		Main.getInstance().getProjectileModule().AddProjectile(
 				head, 
 				player, 
 				this, 
@@ -206,7 +201,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		}
 		projectile.GetProjectile().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, projectile.GetProjectile().getLocation(), 1);
 		projectile.GetProjectile().getWorld().playSound(projectile.GetProjectile().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 3, 0);
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Explode(
+		Main.getInstance().getDamageModule().Explode(
 				getWrapper().getPlayer(), 
 				SECONDARY_RADIUS, 
 				DamageCause.CUSTOM, 
@@ -230,7 +225,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	//
 	
 	private void addCharge() {
-		Main.getInstance().getModuleManager().Get(BowChargeManager.class).AddBowCharge(
+		Main.getInstance().getBowChargeModule().AddBowCharge(
 			getWrapper().getPlayer(), 
 			"SkeletonPassive", 
 			PASSIVE_CHARGE_TIME, 

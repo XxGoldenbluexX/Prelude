@@ -19,17 +19,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import fr.nekotine.core.bowcharge.BowChargeManager;
-import fr.nekotine.core.charge.ChargeManager;
-import fr.nekotine.core.damage.DamageManager;
+import fr.nekotine.core.bowcharge.BowChargeModule;
+import fr.nekotine.core.charge.ChargeModule;
+import fr.nekotine.core.damage.DamageModule;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
-import fr.nekotine.core.itemcharge.SwordChargeManager;
-import fr.nekotine.core.module.EntityVisibilityModule;
+import fr.nekotine.core.itemcharge.ItemChargeModule;
 import fr.nekotine.core.module.ModuleManager;
-import fr.nekotine.core.projectile.ProjectileManager;
+import fr.nekotine.core.projectile.ProjectileModule;
 import fr.nekotine.core.ticking.TickingModule;
 import fr.nekotine.core.ticking.event.TickElapsedEvent;
-import fr.nekotine.core.usable.UsableManager;
+import fr.nekotine.core.usable.UsableModule;
+import fr.nekotine.core.visibility.EntityVisibilityModule;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
@@ -47,13 +47,13 @@ public class Main extends JavaPlugin implements Listener{
 	@SuppressWarnings("unchecked")
 	public Main() {
 		moduleManager = new ModuleManager();
-		moduleManager.Load(this, ChargeManager.class);
+		moduleManager.Load(this, ChargeModule.class);
 		moduleManager.Load(this, TickingModule.class);
-		moduleManager.Load(this, SwordChargeManager.class);
-		moduleManager.Load(this, ProjectileManager.class);
-		moduleManager.Load(this, DamageManager.class);
-		moduleManager.Load(this, BowChargeManager.class);
-		moduleManager.Load(this, UsableManager.class);
+		moduleManager.Load(this, ItemChargeModule.class);
+		moduleManager.Load(this, ProjectileModule.class);
+		moduleManager.Load(this, DamageModule.class);
+		moduleManager.Load(this, BowChargeModule.class);
+		moduleManager.Load(this, UsableModule.class);
 		moduleManager.Load(this, EntityVisibilityModule.class);
 	}
 	private static Main main;
@@ -340,5 +340,26 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public ModuleManager getModuleManager() {
 		return moduleManager;
+	}
+	public DamageModule getDamageModule() {
+		return moduleManager.Get(DamageModule.class);
+	}
+	public UsableModule getUsableModule() {
+		return moduleManager.Get(UsableModule.class);
+	}
+	public ProjectileModule getProjectileModule() {
+		return moduleManager.Get(ProjectileModule.class);
+	}
+	public ChargeModule getChargeModule() {
+		return moduleManager.Get(ChargeModule.class);
+	}
+	public BowChargeModule getBowChargeModule() {
+		return moduleManager.Get(BowChargeModule.class);
+	}
+	public ItemChargeModule getItemChargeModule() {
+		return moduleManager.Get(ItemChargeModule.class);
+	}
+	public EntityVisibilityModule getEntityVisibilityModule() {
+		return moduleManager.Get(EntityVisibilityModule.class);
 	}
 }

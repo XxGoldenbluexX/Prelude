@@ -15,9 +15,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.util.UtilEntity;
 import fr.nekotine.core.util.UtilMobAi;
 import fr.nekotine.prelude.Effigy;
@@ -122,7 +120,7 @@ public class Trader extends Effigy implements ICharge{
 				if(near.equals(lama) || !(near instanceof LivingEntity)) continue;
 				
 				if(near instanceof Player && Main.getInstance().inSameTeam((Player)near, getWrapper().getPlayer())) {
-					Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+					Main.getInstance().getDamageModule().Damage(
 							(Player)near,
 							getWrapper().getPlayer(), 
 							null,
@@ -152,7 +150,7 @@ public class Trader extends Effigy implements ICharge{
 	//
 	
 	private void AddPassiveCharge() {
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				PASSIVE_CHARGE_NAME, 
 				PASSIVE_COOLDOWN, 
@@ -162,7 +160,7 @@ public class Trader extends Effigy implements ICharge{
 				this);
 	}
 	private void AddSecondaryCharge() {
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).AddCharge(
+		Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
 				SECONDARY_CHARGE_NAME, 
 				SECONDARY_DURATION, 
@@ -178,7 +176,7 @@ public class Trader extends Effigy implements ICharge{
 		UtilEntity.SetMaxHealth(lama, LLAMA_HEALTH);
 	}
 	private void CancelPassiveCharge() {
-		Main.getInstance().getModuleManager().Get(ChargeManager.class).SetCancelled(getWrapper().getPlayer().getName(), PASSIVE_CHARGE_NAME, true);
+		Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), PASSIVE_CHARGE_NAME, true);
 	}
 	
 	//
@@ -197,7 +195,7 @@ public class Trader extends Effigy implements ICharge{
 					damage = -PRIMARY_HEAL;
 				}
 				
-				Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+				Main.getInstance().getDamageModule().Damage(
 						lama.getKiller(),
 						getWrapper().getPlayer(), 
 						null,

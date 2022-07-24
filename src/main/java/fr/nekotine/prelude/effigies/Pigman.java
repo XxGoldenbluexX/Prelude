@@ -1,7 +1,6 @@
 package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -14,13 +13,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.projectile.ProjectileManager;
+import fr.nekotine.core.usable.Function2;
 import fr.nekotine.core.usable.Usable;
-import fr.nekotine.core.usable.UsableManager;
 import fr.nekotine.core.util.UtilMath;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
@@ -46,9 +43,9 @@ public class Pigman extends Effigy implements IProjectile{
 	
 	private Usable meat;
 	private boolean hit = false;
-	private static final Consumer<PlayerDropItemEvent> CANCEL_DROP_EVENT = new Consumer<PlayerDropItemEvent>() {
+	private static final Function2<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new Function2<PlayerDropItemEvent, Class<?>[]>() {
 		@Override
-		public void accept(PlayerDropItemEvent e) {
+		public void run(PlayerDropItemEvent e, Class<?>[] classes) {
 			e.setCancelled(true);
 		}
 	};
@@ -57,7 +54,7 @@ public class Pigman extends Effigy implements IProjectile{
 	
 	public Pigman(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
-		meat = Main.getInstance().getModuleManager().Get(UsableManager.class).AddUsable(
+		meat = Main.getInstance().getUsableModule().AddUsable(
 				new ItemStack(NO_MEAT_MATERIAL),
 				getWrapper().getPlayer().getInventory());
 		meat.SetName("Viande");
@@ -77,7 +74,7 @@ public class Pigman extends Effigy implements IProjectile{
 			return;
 		}
 		
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+		Main.getInstance().getDamageModule().Damage(
 				hitE, 
 				getWrapper().getPlayer(), 
 				null, 
@@ -112,7 +109,7 @@ public class Pigman extends Effigy implements IProjectile{
 		Item meatItem = getWrapper().getPlayer().getWorld().dropItem(getWrapper().getPlayer().getLocation().add(0, 1.5, 0), new ItemStack(MEAT_MATERIAL));
 		meatItem.setInvulnerable(true);
 		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
-		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
+		Main.getInstance().getProjectileModule().AddProjectile(
 				meatItem, 
 				getWrapper().getPlayer(),
 				this, 
@@ -131,7 +128,7 @@ public class Pigman extends Effigy implements IProjectile{
 		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
-		Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(
+		Main.getInstance().getDamageModule().Damage(
 				getWrapper().getPlayer(),
 				null, 
 				null, 

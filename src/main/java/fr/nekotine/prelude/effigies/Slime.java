@@ -14,13 +14,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import fr.nekotine.core.damage.DamageManager;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
-import fr.nekotine.core.itemcharge.ISwordCharge;
-import fr.nekotine.core.itemcharge.SwordChargeManager;
+import fr.nekotine.core.itemcharge.IItemCharge;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.projectile.ProjectileManager;
 import fr.nekotine.core.util.CustomAction;
 import fr.nekotine.core.util.UtilEntity;
 import fr.nekotine.core.util.UtilMobAi;
@@ -30,7 +27,7 @@ import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
 import fr.nekotine.prelude.utils.Ability;
 
-public class Slime extends Effigy implements ISwordCharge, IProjectile{
+public class Slime extends Effigy implements IItemCharge, IProjectile{
 	public Slime(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
 	}
@@ -69,7 +66,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	public void entityDamage(LivingEntityDamageEvent e) {
 		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && !UtilEntity.IsOnGround(e.GetDamager())) {
 			e.GetDamaged().addPotionEffect(SLOW);
-		}else if(e.GetCause() == DamageCause.ENTITY_ATTACK && e.GetDamager()!=null && Main.getInstance().getModuleManager().Get(ProjectileManager.class).Exist(e.GetDamager())) {
+		}else if(e.GetCause() == DamageCause.ENTITY_ATTACK && e.GetDamager()!=null && Main.getInstance().getProjectileModule().Exist(e.GetDamager())) {
 			e.SetCancelled(true);
 		}
 	}
@@ -77,7 +74,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	@Override
 	protected void castPrimarySpell() {
 		setAbilityLocked(Ability.PRIMARY, true);
-		Main.getInstance().getModuleManager().Get(SwordChargeManager.class).AddSwordCharge(
+		Main.getInstance().getItemChargeModule().AddItemCharge(
 				getWrapper().getPlayer(),
 				"SlimePrimary",
 				PRIMARY_CHARGE_DURATION,
@@ -128,7 +125,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		
 		LivingEntity[] self = {player};
 		Material[] barrier = {Material.BARRIER};
-		Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
+		Main.getInstance().getProjectileModule().AddProjectile(
 				slime,
 				player,
 				this,
@@ -162,7 +159,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_ATTACK, 1, 0);
 		
 		if(hitE != null) {
-			Main.getInstance().getModuleManager().Get(DamageManager.class).Damage(hitE, getWrapper().getPlayer(), null, DamageCause.PROJECTILE, PRIMARY_DAMAGE, false, true, null);
+			Main.getInstance().getDamageModule().Damage(hitE, getWrapper().getPlayer(), null, DamageCause.PROJECTILE, PRIMARY_DAMAGE, false, true, null);
 		}
 		Location spawnLoc = proj.GetProjectile().getLocation();
 		proj.GetProjectile().remove();
@@ -198,7 +195,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 			UtilMobAi.clearBrain(slime);
 			slime.teleport(location);
 			
-			Main.getInstance().getModuleManager().Get(ProjectileManager.class).AddProjectile(
+			Main.getInstance().getProjectileModule().AddProjectile(
 					slime,
 					effigy.getWrapper().getPlayer(),
 					this,
@@ -209,7 +206,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 		}
 		
 		public void remove() {
-			Main.getInstance().getModuleManager().Get(ProjectileManager.class).TriggerFromInterface(this);
+			Main.getInstance().getProjectileModule().TriggerFromInterface(this);
 		}
 		
 		@Override
