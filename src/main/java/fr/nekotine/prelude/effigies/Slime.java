@@ -38,7 +38,7 @@ public class Slime extends Effigy implements ISwordCharge, IProjectile{
 	//
 	
 	private boolean canUsePassive = false;
-	private static final double PASSIVE_PROBABILITY = 0.5;
+	private static final double PASSIVE_PROBABILITY = 0.25;
 	
 	private static final int PRIMARY_COOLDOWN = 5 * 20;
 	private static final int SECONDARY_COOLDOWN = 9 * 20;

@@ -18,7 +18,6 @@ import org.bukkit.potion.PotionEffectType;
 import fr.nekotine.core.charge.ChargeManager;
 import fr.nekotine.core.charge.ICharge;
 import fr.nekotine.core.damage.DamageManager;
-import fr.nekotine.core.module.EntityVisibilityModule;
 import fr.nekotine.core.util.UtilEntity;
 import fr.nekotine.core.util.UtilMobAi;
 import fr.nekotine.prelude.Effigy;
@@ -29,7 +28,7 @@ import fr.nekotine.prelude.utils.Ability;
 
 public class Trader extends Effigy implements ICharge{
 	private static final int PRIMARY_COOLDOWN = 5 * 20;
-	private static final int SECONDARY_COOLDOWN = 20 * 20;
+	private static final int SECONDARY_COOLDOWN = 10 * 20;
 	
 	private TraderLlama lama;
 	private static final long LLAMA_HEALTH = 10;

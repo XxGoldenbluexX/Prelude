@@ -34,7 +34,7 @@ public class Pigman extends Effigy implements IProjectile{
 	
 	private static final Material MEAT_MATERIAL = Material.COOKED_PORKCHOP;
 	private static final Material NO_MEAT_MATERIAL = Material.PORKCHOP;
-	private static final double DAMAGE_BOOST_PER_MEAT = 0.5 * 2;
+	private static final double DAMAGE_BOOST_PER_MEAT = 0.25 * 2;
 	
 	private static final int PRIMARY_COOLDOWN_REDUCTION = 1 * 20;
 	private static final double PRIMARY_DAMAGE = 0.5 * 2;
@@ -45,6 +45,7 @@ public class Pigman extends Effigy implements IProjectile{
 	private static final double SECONDARY_HEAL_PER_MEAT = 0.5 * 2;
 	
 	private Usable meat;
+	private boolean hit = false;
 	private static final Consumer<PlayerDropItemEvent> CANCEL_DROP_EVENT = new Consumer<PlayerDropItemEvent>() {
 		@Override
 		public void accept(PlayerDropItemEvent e) {
@@ -189,7 +190,12 @@ public class Pigman extends Effigy implements IProjectile{
 	public void OnDamage(LivingEntityDamageEvent e) {
 		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause() == DamageCause.ENTITY_ATTACK) {
 			e.AddBaseMod(DAMAGE_BOOST_PER_MEAT * meat.GetAmount());
-			AddMeat(1);
+			if(hit) {
+				hit = false;
+				AddMeat(1);
+			}else {
+				hit = true;
+			}
 		}
 	}
 }
