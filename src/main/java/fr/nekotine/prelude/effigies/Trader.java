@@ -26,7 +26,7 @@ import fr.nekotine.prelude.utils.Ability;
 
 public class Trader extends Effigy implements ICharge{
 	private static final int PRIMARY_COOLDOWN = 5 * 20;
-	private static final int SECONDARY_COOLDOWN = 10 * 20;
+	private static final int SECONDARY_COOLDOWN = 20 * 20;
 	
 	private TraderLlama lama;
 	private static final long LLAMA_HEALTH = 10;
