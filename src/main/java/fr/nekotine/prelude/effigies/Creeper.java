@@ -24,11 +24,11 @@ public class Creeper extends Effigy implements ICharge{
 	private static final double PASSIVE_DAMAGE = 0.75 * 2;
 	private static final double PASSIVE_RADIUS = 2;
 	
-	private static final float PRIMARY_DASH = 0.75f;
+	private static final float PRIMARY_DASH = 1f;
 	
 	private float walkSpeed;
 	private static final String SECONDARY_CHARGE_NAME = "CreeperSecondary";
-	private static final long SECONDARY_CHARGE_TIME = 1500;
+	private static final long SECONDARY_CHARGE_TIME = 1250;
 	private static final long SECONDARY_CHARGE_AUDIO_BIP = 2;
 	private static final double SECONDARY_DAMAGE = 4.25 * 2;
 	private static final double SECONDARY_SELF_DAMAGE = 0.5 * 2;

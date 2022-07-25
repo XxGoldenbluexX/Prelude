@@ -2,6 +2,7 @@ package fr.nekotine.prelude.effigies;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -66,7 +67,8 @@ public class Spider extends Effigy{
 	private boolean isStickingToBlock() {
 		Location ploc = getWrapper().getPlayer().getLocation();
 		for(int n=-1;n<=1;n=n+2) {
-			if(ploc.clone().add(n, 0, 0).getBlock().isSolid() || ploc.clone().add(0, 0, n).getBlock().isSolid()) {
+			if((ploc.clone().add(n, 0, 0).getBlock().isSolid() && ploc.clone().add(n, 0, 0).getBlock().getType()!=Material.BARRIER) || 
+				ploc.clone().add(0, 0, n).getBlock().isSolid() && ploc.clone().add(0, 0, n).getBlock().getType()!=Material.BARRIER) {
 				return true;
 			}
 		}
