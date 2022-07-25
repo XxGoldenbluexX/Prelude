@@ -31,8 +31,8 @@ public class Trader extends Effigy implements ICharge{
 	private TraderLlama lama;
 	private static final long LLAMA_HEALTH = 10;
 	
-	private static final long PASSIVE_COOLDOWN = 3 * 1000;
-	private static final long PASSIVE_HEAL = 1 * 2;
+	private static final long PASSIVE_COOLDOWN = 2 * 1000;
+	private static final double PASSIVE_HEAL = 0.5 * 2;
 	private static final PotionEffect PASSIVE_SLOW_EFFECT = new PotionEffect(PotionEffectType.SLOW, 3 * 20, 1, false, false, true);
 	private static final String PASSIVE_CHARGE_NAME = "TraderPassive";
 	private static final long PASSIVE_RADIUS = 4;

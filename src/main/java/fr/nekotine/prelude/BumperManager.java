@@ -16,8 +16,11 @@ public class BumperManager implements Listener{
 
 	public BumperManager() {
 		EventRegisterer.registerEvent(this);
-		add(Material.SLIME_BLOCK, 1.25f);
-		add(Material.HONEY_BLOCK, 2f);
+		add(Material.WAXED_OXIDIZED_CUT_COPPER, 1f);
+		add(Material.WAXED_WEATHERED_CUT_COPPER, 1.25f);
+		add(Material.WAXED_EXPOSED_CUT_COPPER, 1.5f);
+		add(Material.WAXED_CUT_COPPER, 2f);
+
 	}
 	public void destroy() {
 		EventRegisterer.unregisterEvent(this);

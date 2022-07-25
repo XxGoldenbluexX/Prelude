@@ -40,7 +40,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	
 	private static final int MAX_FIREBALL = 5;
 	private static final float FIREBALL_SPEED = 1.25f;
-	private static final double FIREBALL_DAMAGE = 0.5 * 2;
+	private static final double FIREBALL_DAMAGE = 1 * 2;
 	private static final int FIREBALL_FIRE_DURATION = 2 * 20 + 10;
 	
 	private static final int SECONDARY_DURATION = 5 * 1000;
