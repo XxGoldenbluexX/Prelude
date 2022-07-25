@@ -4,6 +4,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -86,7 +87,7 @@ public abstract class Effigy implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void onHit(LivingEntityDamageEvent e) {
 		if(wrapper.getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK) {
 			e.SetDamage(effigyType.getDamage());

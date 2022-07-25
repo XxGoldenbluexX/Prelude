@@ -143,6 +143,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	
 	@EventHandler
 	public void onArrow(LivingEntityDamageEvent e) {
+		if(e.IsCancelled()) return;
 		if(!getWrapper().getPlayer().equals(e.GetDamager())) return;
 		if(e.GetProjectile() == null) return;
 		if(e.GetProjectile().getType() != EntityType.ARROW) return;

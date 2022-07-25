@@ -233,7 +233,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	}
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
-		if(getWrapper().getPlayer().equals(e.GetDamaged()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsBurning() && e.GetDamager() != null) {
+		if(!e.IsCancelled() && getWrapper().getPlayer().equals(e.GetDamaged()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsBurning() && e.GetDamager() != null) {
 			
 			e.GetDamager().setFireTicks(Math.max(e.GetDamager().getFireTicks(), SECONDARY_BURN_DURATION));
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);

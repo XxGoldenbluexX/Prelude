@@ -106,7 +106,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 	}
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
-		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsSecondaryActive()) {
+		if(!e.IsCancelled() && getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsSecondaryActive()) {
 			e.GetDamaged().addPotionEffect(SECONDARY_SLOW_EFFECT);
 			e.AddBaseMod(SECONDARY_BONUS_DAMAGE);
 			Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME, true);

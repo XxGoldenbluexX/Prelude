@@ -185,7 +185,7 @@ public class Pigman extends Effigy implements IProjectile{
 	
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
-		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause() == DamageCause.ENTITY_ATTACK) {
+		if(!e.IsCancelled() && getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause() == DamageCause.ENTITY_ATTACK) {
 			e.AddBaseMod(DAMAGE_BOOST_PER_MEAT * meat.GetAmount());
 			if(hit) {
 				hit = false;

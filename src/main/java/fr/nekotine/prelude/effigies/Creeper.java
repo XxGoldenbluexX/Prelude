@@ -84,8 +84,9 @@ public class Creeper extends Effigy implements ICharge{
 	
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
+		if(e.IsCancelled()) return;
 		//Thorns
-		if(getWrapper().getPlayer().equals(e.GetDamaged()) && !e.GetDamaged().equals(e.GetDamager())) {
+		if(getWrapper().getPlayer().equals(e.GetDamaged()) && !e.GetDamaged().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK) {
 			getWrapper().getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, getWrapper().getPlayer().getLocation().add(0, 0.5, 0), 1);
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 0.5f, 1);
 			 Main.getInstance().getDamageModule().Explode(

@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -320,7 +321,7 @@ public class Main extends JavaPlugin implements Listener{
 	public void onDisconnext(PlayerQuitEvent e) {
 		if(players.containsKey(e.getPlayer())) removePlayer(e.getPlayer());
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void OnDamage(LivingEntityDamageEvent e) {
 		if(e.GetDamaged() instanceof Player && e.GetDamager() instanceof Player) {
 			Player damaged = (Player)e.GetDamaged();

@@ -59,11 +59,13 @@ public class Slime extends Effigy implements IItemCharge, IProjectile{
 	@EventHandler
 	public void onDamage(LivingEntityDamageEvent e) {
 		if(!canUsePassive) return;
-		if(!e.IsCancelled() && e.GetDamage() > 0 && e.GetDamaged().equals(getWrapper().getPlayer()) && Math.random() >= PASSIVE_PROBABILITY) 
+		if(e.IsCancelled()) return;
+		if(e.GetDamage() > 0 && e.GetDamaged().equals(getWrapper().getPlayer()) && Math.random() >= PASSIVE_PROBABILITY) 
 			slimes.summon(e.GetDamaged().getLocation(), true);
 	}	
 	@EventHandler
 	public void entityDamage(LivingEntityDamageEvent e) {
+		if(e.IsCancelled()) return;
 		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && !UtilEntity.IsOnGround(e.GetDamager())) {
 			e.GetDamaged().addPotionEffect(SLOW);
 		}else if(e.GetCause() == DamageCause.ENTITY_ATTACK && e.GetDamager()!=null && Main.getInstance().getProjectileModule().Exist(e.GetDamager())) {
