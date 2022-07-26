@@ -108,7 +108,9 @@ public class Main extends JavaPlugin implements Listener{
 		
 		Gameruler.enable();
 		
-		setMapName(PreludeMap.getMapNameList().get(0));
+		ArrayList<String> mapNameList = PreludeMap.getMapNameList();
+		
+		setMapName(mapNameList.isEmpty()?"null":mapNameList.get(0));
 		
 		roundManager = new RoundManager();
 		mapInventory = new MapInventory();
