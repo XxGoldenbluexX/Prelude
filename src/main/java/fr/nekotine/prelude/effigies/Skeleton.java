@@ -1,5 +1,7 @@
 package fr.nekotine.prelude.effigies;
 
+import java.util.function.BiConsumer;
+
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -21,7 +23,6 @@ import fr.nekotine.core.bowcharge.IBowCharge;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.usable.Function2;
 import fr.nekotine.core.usable.Usable;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
@@ -45,15 +46,15 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final double SECONDARY_DAMAGE = 1 * 2;
 	private static final double SECONDARY_RADIUS = 3;
 	
-	private static final Function2<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new Function2<PlayerDropItemEvent, Class<?>[]>() {
+	private static final BiConsumer<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new BiConsumer<PlayerDropItemEvent, Class<?>[]>() {
 		@Override
-		public void run(PlayerDropItemEvent e, Class<?>[] classes) {
+		public void accept(PlayerDropItemEvent e, Class<?>[] classes) {
 			e.setCancelled(true);
 		}
 	};
-	private static final Function2<EntityShootBowEvent, Class<?>[]> CANCEL_ARROW_CONSUMPTION = new Function2<EntityShootBowEvent, Class<?>[]>() {
+	private static final BiConsumer<EntityShootBowEvent, Class<?>[]> CANCEL_ARROW_CONSUMPTION = new BiConsumer<EntityShootBowEvent, Class<?>[]>() {
 		@Override
-		public void run(EntityShootBowEvent e, Class<?>[] classes) {
+		public void accept(EntityShootBowEvent e, Class<?>[] classes) {
 			e.setConsumeItem(false);
 		}
 	};

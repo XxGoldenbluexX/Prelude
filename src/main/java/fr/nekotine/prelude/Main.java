@@ -97,7 +97,7 @@ public class Main extends JavaPlugin implements Listener{
 		Commands.make().register();
 		CommandAPI.onEnable(this);
 		
-		if (getDataFolder().exists()) {//making dataFolder
+		if (!getDataFolder().exists()) {//making dataFolder
 			getDataFolder().mkdir();
 		}
 		File mapf = new File(getDataFolder(),"Maps");//making map Folder

@@ -1,6 +1,7 @@
 package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
-import fr.nekotine.core.usable.Function2;
 import fr.nekotine.core.usable.Usable;
 import fr.nekotine.core.util.UtilMath;
 import fr.nekotine.prelude.Effigy;
@@ -43,9 +43,9 @@ public class Pigman extends Effigy implements IProjectile{
 	
 	private Usable meat;
 	private boolean hit = false;
-	private static final Function2<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new Function2<PlayerDropItemEvent, Class<?>[]>() {
+	private static final BiConsumer<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new BiConsumer<PlayerDropItemEvent, Class<?>[]>() {
 		@Override
-		public void run(PlayerDropItemEvent e, Class<?>[] classes) {
+		public void accept(PlayerDropItemEvent e, Class<?>[] classes) {
 			e.setCancelled(true);
 		}
 	};

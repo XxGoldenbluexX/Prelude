@@ -1,8 +1,11 @@
 package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
@@ -13,16 +16,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import com.destroystokyo.paper.entity.ai.Goal;
+import com.destroystokyo.paper.entity.ai.MobGoals;
+
 import fr.nekotine.core.charge.ICharge;
+import fr.nekotine.core.usable.Usable;
+import fr.nekotine.core.util.UtilMobAi;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
+import fr.nekotine.prelude.ai.WitchBatFollowGoal;
 import fr.nekotine.prelude.utils.Ability;
 import net.kyori.adventure.text.Component;
 
@@ -36,21 +47,32 @@ public class Witch extends Effigy implements ICharge{
 	private static final PotionEffect SLOW_POTION_EFFECT = new PotionEffect(PotionEffectType.SLOW, 5 * 20, 1, false, false, true);
 	private static final PotionEffect SPEED_POTION_EFFECT = new PotionEffect(PotionEffectType.SPEED, 5 * 20, 0, false, false, true);
 	private static final long BAT_CAP = 5;
-	
 	private static final double PRIMARY_DAMAGE = 1 * 2;
 	private static final double PRIMARY_HEAL = 0.5 * 2;
-	
 	private static final Component SECONDARY_POTION_NAME = Component.text("WitchSecondary");
-	
 	private static final String CHARGE_NAME = "WitchPassive";
+	private static final BiConsumer<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new BiConsumer<PlayerDropItemEvent, Class<?>[]>() {
+		@Override
+		public void accept(PlayerDropItemEvent e, Class<?>[] classes) {
+			e.setCancelled(true);
+		}
+	};
+	private static final Material BAT_INDICATOR_MATERIAL = Material.DRIED_KELP;
 	
+	private final ArrayList<Bat> bats = new ArrayList<>();
 	
-	private ArrayList<Bat> bats = new ArrayList<>();
+	private final Usable batIndicator;
 	
 	//
 	
 	public Witch(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
+		batIndicator = Main.getInstance().getUsableModule().AddUsable(
+				new ItemStack(BAT_INDICATOR_MATERIAL),
+				getWrapper().getPlayer().getInventory());
+		batIndicator.SetName("Chauve-souris");
+		batIndicator.OnDrop(CANCEL_DROP_EVENT);
+		batIndicator.Give();
 	}
 
 	//
@@ -90,6 +112,8 @@ public class Witch extends Effigy implements ICharge{
 			bat.remove();
 		}
 		bats.clear();
+		
+		batIndicator.SetAmount(bats.size());
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
 		
@@ -179,8 +203,16 @@ public class Witch extends Effigy implements ICharge{
 			bat.setSilent(true);
 			bat.setInvulnerable(true);
 			bat.setCollidable(false);
-			bat.setLeashHolder(player);
+			// --- AI part
+			UtilMobAi.clearBrain(bat);
+			Goal<Bat> followGoal = new WitchBatFollowGoal(Main.getInstance(), bat, player, (Math.PI*2/BAT_CAP)*bats.size());
+			MobGoals goals = Bukkit.getMobGoals();
+			if (!goals.hasGoal(bat, followGoal.getKey())) {
+				goals.addGoal(bat, 0, followGoal);
+			}
+			// ---
 			bats.add(bat);
+			batIndicator.SetAmount(bats.size());
 		}
 		if(bats.size() >= BAT_CAP){
 			CancelCharge();
@@ -205,5 +237,6 @@ public class Witch extends Effigy implements ICharge{
 			bat.remove();
 		}
 		bats.clear();
+		batIndicator.SetAmount(bats.size());
 	}
 }
