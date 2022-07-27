@@ -112,8 +112,8 @@ public class Witch extends Effigy implements ICharge{
 			bat.remove();
 		}
 		bats.clear();
-		
-		batIndicator.SetAmount(bats.size());
+		batIndicator.SetAmount(1);
+		batIndicator.SetEnchantedGlow(false);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
 		
@@ -213,6 +213,7 @@ public class Witch extends Effigy implements ICharge{
 			// ---
 			bats.add(bat);
 			batIndicator.SetAmount(bats.size());
+			batIndicator.SetEnchantedGlow(true);
 		}
 		if(bats.size() >= BAT_CAP){
 			CancelCharge();
@@ -237,6 +238,7 @@ public class Witch extends Effigy implements ICharge{
 			bat.remove();
 		}
 		bats.clear();
-		batIndicator.SetAmount(bats.size());
+		batIndicator.SetAmount(1);
+		batIndicator.SetEnchantedGlow(false);
 	}
 }
