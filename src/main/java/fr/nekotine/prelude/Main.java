@@ -45,18 +45,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 
 public class Main extends JavaPlugin implements Listener{
 	
-	@SuppressWarnings("unchecked")
-	public Main() {
-		moduleManager = new ModuleManager();
-		moduleManager.Load(this, ChargeModule.class);
-		moduleManager.Load(this, TickingModule.class);
-		moduleManager.Load(this, ItemChargeModule.class);
-		moduleManager.Load(this, ProjectileModule.class);
-		moduleManager.Load(this, DamageModule.class);
-		moduleManager.Load(this, BowChargeModule.class);
-		moduleManager.Load(this, UsableModule.class);
-		moduleManager.Load(this, EntityVisibilityModule.class);
-	}
 	private static Main main;
 	public static Main getInstance() {
 		return main;
@@ -83,10 +71,23 @@ public class Main extends JavaPlugin implements Listener{
 	private GameScoreboard gameScoreboard;
 	private BumperManager bumperManager;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable() {
 		super.onEnable();
 		main=this;
+		
+		moduleManager = new ModuleManager();
+		moduleManager.Load(this,
+				ChargeModule.class,
+				TickingModule.class,
+				ItemChargeModule.class,
+				ProjectileModule.class,
+				DamageModule.class,
+				BowChargeModule.class,
+				UsableModule.class,
+				EntityVisibilityModule.class
+				);
 		
 		moduleManager.enableAll();
 		
@@ -138,15 +139,14 @@ public class Main extends JavaPlugin implements Listener{
 	@Override
 	public void onDisable() {
 		Gameruler.disable();
-		roundManager.endGame();
-		roundManager.destroy();
-		gameScoreboard.destroy();
-		bumperManager.destroy();
-		mapInventory.destroy();
+		if (roundManager != null) roundManager.endGame();
+		if (roundManager != null) roundManager.destroy();
+		if (gameScoreboard != null) gameScoreboard.destroy();
+		if (bumperManager != null) bumperManager.destroy();
+		if (mapInventory != null) mapInventory.destroy();
+		if (moduleManager != null) moduleManager.disableAll();
 		
 		end();
-		
-		moduleManager.disableAll();
 		
 		EventRegisterer.unregisterEvent(this);
 	}

@@ -2,6 +2,7 @@ package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -10,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
@@ -59,12 +61,14 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	public Blaze(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
 		wrapper.getPlayer().addPotionEffect(PASSIVE_SLOW_FALLING);
-		
-		fireballs = Main.getInstance().getUsableModule().AddUsable(
-				new ItemStack(NO_FIREBALL_MATERIAL), 
-				getWrapper().getPlayer().getInventory());
+		fireballs = new Usable(Main.getInstance().getUsableModule(), new ItemStack(NO_FIREBALL_MATERIAL)) {
+			@Override
+			protected void OnDrop(PlayerDropItemEvent e) {
+				e.setCancelled(true);
+			}
+		};
 		fireballs.SetName("Charges");
-		fireballs.Give();
+		fireballs.Give(getWrapper().getPlayer().getInventory());
 	}
 
 	//
@@ -147,9 +151,15 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	}
 	@Override
 	protected void destroy() {
-		getWrapper().getPlayer().removePotionEffect(PASSIVE_SLOW_FALLING.getType());
+		Player player = getWrapper().getPlayer();
+		player.removePotionEffect(PASSIVE_SLOW_FALLING.getType());
 		fireballs.Remove();
-		getWrapper().getPlayer().setAllowFlight(true);
+		fireballs.unregister();
+		if (player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
+			player.setAllowFlight(false);
+		}else {
+			player.setAllowFlight(true);
+		}
 		 Main.getInstance().getChargeModule().SetCancelled(getWrapper().getPlayer().getName(), PASSIVE_CHARGE_NAME, true);
 		super.destroy();
 	}

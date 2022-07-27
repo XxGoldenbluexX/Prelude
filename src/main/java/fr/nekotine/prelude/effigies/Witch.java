@@ -1,7 +1,6 @@
 package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -51,12 +50,6 @@ public class Witch extends Effigy implements ICharge{
 	private static final double PRIMARY_HEAL = 0.5 * 2;
 	private static final Component SECONDARY_POTION_NAME = Component.text("WitchSecondary");
 	private static final String CHARGE_NAME = "WitchPassive";
-	private static final BiConsumer<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new BiConsumer<PlayerDropItemEvent, Class<?>[]>() {
-		@Override
-		public void accept(PlayerDropItemEvent e, Class<?>[] classes) {
-			e.setCancelled(true);
-		}
-	};
 	private static final Material BAT_INDICATOR_MATERIAL = Material.DRIED_KELP;
 	
 	private final ArrayList<Bat> bats = new ArrayList<>();
@@ -67,12 +60,15 @@ public class Witch extends Effigy implements ICharge{
 	
 	public Witch(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
-		batIndicator = Main.getInstance().getUsableModule().AddUsable(
-				new ItemStack(BAT_INDICATOR_MATERIAL),
-				getWrapper().getPlayer().getInventory());
+		batIndicator = new Usable(Main.getInstance().getUsableModule(), new ItemStack(BAT_INDICATOR_MATERIAL)) {
+			@Override
+			protected void OnDrop(PlayerDropItemEvent e) {
+				e.setCancelled(true);
+			}
+		};
 		batIndicator.SetName("Chauve-souris");
-		batIndicator.OnDrop(CANCEL_DROP_EVENT);
-		batIndicator.Give();
+		batIndicator.Give(getWrapper().getPlayer().getInventory());
+		batIndicator.register();
 	}
 
 	//
@@ -134,6 +130,8 @@ public class Witch extends Effigy implements ICharge{
 	protected void destroy() {
 		CancelCharge();
 		RemoveBats();
+		batIndicator.Remove();
+		batIndicator.unregister();
 		super.destroy();
 	}
 	@Override

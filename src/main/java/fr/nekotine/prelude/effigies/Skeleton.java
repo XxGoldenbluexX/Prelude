@@ -47,19 +47,6 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	private static final double SECONDARY_DAMAGE = 1 * 2;
 	private static final double SECONDARY_RADIUS = 3;
 	
-	private static final BiConsumer<PlayerDropItemEvent, Class<?>[]> CANCEL_DROP_EVENT = new BiConsumer<PlayerDropItemEvent, Class<?>[]>() {
-		@Override
-		public void accept(PlayerDropItemEvent e, Class<?>[] classes) {
-			e.setCancelled(true);
-		}
-	};
-	private static final BiConsumer<EntityShootBowEvent, Class<?>[]> CANCEL_ARROW_CONSUMPTION = new BiConsumer<EntityShootBowEvent, Class<?>[]>() {
-		@Override
-		public void accept(EntityShootBowEvent e, Class<?>[] classes) {
-			e.setConsumeItem(false);
-		}
-	};
-	
 	private boolean multiplyer_active = false;
 	private boolean canShoot = false;
 	
@@ -70,24 +57,33 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	
 	public Skeleton(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
-		this.bow = Main.getInstance().getUsableModule().AddUsable(
-				new ItemStack(Material.BOW), 
-				getWrapper().getPlayer().getInventory());
-		this.bow.SetUnbreakable(true);
-		this.bow.HideUnbreakable(true);
-		this.bow.OnDrop(CANCEL_DROP_EVENT);
-		this.bow.SetEnchantedText(false);
-		this.bow.OnBowShoot(CANCEL_ARROW_CONSUMPTION);
-		this.bow.SetName("Arc");
+		bow = new Usable(Main.getInstance().getUsableModule(), new ItemStack(Material.BOW)) {
+			@Override
+			protected void OnDrop(PlayerDropItemEvent e) {
+				e.setCancelled(true);
+			}
+			@Override
+			protected void OnBowShoot(EntityShootBowEvent e) {
+				e.setConsumeItem(false);
+			}
+		};
+		bow.SetUnbreakable(true);
+		bow.HideUnbreakable(true);
+		bow.SetEnchantedText(false);
+		bow.SetName("Arc");
+		bow.Give(getWrapper().getPlayer().getInventory());
+		bow.register();
+		bow.Give(getWrapper().getPlayer().getInventory());
 		
-		this.arrow = Main.getInstance().getUsableModule().AddUsable(
-				new ItemStack(Material.ARROW), 
-				getWrapper().getPlayer().getInventory());
-		this.arrow.OnDrop(CANCEL_DROP_EVENT);
-		this.arrow.SetName("Fleche");
-		
-		this.bow.Give();
-		this.arrow.Give();
+		arrow = new Usable(Main.getInstance().getUsableModule(), new ItemStack(Material.ARROW)) {
+			@Override
+			protected void OnDrop(PlayerDropItemEvent e) {
+				e.setCancelled(true);
+			}
+		};
+		arrow.SetName("Fleche");
+		arrow.register();
+		arrow.Give(getWrapper().getPlayer().getInventory());
 		
 		addCharge();
 	}
@@ -134,6 +130,8 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	protected void destroy() {
 		this.bow.Remove();
 		this.arrow.Remove();
+		bow.unregister();
+		arrow.unregister();
 		super.destroy();
 	}
 	@Override
