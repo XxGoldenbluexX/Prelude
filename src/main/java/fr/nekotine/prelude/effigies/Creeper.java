@@ -1,8 +1,12 @@
 package fr.nekotine.prelude.effigies;
 
+import java.util.ArrayList;
+
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -89,15 +93,16 @@ public class Creeper extends Effigy implements ICharge{
 		if(getWrapper().getPlayer().equals(e.GetDamaged()) && !e.GetDamaged().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK) {
 			getWrapper().getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, getWrapper().getPlayer().getLocation().add(0, 0.5, 0), 1);
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 0.5f, 1);
-			 Main.getInstance().getDamageModule().Explode(
+			ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
+			Main.getInstance().getDamageModule().Explode(
 					getWrapper().getPlayer(), 
-					PASSIVE_RADIUS, 
-					DamageCause.THORNS, 
-					PASSIVE_DAMAGE, 
-					true, 
-					false, 
-					getWrapper().getPlayer().getLocation(), 
-					true);
+					PASSIVE_RADIUS,
+					DamageCause.THORNS,
+					PASSIVE_DAMAGE,
+					true,
+					false,
+					getWrapper().getPlayer().getLocation(),
+					inTeam.toArray(new LivingEntity[inTeam.size()]));
 		}
 		//AA lors du secondaire
 		if(getWrapper().getPlayer().equals(e.GetDamager()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsCharging()) {
@@ -120,6 +125,7 @@ public class Creeper extends Effigy implements ICharge{
 		
 		getWrapper().getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_HUGE, getWrapper().getPlayer().getLocation(), 1);
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 3, 0);
+		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
 		 Main.getInstance().getDamageModule().Explode(
 				getWrapper().getPlayer(), 
 				SECONDARY_RADIUS, 
@@ -128,7 +134,7 @@ public class Creeper extends Effigy implements ICharge{
 				true, 
 				true, 
 				getWrapper().getPlayer().getLocation(), 
-				true);
+				inTeam.toArray(new LivingEntity[inTeam.size()]));
 		
 		 Main.getInstance().getDamageModule().Damage(
 				getWrapper().getPlayer(),

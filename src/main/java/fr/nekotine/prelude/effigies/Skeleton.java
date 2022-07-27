@@ -1,5 +1,6 @@
 package fr.nekotine.prelude.effigies;
 
+import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
 import org.bukkit.Material;
@@ -203,6 +204,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 		}
 		projectile.GetProjectile().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, projectile.GetProjectile().getLocation(), 1);
 		projectile.GetProjectile().getWorld().playSound(projectile.GetProjectile().getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 3, 0);
+		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
 		Main.getInstance().getDamageModule().Explode(
 				getWrapper().getPlayer(), 
 				SECONDARY_RADIUS, 
@@ -211,7 +213,7 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 				true, 
 				false, 
 				projectile.GetProjectile().getLocation(), 
-				false);
+				inTeam.toArray(new LivingEntity[inTeam.size()]));
 		
 		projectile.GetProjectile().remove();
 	}

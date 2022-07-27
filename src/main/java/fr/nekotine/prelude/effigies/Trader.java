@@ -2,6 +2,7 @@ package fr.nekotine.prelude.effigies;
 
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -16,8 +17,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import fr.nekotine.core.charge.ICharge;
+import fr.nekotine.core.ticking.event.TickElapsedEvent;
 import fr.nekotine.core.util.UtilEntity;
 import fr.nekotine.core.util.UtilMobAi;
+import fr.nekotine.core.util.UtilParticle;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
@@ -116,7 +119,9 @@ public class Trader extends Effigy implements ICharge{
 			
 			lama.getWorld().playSound(lama, Sound.ENTITY_WANDERING_TRADER_DRINK_MILK, 1, 0);
 			
-			for(Entity near : lama.getWorld().getNearbyLivingEntities(lama.getLocation(), PASSIVE_RADIUS)) {
+			
+			
+			for(Entity near : UtilEntity.GetNearbyLivingEntities(lama.getLocation(), PASSIVE_RADIUS)) {
 				if(near.equals(lama) || !(near instanceof LivingEntity)) continue;
 				
 				if(near instanceof Player && Main.getInstance().inSameTeam((Player)near, getWrapper().getPlayer())) {
@@ -208,5 +213,11 @@ public class Trader extends Effigy implements ICharge{
 				CancelPassiveCharge();
 			}
 		}
+	}
+	@EventHandler
+	public void OnTick(TickElapsedEvent e) {
+		if(lama == null || !lama.isValid() || !UtilEntity.IsOnGround(lama)) return; 
+			
+		UtilParticle.Circle2D(lama.getLocation(), PASSIVE_RADIUS, 25, Particle.FIREWORKS_SPARK, 1);
 	}
 }
