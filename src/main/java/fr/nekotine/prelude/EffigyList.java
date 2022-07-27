@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import fr.nekotine.prelude.effigies.Blaze;
 import fr.nekotine.prelude.effigies.Creeper;
 import fr.nekotine.prelude.effigies.Hoglin;
+import fr.nekotine.prelude.effigies.Husk;
 import fr.nekotine.prelude.effigies.Pigman;
 import fr.nekotine.prelude.effigies.Skeleton;
 import fr.nekotine.prelude.effigies.Slime;
@@ -27,8 +28,7 @@ public enum EffigyList {
 			1.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJiNjczMmVhYTk3ODg0NTg0NjhmNTk3Njk0Mzk4NjQ2NDk3NGFmMzVmZWFmYjRmY2FkMDVhN2EzMDhjMmE2NyJ9fX0=",
 			1,
-			DisguiseType.SPIDER
-			),
+			DisguiseType.SPIDER),
 	SLIME(
 			Slime.class,
 			ChatColor.GREEN+"Slime",
@@ -39,8 +39,7 @@ public enum EffigyList {
 			0.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjFhZmZkMzFlZmMzN2JhODRmNTAxODczOTRkODY4ODM0NGNjZDA2Y2RjOTI2ZGRmY2YyZGYxMTY5ODZkY2E5In19fQ==",
 			1,
-			DisguiseType.SLIME
-			),
+			DisguiseType.SLIME),
 	SKELETON(
 			Skeleton.class,
 			ChatColor.WHITE+"Squelette",
@@ -51,8 +50,7 @@ public enum EffigyList {
 			0.5 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAxMjY4ZTljNDkyZGExZjBkODgyNzFjYjQ5MmE0YjMwMjM5NWY1MTVhN2JiZjc3ZjRhMjBiOTVmYzAyZWIyIn19fQ==",
 			1,
-			DisguiseType.SKELETON
-			),
+			DisguiseType.SKELETON),
 	WITCH(
 			Witch.class,
 			ChatColor.LIGHT_PURPLE+"Sorciere",
@@ -63,8 +61,18 @@ public enum EffigyList {
 			1 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmNlNjYwNDE1N2ZjNGFiNTU5MWU0YmNmNTA3YTc0OTkxOGVlOWM0MWUzNTdkNDczNzZlMGVlNzM0MjA3NGM5MCJ9fX0=",
 			1,
-			DisguiseType.WITCH
-			),
+			DisguiseType.WITCH),
+	HUSK(
+			Husk.class,
+			ChatColor.YELLOW+"Husk",
+			Material.ROTTEN_FLESH,
+			"Tempête",
+			"Cimetière",
+			10 * 2,
+			1.5 * 2,
+			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI5ZGE2YjhkMDZjZDI4ZDQ0MTM5OGI5Njc2NmMzYjRmMzcwZGU4NWM3ODk4MjA1ZTVjNDI5ZjE3OGEyNDU5NyJ9fX0=",
+			1,
+			DisguiseType.HUSK),
 	CREEPER(
 			Creeper.class,
 			ChatColor.DARK_GREEN+"Creeper",
@@ -75,8 +83,7 @@ public enum EffigyList {
 			1.25 * 2,
 			"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTliMDFkNzNhMWM5MmM0NDkxYjU3OWRmZDk3YTk5MjhhYzNjYzM2ZmRlNDMxZjlkYTA5MzJlMGY1ZWJhYjhjNSJ9fX0=",
 			1,
-			DisguiseType.CREEPER
-			),
+			DisguiseType.CREEPER),
 	PIGMAN(
 			Pigman.class,
 			ChatColor.GOLD+"Pigman",

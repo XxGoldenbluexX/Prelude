@@ -1,7 +1,6 @@
 package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
 
 import org.bukkit.Material;
 import org.bukkit.Particle;
