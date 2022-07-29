@@ -19,6 +19,8 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent;
+
 import fr.nekotine.core.bowcharge.IBowCharge;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.projectile.CustomProjectile;
@@ -78,6 +80,10 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 			@Override
 			protected void OnDrop(PlayerDropItemEvent e) {
 				e.setCancelled(true);
+			}
+			@Override
+			protected void OnBowShoot(EntityShootBowEvent e) {
+				e.setConsumeItem(false);
 			}
 		};
 		arrow.SetName("Fleche");
