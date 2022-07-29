@@ -89,7 +89,7 @@
 	    	<artifactId>NekotineCore</artifactId>
 	     	<version>0.0.1-SNAPHOT</version>
 	     	<scope>system</scope>
-	     	<systemPath>I:\Eclipse\workspace\NekotineCore\build\NekotineCore.jar</systemPath>
+	     	<systemPath>E:\eclipse\SharedProjects\NekotineCore\build\NekotineCore.jar</systemPath>
 	     	
  	 </dependency>
 	</dependencies>

@@ -1,5 +1,6 @@
 package fr.nekotine.prelude.utils;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.libraryaddict.disguise.DisguiseAPI;
@@ -32,5 +33,11 @@ public class Disguiser {
 	}
 	public static void setBurning(MobDisguise disguise, boolean burning) {
 		disguise.getWatcher().setBurning(burning);	
+	}
+	public static void setGlow(MobDisguise disguise, boolean glow) {
+		disguise.getWatcher().setGlowing(true);
+	}
+	public static void setGlowColor(MobDisguise disguise, ChatColor color) {
+		disguise.getWatcher().setGlowColor(color);
 	}
 }

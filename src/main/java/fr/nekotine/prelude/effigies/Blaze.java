@@ -2,6 +2,7 @@ package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -17,6 +19,9 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
+
+import com.destroystokyo.paper.entity.ai.MobGoals;
 
 import fr.nekotine.core.charge.ICharge;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
@@ -24,10 +29,13 @@ import fr.nekotine.core.projectile.CustomProjectile;
 import fr.nekotine.core.projectile.IProjectile;
 import fr.nekotine.core.usable.Usable;
 import fr.nekotine.core.util.UtilEntity;
+import fr.nekotine.core.util.UtilMobAi;
 import fr.nekotine.prelude.Effigy;
 import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
+import fr.nekotine.prelude.ai.BlazeFireballAttackGoal;
+import fr.nekotine.prelude.ai.TargetNearestEnemiePlayersGoal;
 import fr.nekotine.prelude.utils.Ability;
 import fr.nekotine.prelude.utils.Disguiser;
 
@@ -54,7 +62,16 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	
 	private static final Material[] NONE = {};
 	
+	private static final double BLAZE_TURET_TARGET_RANGE = 20;
+	private static final int BLAZE_TURET_SALVE_COOLDOWN = 100; // IN TICK
+	private static final int BLAZE_TURET_SALVE_DELAY = 10;
+	private static final int BLAZE_TURET_SALVE_SIZE = 3;
+	private static final Vector BLAZE_TURET_SALVE_LAUNCH_OFFSET = new Vector(0, 1, 0);
+	private static final double BLAZE_TURET_FIREBALL_SPEED = 1;
+	
 	private Usable fireballs;
+	
+	private org.bukkit.entity.Blaze blazeTuret;
 	
 	//
 	
@@ -124,9 +141,11 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	}
 	@Override
 	protected void castSecondarySpell() {
+		Player player = getWrapper().getPlayer();
+		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
-		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);
+		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);
 		
 		 Main.getInstance().getChargeModule().AddCharge(
 				getWrapper().getPlayer().getName(), 
@@ -138,6 +157,22 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 				this);
 		
 		Disguiser.setBurning(getDisguise(), true);
+		if (blazeTuret == null || !blazeTuret.isValid()) {
+			blazeTuret = player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Blaze.class, SpawnReason.CUSTOM);
+			MobGoals goals = Bukkit.getServer().getMobGoals();
+			UtilMobAi.clearBrain(blazeTuret);
+			TargetNearestEnemiePlayersGoal targetGoal =
+					new TargetNearestEnemiePlayersGoal(Main.getInstance(), blazeTuret, getWrapper().getTeam(), BLAZE_TURET_TARGET_RANGE);
+			BlazeFireballAttackGoal attackGoal =
+					new BlazeFireballAttackGoal(Main.getInstance(), blazeTuret,
+							BLAZE_TURET_SALVE_COOLDOWN,
+							BLAZE_TURET_SALVE_DELAY,
+							BLAZE_TURET_SALVE_SIZE,
+							BLAZE_TURET_SALVE_LAUNCH_OFFSET,
+							BLAZE_TURET_FIREBALL_SPEED);
+			goals.addGoal(blazeTuret, 1, targetGoal);
+			goals.addGoal(blazeTuret, 2, attackGoal);
+		}
 	}
 	@Override
 	protected void roundEnd() {
@@ -155,6 +190,10 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		player.removePotionEffect(PASSIVE_SLOW_FALLING.getType());
 		fireballs.Remove();
 		fireballs.unregister();
+		if (blazeTuret != null) {
+			blazeTuret.remove();
+			blazeTuret = null;
+		}
 		if (player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
 			player.setAllowFlight(false);
 		}else {
