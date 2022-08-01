@@ -103,7 +103,7 @@ public class GameScoreboard {
 			return "";
 		}
 	}
-	private ChatColor getTeamColor(Team team) {
+	public ChatColor getTeamColor(Team team) {
 		switch(team) {
 		case RED:
 			return RED_COLOR;

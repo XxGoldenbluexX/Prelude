@@ -3,6 +3,7 @@ package fr.nekotine.prelude.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import fr.nekotine.prelude.Main;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.DisguiseConfig.NotifyBar;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
@@ -16,7 +17,8 @@ public class Disguiser {
 		
 		dg.setSelfDisguiseVisible(false);
 		dg.setNotifyBar(NotifyBar.NONE);
-		dg.getWatcher().setCustomName(ComponentMaker.getText(toDisguise.displayName()));
+		
+		dg.getWatcher().setCustomName(Main.getInstance().getScoreboard().getTeamColor(Main.getInstance().getWrapper(toDisguise).getTeam()) + ComponentMaker.getText(toDisguise.displayName()));
 		dg.getWatcher().setCustomNameVisible(true);
 		if(disguiseType==DisguiseType.SLIME) ((SlimeWatcher)dg.getWatcher()).setSize(2);;
 		

@@ -37,6 +37,7 @@ import fr.nekotine.prelude.PlayerWrapper;
 import fr.nekotine.prelude.ai.BlazeFireballAttackGoal;
 import fr.nekotine.prelude.ai.TargetNearestEnemiePlayersGoal;
 import fr.nekotine.prelude.utils.Ability;
+import fr.nekotine.prelude.utils.ComponentMaker;
 import fr.nekotine.prelude.utils.Disguiser;
 
 public class Blaze extends Effigy implements IProjectile, ICharge{
@@ -159,6 +160,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		Disguiser.setBurning(getDisguise(), true);
 		if (blazeTuret == null || !blazeTuret.isValid()) {
 			blazeTuret = player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Blaze.class, SpawnReason.CUSTOM);
+			blazeTuret.customName(ComponentMaker.getComponent(getDisguise().getWatcher().getCustomName()));
 			MobGoals goals = Bukkit.getServer().getMobGoals();
 			UtilMobAi.clearBrain(blazeTuret);
 			TargetNearestEnemiePlayersGoal targetGoal =
