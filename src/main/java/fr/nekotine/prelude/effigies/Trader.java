@@ -1,6 +1,5 @@
 package fr.nekotine.prelude.effigies;
 
-import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -189,9 +188,8 @@ public class Trader extends Effigy implements ICharge{
 	@EventHandler
 	public void OnDeath(EntityDeathEvent e) {
 		if(e.getEntity().equals(lama)) {
-			lama.playEffect(EntityEffect.HURT);
-			lama.remove();
-			e.setCancelled(true);
+			e.setDroppedExp(0);
+			e.getDrops().clear();
 			
 			if(lama.getKiller() != null) {
 				long damage = PRIMARY_DAMAGE;
