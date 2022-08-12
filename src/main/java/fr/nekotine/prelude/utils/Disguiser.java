@@ -9,7 +9,6 @@ import me.libraryaddict.disguise.DisguiseConfig.NotifyBar;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.libraryaddict.disguise.disguisetypes.watchers.CreeperWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
 
 public class Disguiser {
 	public static MobDisguise disguiseToAll(Player toDisguise, DisguiseType disguiseType) {
@@ -20,7 +19,6 @@ public class Disguiser {
 		
 		dg.getWatcher().setCustomName(Main.getInstance().getScoreboard().getTeamColor(Main.getInstance().getWrapper(toDisguise).getTeam()) + ComponentMaker.getText(toDisguise.displayName()));
 		dg.getWatcher().setCustomNameVisible(true);
-		if(disguiseType==DisguiseType.SLIME) ((SlimeWatcher)dg.getWatcher()).setSize(2);;
 		
 		DisguiseAPI.disguiseToAll(toDisguise, dg);
 		

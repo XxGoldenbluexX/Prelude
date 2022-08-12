@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -221,16 +222,19 @@ public class Husk extends Effigy implements IProjectile{
 			if(spawnable.size() == 0) return;
 			
 			int chosen = (int)Math.floor(Math.random() * spawnable.size());
-			org.bukkit.entity.Husk husk = (org.bukkit.entity.Husk)center.getWorld().spawnEntity(spawnable.get(chosen), EntityType.HUSK, SpawnReason.CUSTOM);
+			org.bukkit.entity.Husk husk = (org.bukkit.entity.Husk)center.getWorld().spawnEntity(new Location(getWrapper().getPlayer().getWorld(), 0, 0, 0), EntityType.HUSK, SpawnReason.CUSTOM);
 			husk.customName(ComponentMaker.getComponent(getDisguise().getWatcher().getCustomName()));
 			husk.setSilent(true);
 			UtilMobAi.clearBrain(husk);
 			husk.setAdult();
 			husk.getEquipment().clear();
+			husk.getEquipment().setItemInMainHand(new ItemStack(Material.ROTTEN_FLESH), true);
 			husk.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(huskHealth);
 			husk.setHealth(huskHealth);
 			husk.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(huskDamage);
 			husk.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0);
+			
+			husk.teleport(spawnable.get(chosen));
 			husks.add(husk);
 		}
 		private Block GetHighestBlockUnderLocation(Location from, double maxHeight) {

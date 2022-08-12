@@ -95,7 +95,7 @@ public class ShopInventory extends BaseInventory{
 		}
 	}
 	private void placeEffigy(EffigyList effigy, int slot) {
-		ItemStack effigy_head = ItemStackMaker.makeHead(effigy.getName(), effigy.getUrlToHead(), 1);
+		ItemStack effigy_head = ItemStackMaker.makeHead(effigy.getName(), effigy.getUrlToHead(), 1, effigy.getDescription());
 		TagInjector.injectEffigyListTag(effigy_head, effigy);
 		setItem(effigy_head, slot);
 	}

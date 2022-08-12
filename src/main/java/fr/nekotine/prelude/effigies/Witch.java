@@ -201,6 +201,7 @@ public class Witch extends Effigy implements ICharge{
 			bat.setSilent(true);
 			bat.setInvulnerable(true);
 			bat.setCollidable(false);
+			bat.setLeashHolder(getWrapper().getPlayer());
 			// --- AI part
 			UtilMobAi.clearBrain(bat);
 			Goal<Bat> followGoal = new WitchBatFollowGoal(Main.getInstance(), bat, player, (Math.PI*2/BAT_CAP)*bats.size());

@@ -23,8 +23,8 @@ public class RoundManager implements Listener{
 	private static final int POINTS_PER_LOSS = 1;
 	private static final int POINTS_PER_LOSING_STREAK = 2;
 	
-	private static final int PREPARATION_PHASE_DURATION_TICKS = 20*15;
-	private static final int ENDING_PHASE_DURATION_TICKS = 20*10;
+	private static final int PREPARATION_PHASE_DURATION_TICKS = 20*20;
+	private static final int ENDING_PHASE_DURATION_TICKS = 20*5;
 	
 	private static final EffigyList DEFAULT_EFFIGY = EffigyList.SPIDER;
 	

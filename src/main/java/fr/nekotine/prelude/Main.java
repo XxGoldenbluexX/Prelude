@@ -24,6 +24,7 @@ import fr.nekotine.core.bowcharge.BowChargeModule;
 import fr.nekotine.core.charge.ChargeModule;
 import fr.nekotine.core.damage.DamageModule;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
+import fr.nekotine.core.effect.CustomEffectModule;
 import fr.nekotine.core.itemcharge.ItemChargeModule;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileModule;
@@ -86,7 +87,8 @@ public class Main extends JavaPlugin implements Listener{
 				DamageModule.class,
 				BowChargeModule.class,
 				UsableModule.class,
-				EntityVisibilityModule.class
+				EntityVisibilityModule.class,
+				CustomEffectModule.class
 				);
 		
 		moduleManager.enableAll();
@@ -364,5 +366,8 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	public EntityVisibilityModule getEntityVisibilityModule() {
 		return moduleManager.Get(EntityVisibilityModule.class);
+	}
+	public CustomEffectModule getCustomEffectModule() {
+		return moduleManager.Get(CustomEffectModule.class);
 	}
 }

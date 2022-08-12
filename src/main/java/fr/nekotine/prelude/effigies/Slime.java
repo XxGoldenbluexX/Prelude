@@ -26,10 +26,12 @@ import fr.nekotine.prelude.EffigyList;
 import fr.nekotine.prelude.Main;
 import fr.nekotine.prelude.PlayerWrapper;
 import fr.nekotine.prelude.utils.Ability;
+import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
 
 public class Slime extends Effigy implements IItemCharge, IProjectile{
 	public Slime(PlayerWrapper wrapper, EffigyList effigyType) {
 		super(wrapper, effigyType);
+		((SlimeWatcher)getDisguise().getWatcher()).setSize(2);;
 	}
 	
 	//
