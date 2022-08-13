@@ -38,10 +38,9 @@ import fr.nekotine.prelude.ai.BlazeFireballAttackGoal;
 import fr.nekotine.prelude.ai.TargetNearestEnemiePlayersGoal;
 import fr.nekotine.prelude.utils.Ability;
 import fr.nekotine.prelude.utils.ComponentMaker;
-import fr.nekotine.prelude.utils.Disguiser;
 
 public class Blaze extends Effigy implements IProjectile, ICharge{
-	private static final int PRIMARY_COOLDOWN = 1 * 20;
+	private static final int PRIMARY_COOLDOWN = 0 * 20;
 	private static final int SECONDARY_COOLDOWN = 15 * 20;
 	
 	private static final long PASSIVE_CHARGE_TIME = 2 * 1000;
@@ -54,10 +53,6 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	private static final double FIREBALL_DAMAGE = 1 * 2;
 	private static final int FIREBALL_FIRE_DURATION = 2 * 20 + 10;
 	
-	private static final int SECONDARY_DURATION = 5 * 1000;
-	private static final int SECONDARY_BURN_DURATION = FIREBALL_FIRE_DURATION;
-	private static final String SECONDARY_CHARGE_NAME = "BlazeSecondary";
-	
 	private static final Material FIREBALL_MATERIAL = Material.FIRE_CHARGE;
 	private static final Material NO_FIREBALL_MATERIAL = Material.FIREWORK_STAR;
 	
@@ -69,6 +64,8 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	private static final int BLAZE_TURET_SALVE_SIZE = 3;
 	private static final Vector BLAZE_TURET_SALVE_LAUNCH_OFFSET = new Vector(0, 1, 0);
 	private static final double BLAZE_TURET_FIREBALL_SPEED = 1;
+	
+	private static final int PASSIVE_BURN_DURATION = FIREBALL_FIRE_DURATION;
 	
 	private Usable fireballs;
 	
@@ -103,8 +100,8 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 				DamageCause.CUSTOM, 
 				FIREBALL_DAMAGE, 
 				true, 
-				IsBurning(), 
-				proj.GetProjectile().getLocation());
+				true, 
+				getWrapper().getPlayer().getLocation());
 		
 		hitE.setFireTicks(Math.max(hitE.getFireTicks(), FIREBALL_FIRE_DURATION));
 		
@@ -117,8 +114,8 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
-		if(!CanUseSpell()) return;
+	protected boolean castPrimarySpell() {
+		if(!CanUseSpell()) return false;
 
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 
@@ -127,7 +124,7 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 		Fireball fireball = getWrapper().getPlayer().launchProjectile(Fireball.class);
 		fireball.setInvulnerable(true);
 		ArrayList<Player> inTeam = Main.getInstance().getPlayersInTeam(getWrapper().getTeam());
-		 Main.getInstance().getProjectileModule().AddProjectile(
+		Main.getInstance().getProjectileModule().AddProjectile(
 				fireball, 
 				getWrapper().getPlayer(), 
 				this, 
@@ -139,42 +136,35 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 				NONE);
 		
 		RemoveFireball();
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
+		if (blazeTuret != null || blazeTuret.isValid()) return false;
 		Player player = getWrapper().getPlayer();
 		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
 		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);
 		
-		 Main.getInstance().getChargeModule().AddCharge(
-				getWrapper().getPlayer().getName(), 
-				SECONDARY_CHARGE_NAME, 
-				SECONDARY_DURATION, 
-				false, 
-				false, 
-				0, 
-				this);
-		
-		Disguiser.setBurning(getDisguise(), true);
-		if (blazeTuret == null || !blazeTuret.isValid()) {
-			blazeTuret = player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Blaze.class, SpawnReason.CUSTOM);
-			blazeTuret.customName(ComponentMaker.getComponent(getDisguise().getWatcher().getCustomName()));
-			MobGoals goals = Bukkit.getServer().getMobGoals();
-			UtilMobAi.clearBrain(blazeTuret);
-			TargetNearestEnemiePlayersGoal targetGoal =
-					new TargetNearestEnemiePlayersGoal(Main.getInstance(), blazeTuret, getWrapper().getTeam(), BLAZE_TURET_TARGET_RANGE);
-			BlazeFireballAttackGoal attackGoal =
-					new BlazeFireballAttackGoal(Main.getInstance(), blazeTuret,
-							BLAZE_TURET_SALVE_COOLDOWN,
-							BLAZE_TURET_SALVE_DELAY,
-							BLAZE_TURET_SALVE_SIZE,
-							BLAZE_TURET_SALVE_LAUNCH_OFFSET,
-							BLAZE_TURET_FIREBALL_SPEED);
-			goals.addGoal(blazeTuret, 1, targetGoal);
-			goals.addGoal(blazeTuret, 2, attackGoal);
-		}
+		blazeTuret = player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Blaze.class, SpawnReason.CUSTOM);
+		blazeTuret.customName(ComponentMaker.getComponent(getDisguise().getWatcher().getCustomName()));
+		MobGoals goals = Bukkit.getServer().getMobGoals();
+		UtilMobAi.clearBrain(blazeTuret);
+		TargetNearestEnemiePlayersGoal targetGoal =
+				new TargetNearestEnemiePlayersGoal(Main.getInstance(), blazeTuret, getWrapper().getTeam(), BLAZE_TURET_TARGET_RANGE);
+		BlazeFireballAttackGoal attackGoal =
+				new BlazeFireballAttackGoal(Main.getInstance(), blazeTuret,
+						BLAZE_TURET_SALVE_COOLDOWN,
+						BLAZE_TURET_SALVE_DELAY,
+						BLAZE_TURET_SALVE_SIZE,
+						BLAZE_TURET_SALVE_LAUNCH_OFFSET,
+						BLAZE_TURET_FIREBALL_SPEED);
+		goals.addGoal(blazeTuret, 1, targetGoal);
+		goals.addGoal(blazeTuret, 2, attackGoal);
+			
+	return true;
 	}
 	@Override
 	protected void roundEnd() {
@@ -243,9 +233,6 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 				0, 
 				this);
 	}
-	private boolean IsBurning() {
-		return  Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), SECONDARY_CHARGE_NAME);
-	}
 	
 	//
 
@@ -254,14 +241,9 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	}
 	@Override
 	public void Ended(String arg0, String chargeName) {
-		if(chargeName == PASSIVE_CHARGE_NAME) {
-			AddFireball();
-			if(CanAddFireball()) AddCharge();
-		}
-		if(chargeName == SECONDARY_CHARGE_NAME) {
-			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);
-			Disguiser.setBurning(getDisguise(), false);
-		}
+		AddFireball();
+		if(CanAddFireball()) AddCharge();
+		
 	}
 	
 	//
@@ -284,9 +266,9 @@ public class Blaze extends Effigy implements IProjectile, ICharge{
 	}
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
-		if(!e.IsCancelled() && getWrapper().getPlayer().equals(e.GetDamaged()) && e.GetCause()==DamageCause.ENTITY_ATTACK && IsBurning() && e.GetDamager() != null) {
+		if(!e.IsCancelled() && getWrapper().getPlayer().equals(e.GetDamaged()) && e.GetCause()==DamageCause.ENTITY_ATTACK && e.GetDamager() != null) {
 			
-			e.GetDamager().setFireTicks(Math.max(e.GetDamager().getFireTicks(), SECONDARY_BURN_DURATION));
+			e.GetDamager().setFireTicks(Math.max(e.GetDamager().getFireTicks(), PASSIVE_BURN_DURATION));
 			getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer().getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1, 0);
 		
 		}

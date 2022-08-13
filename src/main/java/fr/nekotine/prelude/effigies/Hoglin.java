@@ -52,7 +52,7 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_CONVERTED_TO_ZOMBIFIED, 1, 0);
@@ -66,9 +66,11 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 				PRIMARY_DURATION,
 				true, 
 				false);
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_HOGLIN_ANGRY, 1, 0);
@@ -81,6 +83,8 @@ public class Hoglin extends Effigy implements IProjectile,ICharge{
 				false, 
 				0, 
 				this);
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {

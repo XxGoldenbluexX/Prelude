@@ -74,20 +74,24 @@ public class Husk extends Effigy implements IProjectile{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
 		Tornado(getWrapper().getPlayer().getLocation());
 		
-		if(cemetery == null) return;
-		cemetery.GetHusks().forEach( husk -> Tornado(husk.getLocation()));	
+		if(cemetery != null) 
+			cemetery.GetHusks().forEach( husk -> Tornado(husk.getLocation()));
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
 		Destroy();
 		cemetery = new Cemetery(getWrapper().getPlayer().getLocation(), SECONDARY_RANGE, MAX_HUSK_COUNT, HUSK_HEALTH, HUSK_DAMAGE);
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {

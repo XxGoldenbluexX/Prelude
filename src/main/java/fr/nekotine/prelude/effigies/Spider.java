@@ -76,7 +76,7 @@ public class Spider extends Effigy{
 	}
 
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		Player p = getWrapper().getPlayer();
 		Location loc = p.getEyeLocation();
 		final Arrow arrow = loc.getWorld().spawnArrow(loc, loc.getDirection(), 0.9f, 0);
@@ -84,14 +84,18 @@ public class Spider extends Effigy{
 		arrow.setColor(Color.GREEN);
 		arrow.setShooter(p);
 		setCooldown(Ability.PRIMARY, 200);
+		
+		return true;
 	}
 
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		Player p = getWrapper().getPlayer();
 		p.setVelocity(p.getEyeLocation().getDirection());
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SPIDER_AMBIENT, 1, 0);
 		setCooldown(Ability.SECONDARY, 200);
+		
+		return true;
 	}
 
 	@Override

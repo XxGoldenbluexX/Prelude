@@ -76,7 +76,7 @@ public class Slime extends Effigy implements IItemCharge, IProjectile{
 	}
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		setAbilityLocked(Ability.PRIMARY, true);
 		Main.getInstance().getItemChargeModule().AddItemCharge(
 				getWrapper().getPlayer(),
@@ -90,13 +90,17 @@ public class Slime extends Effigy implements IItemCharge, IProjectile{
 				false,
 				null,
 				this);
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		Player p = getWrapper().getPlayer();
 		p.setVelocity(p.getVelocity().setY(JUMP_VELOCITY));
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_SLIME_JUMP, 1, 0);
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {
@@ -133,7 +137,7 @@ public class Slime extends Effigy implements IItemCharge, IProjectile{
 				slime,
 				player,
 				this,
-				player.getEyeLocation().getDirection().multiply(size / 2f),
+				player.getEyeLocation().getDirection().multiply(size / 1.5f),
 				10 * 1000,
 				true,
 				true,

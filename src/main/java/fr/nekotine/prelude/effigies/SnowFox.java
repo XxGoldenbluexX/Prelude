@@ -56,9 +56,9 @@ public class SnowFox extends Effigy implements IProjectile{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		Block targeted = getWrapper().getPlayer().getTargetBlockExact(PRIMARY_BLOCK_RANGE);
-		if(targeted == null) return;
+		if(targeted == null) return false;
 		
 		Location start = targeted.getLocation();
 		
@@ -80,9 +80,11 @@ public class SnowFox extends Effigy implements IProjectile{
 		getWrapper().getPlayer().getWorld().playSound(start, Sound.BLOCK_GLASS_PLACE, 1, 0);
 		
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
 		Fox baby = (Fox)getWrapper().getPlayer().getWorld().spawnEntity(new Location(getWrapper().getPlayer().getWorld(), 0, 0, 0), EntityType.FOX, SpawnReason.CUSTOM);
@@ -107,6 +109,8 @@ public class SnowFox extends Effigy implements IProjectile{
 				null);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_FOX_SCREECH, 1, 0);
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {

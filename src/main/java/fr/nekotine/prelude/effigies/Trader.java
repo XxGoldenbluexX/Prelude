@@ -54,7 +54,7 @@ public class Trader extends Effigy implements ICharge{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WANDERING_TRADER_YES, 1, 0);
@@ -67,10 +67,12 @@ public class Trader extends Effigy implements ICharge{
 		}
 		lama = (TraderLlama)getWrapper().getPlayer().getWorld().spawnEntity(getWrapper().getPlayer().getLocation(), EntityType.TRADER_LLAMA);
 		ConfigureLlama();
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
-		if(lama == null || !lama.isValid()) return;
+	protected boolean castSecondarySpell() {
+		if(lama == null || !lama.isValid()) return false;
 		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
@@ -86,9 +88,9 @@ public class Trader extends Effigy implements ICharge{
 		lama.teleport(getWrapper().getPlayer());
 		getWrapper().getPlayer().teleport(temp);
 		
-		
-		
 		AddSecondaryCharge();
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {

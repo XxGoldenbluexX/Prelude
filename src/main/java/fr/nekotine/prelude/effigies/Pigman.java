@@ -95,8 +95,8 @@ public class Pigman extends Effigy implements IProjectile{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
-		if(!CanUseSpell(PRIMARY_MEAT_COST)) return;
+	protected boolean castPrimarySpell() {
+		if(!CanUseSpell(PRIMARY_MEAT_COST)) return false;
 		
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
@@ -117,10 +117,12 @@ public class Pigman extends Effigy implements IProjectile{
 				PRIMARY_BARRIER);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_AMBIENT, 1, 0);
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
-		if(!CanUseSpell(1)) return;
+	protected boolean castSecondarySpell() {
+		if(!CanUseSpell(1)) return false;
 		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
@@ -137,6 +139,8 @@ public class Pigman extends Effigy implements IProjectile{
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, 1, 0);
 		
 		RemoveMeat(meat.GetAmount());
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {

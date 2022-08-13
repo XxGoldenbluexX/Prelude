@@ -1,5 +1,6 @@
 package fr.nekotine.prelude;
 
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -69,8 +70,12 @@ public abstract class Effigy implements Listener {
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItem())) {
 			event.setCancelled(true);
 			if (Main.getInstance().isRoundPlaying() && (a==Action.RIGHT_CLICK_AIR || a==Action.RIGHT_CLICK_BLOCK) && !primary_ability_locked && !primary_ability_on_cooldown) {
-				castPrimarySpell();
-				MessageSender.sendMessage(MessageSender.getSpell(effigyType.getPrimarySpellName()), p);
+				if(castPrimarySpell()) {
+					MessageSender.sendMessage(MessageSender.getSpell(effigyType.getPrimarySpellName()), p);
+				}else {
+					playErrorSound();
+				}
+				
 			}
 		}
 	}
@@ -80,9 +85,13 @@ public abstract class Effigy implements Listener {
 		Player p = event.getPlayer();
 		if(p.equals(wrapper.getPlayer()) && weapon.equals(event.getItemDrop().getItemStack())) {
 			event.setCancelled(true);
-			if (Main.getInstance().isRoundPlaying() && !secondary_ability_locked && !secondary_ability_on_cooldown) {
-				castSecondarySpell();
-				MessageSender.sendMessage(MessageSender.getSpell(effigyType.getSecondarySpellName()), p);
+			if (Main.getInstance().isRoundPlaying() && !secondary_ability_locked && !secondary_ability_on_cooldown && castSecondarySpell()) {
+				if(castSecondarySpell()) {
+					MessageSender.sendMessage(MessageSender.getSpell(effigyType.getSecondarySpellName()), p);
+				}else {
+					playErrorSound();
+				}
+				
 			}
 		}
 	}
@@ -194,8 +203,16 @@ public abstract class Effigy implements Listener {
 		return disguise;
 	}
 	
-	protected abstract void castPrimarySpell();
-	protected abstract void castSecondarySpell();
+	//
+	
+	private void playErrorSound() {
+		getWrapper().getPlayer().playSound(getWrapper().getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 0);
+	}
+	
+	//
+	
+	protected abstract boolean castPrimarySpell();
+	protected abstract boolean castSecondarySpell();
 	protected abstract void roundEnd();
 	protected abstract void death();
 	protected abstract void roundStart();

@@ -74,7 +74,7 @@ public class Witch extends Effigy implements ICharge{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		
 		Player player = getWrapper().getPlayer();
@@ -83,10 +83,12 @@ public class Witch extends Effigy implements ICharge{
 		PotionMeta meta = potion.getPotionMeta();
 		meta.setColor(DAMAGE_POTION_COLOR);
 		potion.setPotionMeta(meta);
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
-		if(bats.size() < 1) return;
+	protected boolean castSecondarySpell() {
+		if(bats.size() < 1) return false;
 		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		for(int i=0 ; i < bats.size() ; i++) {
@@ -114,6 +116,8 @@ public class Witch extends Effigy implements ICharge{
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
 		
 		if(!Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), CHARGE_NAME)) AddCharge();
+		
+		return true;
 		
 	}
 	@Override

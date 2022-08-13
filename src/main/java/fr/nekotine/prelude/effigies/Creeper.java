@@ -47,13 +47,14 @@ public class Creeper extends Effigy implements ICharge{
 	//
 	
 	@Override
-	protected void castPrimarySpell() {
+	protected boolean castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_CREEPER_DEATH, 1, 0);
 		getWrapper().getPlayer().setVelocity(getWrapper().getPlayer().getEyeLocation().getDirection().multiply(PRIMARY_DASH));
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		
 		walkSpeed = getWrapper().getPlayer().getWalkSpeed();
@@ -69,6 +70,8 @@ public class Creeper extends Effigy implements ICharge{
 				true, 
 				SECONDARY_CHARGE_AUDIO_BIP, 
 				this);
+		 
+		return true;
 	}
 	@Override
 	protected void roundEnd() {

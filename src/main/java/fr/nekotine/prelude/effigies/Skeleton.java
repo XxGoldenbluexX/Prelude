@@ -94,16 +94,18 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 	//
 
 	@Override
-	protected void castPrimarySpell() {
-		if(multiplyer_active) return;
+	protected boolean castPrimarySpell() {
+		if(multiplyer_active) return false;
 		
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 		multiplyer_active = true;
 		this.bow.SetEnchantedGlow(true);
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ITEM_CROSSBOW_QUICK_CHARGE_1, 1, 0);
+		
+		return true;
 	}
 	@Override
-	protected void castSecondarySpell() {
+	protected boolean castSecondarySpell() {
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
 		Player player = getWrapper().getPlayer();
 		WitherSkull head = player.launchProjectile(WitherSkull.class);
@@ -122,6 +124,8 @@ public class Skeleton extends Effigy implements IBowCharge, IProjectile{
 				true);
 		
 		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITHER_SHOOT, 1, 0);
+		
+		return true;
 	}
 	@Override
 	protected void roundEnd() {
