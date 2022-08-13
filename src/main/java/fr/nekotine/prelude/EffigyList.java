@@ -301,6 +301,6 @@ public enum EffigyList {
 		return ChatColor.GOLD+"   ❶   " + ChatColor.WHITE+" ▶ " + ChatColor.GOLD+ChatColor.ITALIC;
 	}
 	private static String getSecondaryPrefix() {
-		return ChatColor.GOLD+"   ❶   " + ChatColor.WHITE+" ▶ " + ChatColor.GOLD+ChatColor.ITALIC;
+		return ChatColor.GOLD+"   ❷   " + ChatColor.WHITE+" ▶ " + ChatColor.GOLD+ChatColor.ITALIC;
 	}
 }

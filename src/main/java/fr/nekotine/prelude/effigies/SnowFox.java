@@ -1,9 +1,12 @@
 package fr.nekotine.prelude.effigies;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Fox.Type;
 import org.bukkit.entity.EntityType;
@@ -34,14 +37,15 @@ public class SnowFox extends Effigy implements IProjectile{
 	private static final int PRIMARY_COOLDOWN = 12 * 20;
 	private static final int SECONDARY_COOLDOWN = 7 * 20;
 	
-	private static final CustomEffect FREEZE_EFFECT = new CustomEffect(new FreezeEffect(), 0, 2 * 20);
+	private static final CustomEffect FREEZE_EFFECT = new CustomEffect(new FreezeEffect(), 0, 3 * 20);
 	private static final CustomEffect INVULNERABLE_EFFECT = new CustomEffect(new InvulnerableEffect(), 0, FREEZE_EFFECT.getDuration());
-	private static final PotionEffect SLOW_EFFECT = new PotionEffect(PotionEffectType.SLOW, 1, 2 * 20);
+	private static final PotionEffect SLOW_EFFECT = new PotionEffect(PotionEffectType.SLOW, 1, 3 * 20);
 	
 	private static final double PASSIVE_SLOW_BONUS_DAMAGE = 1 * 2;
 	private static final double PASSIVE_FREEZE_BONUS_DAMAGE = 2 * 2;
 	
 	private static final int PRIMARY_BLOCK_RANGE = 100;
+	private static final int PRIMARY_HEIGHT = 4;
 	//
 	
 	public SnowFox(PlayerWrapper wrapper, EffigyList effigyType) {
@@ -53,9 +57,29 @@ public class SnowFox extends Effigy implements IProjectile{
 	
 	@Override
 	protected void castPrimarySpell() {
-		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
-		
 		Block targeted = getWrapper().getPlayer().getTargetBlockExact(PRIMARY_BLOCK_RANGE);
+		if(targeted == null) return;
+		
+		Location start = targeted.getLocation();
+		
+		for(int i = 0 ; i < PRIMARY_HEIGHT ; i++) {
+			start.add(0, 1, 0);
+			
+			if(start.getBlock().getType()==Material.AIR) start.getBlock().setType(Material.LIGHT_BLUE_STAINED_GLASS);
+			//poser le tempblock sur start
+			
+			GetEntitiesInBlock(start).stream()
+				.filter(entity -> !Main.getInstance().getPlayersInTeam(getWrapper().getTeam()).contains(entity))
+				.forEach(entity -> 
+					{Main.getInstance().getCustomEffectModule().addEffect(entity, FREEZE_EFFECT);
+					Main.getInstance().getCustomEffectModule().addEffect(entity, INVULNERABLE_EFFECT);
+					entity.playEffect(EntityEffect.HURT);});
+		}
+		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_FOX_AGGRO, 1, 0);
+		getWrapper().getPlayer().getWorld().playSound(start, Sound.BLOCK_GLASS_PLACE, 1, 0);
+		
+		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
 	}
 	@Override
 	protected void castSecondarySpell() {
@@ -81,6 +105,8 @@ public class SnowFox extends Effigy implements IProjectile{
 				false, 
 				inTeam.toArray(new LivingEntity[inTeam.size()]), 
 				null);
+		
+		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_FOX_SCREECH, 1, 0);
 	}
 	@Override
 	protected void roundEnd() {
@@ -101,8 +127,11 @@ public class SnowFox extends Effigy implements IProjectile{
 		if(e.GetDamaged().hasPotionEffect(SLOW_EFFECT.getType())) {
 			e.AddBaseMod(PASSIVE_SLOW_BONUS_DAMAGE);
 		}
-		
-		//Freeze effect
+		if(/* has effect*/ true) {
+			e.AddBaseMod(PASSIVE_FREEZE_BONUS_DAMAGE);
+			Main.getInstance().getCustomEffectModule().removeEffect(e.GetDamaged(), FREEZE_EFFECT);
+			Main.getInstance().getCustomEffectModule().removeEffect(e.GetDamaged(), INVULNERABLE_EFFECT);
+		}
 	}
 
 	//
@@ -120,5 +149,11 @@ public class SnowFox extends Effigy implements IProjectile{
 	}
 	@Override
 	public void Triggered(CustomProjectile arg0) {
+	}
+	
+	//
+	
+	private Collection<LivingEntity> GetEntitiesInBlock(Location blockLocation){
+		return blockLocation.clone().add(0.5, 0.5, 0.5).getNearbyLivingEntities(0.5f);
 	}
 }

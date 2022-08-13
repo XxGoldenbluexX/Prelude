@@ -10,6 +10,10 @@ import fr.nekotine.core.util.UtilEvent;
 import fr.nekotine.prelude.Main;
 
 public class InvulnerableEffect implements CustomEffectType, Listener{
+	private LivingEntity holder;
+	
+	//
+	
 	@Override
 	public boolean haveAmplifier() {
 		return false;
@@ -18,11 +22,12 @@ public class InvulnerableEffect implements CustomEffectType, Listener{
 	public void onAmplifierChange(LivingEntity arg0, int arg1, int arg2) {
 	}
 	@Override
-	public void onApply(LivingEntity arg0) {
+	public void onApply(LivingEntity holder) {
+		this.holder = holder;
 		UtilEvent.Register(Main.getInstance(), this);
 	}
 	@Override
-	public void onUnapply(LivingEntity arg0) {
+	public void onUnapply(LivingEntity holder) {
 		UtilEvent.Unregister(this);
 	}
 	
@@ -30,5 +35,6 @@ public class InvulnerableEffect implements CustomEffectType, Listener{
 	
 	@EventHandler
 	public void OnDamage(LivingEntityDamageEvent e) {
+		if(e.GetDamaged().equals(holder)) e.SetCancelled(true);
 	}
 }
