@@ -7,6 +7,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Bat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -76,14 +77,12 @@ public class Witch extends Effigy implements ICharge{
 	@Override
 	protected boolean castPrimarySpell() {
 		setCooldown(Ability.PRIMARY, PRIMARY_COOLDOWN);
-		
 		Player player = getWrapper().getPlayer();
-		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_THROW, 1, 0);
+		player.getWorld().playSound(player, Sound.ENTITY_WITCH_THROW, 1, 0);
 		ThrownPotion potion = player.launchProjectile(ThrownPotion.class);
 		PotionMeta meta = potion.getPotionMeta();
 		meta.setColor(DAMAGE_POTION_COLOR);
 		potion.setPotionMeta(meta);
-		
 		return true;
 	}
 	@Override
@@ -91,11 +90,12 @@ public class Witch extends Effigy implements ICharge{
 		if(bats.size() < 1) return false;
 		
 		setCooldown(Ability.SECONDARY, SECONDARY_COOLDOWN);
+		Player player = getWrapper().getPlayer();
 		for(int i=0 ; i < bats.size() ; i++) {
 			Bat bat = bats.get(i);
 			
 			ThrownPotion potion = bat.launchProjectile(ThrownPotion.class);
-			potion.setShooter(getWrapper().getPlayer());
+			potion.setShooter(player);
 			potion.setVelocity(new Vector());
 			potion.customName(SECONDARY_POTION_NAME);
 			
@@ -113,9 +113,9 @@ public class Witch extends Effigy implements ICharge{
 		batIndicator.SetAmount(1);
 		batIndicator.SetEnchantedGlow(false);
 		
-		getWrapper().getPlayer().getWorld().playSound(getWrapper().getPlayer(), Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
+		player.getWorld().playSound(player, Sound.ENTITY_WITCH_CELEBRATE, 1, 0);
 		
-		if(!Main.getInstance().getChargeModule().Exist(getWrapper().getPlayer().getName(), CHARGE_NAME)) AddCharge();
+		if(!Main.getInstance().getChargeModule().Exist(player.getName(), CHARGE_NAME)) AddCharge();
 		
 		return true;
 		
