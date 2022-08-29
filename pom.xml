@@ -75,7 +75,7 @@
 		<dependency>
        		 <groupId>dev.jorel.CommandAPI</groupId>
        		 <artifactId>commandapi-core</artifactId>
-        	<version>7.0.0</version>
+        	<version>8.5.1</version>
         	<scope>provided</scope>
     	</dependency>
 		<dependency>

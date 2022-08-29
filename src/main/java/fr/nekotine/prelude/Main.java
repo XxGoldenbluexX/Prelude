@@ -26,12 +26,15 @@ import fr.nekotine.core.damage.DamageModule;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.effect.CustomEffectModule;
 import fr.nekotine.core.itemcharge.ItemChargeModule;
+import fr.nekotine.core.lobby.GameMode;
+import fr.nekotine.core.lobby.LobbyModule;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileModule;
 import fr.nekotine.core.ticking.TickingModule;
 import fr.nekotine.core.ticking.event.TickElapsedEvent;
 import fr.nekotine.core.usable.UsableModule;
 import fr.nekotine.core.visibility.EntityVisibilityModule;
+import fr.nekotine.prelude.gamemode.GM_PreludeBo;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
@@ -88,10 +91,13 @@ public class Main extends JavaPlugin implements Listener{
 				BowChargeModule.class,
 				UsableModule.class,
 				EntityVisibilityModule.class,
-				CustomEffectModule.class
+				CustomEffectModule.class,
+				LobbyModule.class
 				);
 		
 		moduleManager.enableAll();
+		
+		GameMode.registerGameMode(GM_PreludeBo.IDENTIFIER);
 		
 		EventRegisterer.registerEvent(this);
 		

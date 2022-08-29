@@ -57,7 +57,7 @@ public class Commands {
 	
 	private static CommandAPICommand map() {
 		
-		Argument mapArgument = new CustomArgument<PreludeMap>("mapList",(info)-> {
+		Argument<PreludeMap> mapArgument = new CustomArgument<PreludeMap, String>(new StringArgument("mapList"),(info)-> {
 			PreludeMap map = PreludeMap.load(info.input());
 			if (map==null) {
 				throw new CustomArgumentException(new MessageBuilder("No map with this name: ").appendArgInput().appendHere());
@@ -66,7 +66,7 @@ public class Commands {
 			}
 		}).replaceSuggestions(ArgumentSuggestions.strings(info -> {return PreludeMap.getMapNameList().toArray(String[]::new);}));
 		
-		Argument wallNameList = new StringArgument("wallList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
+		Argument<String> wallNameList = new StringArgument("wallList").replaceSuggestions(ArgumentSuggestions.strings((info) -> {
 			return ((PreludeMap)info.previousArgs()[0]).getWalls().stream().map(Wall::getName).toArray(String[]::new);
 		}));
 		
@@ -97,7 +97,7 @@ public class Commands {
 					}
 				});
 	}
-	public static CommandAPICommand mapRemove(Argument mapArgument) {
+	public static CommandAPICommand mapRemove(Argument<PreludeMap> mapArgument) {
 		return new CommandAPICommand("remove")
 				.withArguments(mapArgument)
 				.executes((sender,args)->{
@@ -111,7 +111,7 @@ public class Commands {
 					}
 				});
 	}
-	public static CommandAPICommand mapSetRedSpawn(Argument mapArgument) {
+	public static CommandAPICommand mapSetRedSpawn(Argument<PreludeMap> mapArgument) {
 		return new CommandAPICommand("setRedSpawn")
 				.withArguments(mapArgument)
 				.executesPlayer((player,args)->{
@@ -123,7 +123,7 @@ public class Commands {
 					map.unload();
 				});
 	}
-	public static CommandAPICommand mapSetBlueSpawn(Argument mapArgument) {
+	public static CommandAPICommand mapSetBlueSpawn(Argument<PreludeMap> mapArgument) {
 		return new CommandAPICommand("setBlueSpawn")
 				.withArguments(mapArgument)
 				.executesPlayer((player,args)->{
@@ -135,7 +135,7 @@ public class Commands {
 					map.unload();
 				});
 	}
-	public static CommandAPICommand mapRename(Argument mapArgument) {
+	public static CommandAPICommand mapRename(Argument<PreludeMap> mapArgument) {
 		return new CommandAPICommand("rename")
 				.withArguments(mapArgument)
 				.withArguments(new StringArgument("name"))
@@ -149,7 +149,7 @@ public class Commands {
 					map.unload();
 				});
 	}
-	public static CommandAPICommand mapWallAdd(Argument mapArgument) {
+	public static CommandAPICommand mapWallAdd(Argument<PreludeMap> mapArgument) {
 		return new CommandAPICommand("addWall")
 				.withArguments(mapArgument)
 				.withArguments(new StringArgument("name"))
@@ -172,7 +172,7 @@ public class Commands {
 					map.unload();
 				});
 	}
-	public static CommandAPICommand mapWallRemove(Argument mapArgument, Argument wallNameList) {
+	public static CommandAPICommand mapWallRemove(Argument<PreludeMap> mapArgument, Argument<String> wallNameList) {
 		return new CommandAPICommand("removeWall")
 				.withArguments(mapArgument)
 				.withArguments(wallNameList)
