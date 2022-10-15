@@ -1,13 +1,19 @@
 package fr.nekotine.prelude.gamemode;
 
-import fr.nekotine.core.lobby.GameMode;
-import fr.nekotine.core.minigame.Game;
+import java.util.List;
+import java.util.Map;
+
+import fr.nekotine.core.game.Game;
+import fr.nekotine.core.game.GamePhase;
+import fr.nekotine.core.game.GameTeam;
+import fr.nekotine.core.lobby.GameModeIdentifier;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 
 public class GM_PreludeBo extends Game{
 	
-	public static final GameMode IDENTIFIER = new GameMode("prelude_bo", Component.text("Match à mort en équipe par manche").color(TextColor.color(255, 60, 45))) {//TODO
+	public static final GameModeIdentifier IDENTIFIER = new GameModeIdentifier("prelude_bo", Component.text("Match à mort en équipe par manche").color(TextColor.color(255, 60, 45))) {
 		@Override
 		public Game generateTypedGame() {
 			return new GM_PreludeBo();
@@ -20,7 +26,6 @@ public class GM_PreludeBo extends Game{
 
 	@Override
 	protected void collectGameData() {
-		
 	}
 
 	@Override
@@ -29,6 +34,20 @@ public class GM_PreludeBo extends Game{
 
 	@Override
 	protected void setup() {
+	}
+
+	@Override
+	public void registerTeams(List<GameTeam> teamList) {
+		teamList.add(new GameTeam(Component.translatable("color.minecraft.blue").color(NamedTextColor.BLUE)));
+		teamList.add(new GameTeam(Component.translatable("color.minecraft.red").color(NamedTextColor.RED)));
+	}
+
+	@Override
+	public void registerGamePhases(Map<String, GamePhase> _gamePhasesMap) {
+	}
+
+	@Override
+	public void GotoFirstPhase() {
 	}
 
 }

@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.nekotine.core.bowcharge.BowChargeModule;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.itemcharge.ItemChargeModule;
+import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileModule;
 import fr.nekotine.prelude.utils.Ability;
 import fr.nekotine.prelude.utils.ComponentMaker;
@@ -129,9 +130,9 @@ public abstract class Effigy implements Listener {
 	
 	protected void destroy() {
 		System.out.println("destroy");
-		Main.getInstance().getModuleManager().Get(ItemChargeModule.class).DestroyFromPlayer(wrapper.getPlayer());
-		Main.getInstance().getModuleManager().Get(BowChargeModule.class).DestroyFromPlayer(wrapper.getPlayer());
-		Main.getInstance().getModuleManager().Get(ProjectileModule.class).TriggerFromSender(wrapper.getPlayer());
+		ModuleManager.GetModule(ItemChargeModule.class).DestroyFromPlayer(wrapper.getPlayer());
+		ModuleManager.GetModule(BowChargeModule.class).DestroyFromPlayer(wrapper.getPlayer());
+		ModuleManager.GetModule(ProjectileModule.class).TriggerFromSender(wrapper.getPlayer());
 		removeWeapon();
 		getWrapper().getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 		Disguiser.undisguise(wrapper.getPlayer());

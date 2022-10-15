@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,6 +20,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
 import fr.nekotine.core.bowcharge.BowChargeModule;
 import fr.nekotine.core.charge.ChargeModule;
@@ -26,8 +28,10 @@ import fr.nekotine.core.damage.DamageModule;
 import fr.nekotine.core.damage.LivingEntityDamageEvent;
 import fr.nekotine.core.effect.CustomEffectModule;
 import fr.nekotine.core.itemcharge.ItemChargeModule;
-import fr.nekotine.core.lobby.GameMode;
+import fr.nekotine.core.lobby.GameModeIdentifier;
 import fr.nekotine.core.lobby.LobbyModule;
+import fr.nekotine.core.map.MapIdentifier;
+import fr.nekotine.core.map.MapModule;
 import fr.nekotine.core.module.ModuleManager;
 import fr.nekotine.core.projectile.ProjectileModule;
 import fr.nekotine.core.ticking.TickingModule;
@@ -37,6 +41,7 @@ import fr.nekotine.core.visibility.EntityVisibilityModule;
 import fr.nekotine.prelude.gamemode.GM_PreludeBo;
 import fr.nekotine.prelude.inventories.MapInventory;
 import fr.nekotine.prelude.map.PreludeMap;
+import fr.nekotine.prelude.map.TestMap;
 import fr.nekotine.prelude.utils.EventRegisterer;
 import fr.nekotine.prelude.utils.Gameruler;
 import fr.nekotine.prelude.utils.RoundState;
@@ -62,9 +67,6 @@ public class Main extends JavaPlugin implements Listener{
 	private static final Material JOIN_GAME_MATERIAL = Material.SANDSTONE;
 	private static final Material LEAVE_GAME_MATERIAL = Material.OBSIDIAN;
 	
-	
-	private ModuleManager moduleManager;
-	
 	private HashMap<Player, PlayerWrapper> players = new HashMap<Player, PlayerWrapper>();
 	private String mapName;
 	private boolean running = false;
@@ -81,8 +83,7 @@ public class Main extends JavaPlugin implements Listener{
 		super.onEnable();
 		main=this;
 		
-		moduleManager = new ModuleManager();
-		moduleManager.Load(this,
+		ModuleManager.Load(this,
 				ChargeModule.class,
 				TickingModule.class,
 				ItemChargeModule.class,
@@ -92,12 +93,31 @@ public class Main extends JavaPlugin implements Listener{
 				UsableModule.class,
 				EntityVisibilityModule.class,
 				CustomEffectModule.class,
-				LobbyModule.class
+				LobbyModule.class,
+				MapModule.class
 				);
 		
-		moduleManager.enableAll();
+		ModuleManager.EnableAll();
 		
-		GameMode.registerGameMode(GM_PreludeBo.IDENTIFIER);
+		GameModeIdentifier.registerGameMode(GM_PreludeBo.IDENTIFIER);
+		
+		MapModule.registerMapTypes(TestMap.IDENTIFIER);
+		
+		var mapModule = ModuleManager.GetModule(MapModule.class);
+		
+		mapModule.generateCommands();
+		
+		// TEST
+		
+		mapModule.addMap(new MapIdentifier(TestMap.IDENTIFIER, "testMap", "Displayed test map name", "Une map de test", Material.STONE));
+		
+		
+		new CommandAPICommand("test").executes((sender, args) -> {
+			TestMap testMap = (TestMap) TestMap.IDENTIFIER.generateTypedMap(MapModule.getMap("testMap"));
+			sender.sendMessage(Component.text(testMap.getSpawnLocation().toString()));
+		}).register();
+		
+		//
 		
 		EventRegisterer.registerEvent(this);
 		
@@ -152,7 +172,7 @@ public class Main extends JavaPlugin implements Listener{
 		if (gameScoreboard != null) gameScoreboard.destroy();
 		if (bumperManager != null) bumperManager.destroy();
 		if (mapInventory != null) mapInventory.destroy();
-		if (moduleManager != null) moduleManager.disableAll();
+		ModuleManager.DisableAll();
 		
 		end();
 		
@@ -171,7 +191,6 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public boolean addPlayer(Player player, Team team) {
 		if(!roundManager.isRoundPlaying() && !players.containsKey(player)) {
-			System.out.println("player added");
 			players.put(player, new PlayerWrapper(player, team));
 			
 			gameScoreboard.addPlayer(player);
@@ -193,7 +212,6 @@ public class Main extends JavaPlugin implements Listener{
 	public void setMapName(String mapName) {
 		String before = this.mapName;
 		this.mapName=mapName;
-		System.out.println("map set");
 		EventRegisterer.callMapChangeEvent(before, mapName);
 	}
 	public String getMapName() {
@@ -210,8 +228,6 @@ public class Main extends JavaPlugin implements Listener{
 			Team before = wrapper.getTeam();
 			getWrapper(player).setTeam(team);
 			gameScoreboard.addPlayer(player);
-			
-			System.out.println("team set");
 			EventRegisterer.callPlayerChangeTeamEvent(player, before, team);
 			return true;
 		}
@@ -246,7 +262,6 @@ public class Main extends JavaPlugin implements Listener{
 			closeMenus();
 			
 			running = true;
-			System.out.println("game started");
 			return true;
 		}else {
 			return false;
@@ -263,7 +278,6 @@ public class Main extends JavaPlugin implements Listener{
 			map.unload();
 			running = false;
 
-			System.out.println("game ended");
 			return true;
 		}else {
 			return false;
@@ -350,30 +364,30 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	
 	public ModuleManager getModuleManager() {
-		return moduleManager;
+		return ModuleManager.getInstance();
 	}
 	public DamageModule getDamageModule() {
-		return moduleManager.Get(DamageModule.class);
+		return ModuleManager.GetModule(DamageModule.class);
 	}
 	public UsableModule getUsableModule() {
-		return moduleManager.Get(UsableModule.class);
+		return ModuleManager.GetModule(UsableModule.class);
 	}
 	public ProjectileModule getProjectileModule() {
-		return moduleManager.Get(ProjectileModule.class);
+		return ModuleManager.GetModule(ProjectileModule.class);
 	}
 	public ChargeModule getChargeModule() {
-		return moduleManager.Get(ChargeModule.class);
+		return ModuleManager.GetModule(ChargeModule.class);
 	}
 	public BowChargeModule getBowChargeModule() {
-		return moduleManager.Get(BowChargeModule.class);
+		return ModuleManager.GetModule(BowChargeModule.class);
 	}
 	public ItemChargeModule getItemChargeModule() {
-		return moduleManager.Get(ItemChargeModule.class);
+		return ModuleManager.GetModule(ItemChargeModule.class);
 	}
 	public EntityVisibilityModule getEntityVisibilityModule() {
-		return moduleManager.Get(EntityVisibilityModule.class);
+		return ModuleManager.GetModule(EntityVisibilityModule.class);
 	}
 	public CustomEffectModule getCustomEffectModule() {
-		return moduleManager.Get(CustomEffectModule.class);
+		return ModuleManager.GetModule(CustomEffectModule.class);
 	}
 }

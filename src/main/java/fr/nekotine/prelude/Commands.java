@@ -18,10 +18,18 @@ public class Commands {
 	public static CommandAPICommand make() {
 		return new CommandAPICommand("prelude")
 				.withSubcommand(game())
-				.withSubcommand(map());
+				.withSubcommand(map())
+				.withSubcommands(test());
 	}
 	
 
+	public static CommandAPICommand test() {
+		return new CommandAPICommand("test")
+				.executesPlayer((sender,args) -> {
+					sender.setWalkSpeed(0.2f);
+				});
+	}
+	
 	
 	private static CommandAPICommand game() {
 		return new CommandAPICommand("game")
@@ -50,8 +58,6 @@ public class Commands {
 					//Main.getInstance().stop();
 				});
 	}
-	
-	
 	
 	
 	
@@ -95,6 +101,7 @@ public class Commands {
 						player.sendMessage("map created");
 						//ptit message
 					}
+					return 1;
 				});
 	}
 	public static CommandAPICommand mapRemove(Argument<PreludeMap> mapArgument) {

@@ -35,7 +35,7 @@ dependencies {
 
 group = 'fr.nekotine'
 version = '0.0.1-SNAPSHOT'
-description = 'NekotineCore'
+description = 'Prelude'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -50,13 +50,16 @@ defaultTasks 'build'
 // "UBER" TASKS
 
 tasks.register('dev') {
+	group = "developpement"
+	description = "Compile un jar et l'envoie sur le server de développement"
 	dependsOn('assemble', 'copyToDevServer')
 }
 
 // TASKS
 
 tasks.register('copyToDevServer', Copy) {
-	dependsOn('assemble')
+	group = "developpement"
+	description = "Envoie le jar sur le server de développement"
 	from jar
 	into DevServerPluginDirectory
 }
